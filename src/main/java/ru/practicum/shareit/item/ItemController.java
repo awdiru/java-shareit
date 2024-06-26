@@ -1,7 +1,5 @@
 package ru.practicum.shareit.item;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.exceptions.IncorrectItemException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**

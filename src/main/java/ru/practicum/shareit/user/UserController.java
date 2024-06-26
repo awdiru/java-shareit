@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.exceptions.IncorrectEmailException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
