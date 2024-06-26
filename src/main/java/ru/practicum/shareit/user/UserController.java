@@ -24,16 +24,16 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Valid UserDto UserDto) {
+    public UserDto createUser(@RequestBody @Valid final UserDto userDto) {
 
         log.info("UserController: createUser");
         try {
-            return userService.createUser(UserDto);
+            return userService.createUser(userDto);
 
         } catch (IncorrectEmailException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -46,12 +46,12 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable long userId,
-                              @RequestBody @Valid UserDto UserDto) {
+    public UserDto updateUser(@PathVariable final long userId,
+                              @RequestBody @Valid final UserDto userDto) {
 
         log.info("UserController: updateUser");
         try {
-            return userService.updateUser(userId, UserDto);
+            return userService.updateUser(userId, userDto);
 
         } catch (IncorrectUserIdException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -64,14 +64,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable long userId) {
+    public UserDto getUser(@PathVariable final long userId) {
 
         log.info("UserController: getUser");
         return userService.getUser(userId);
     }
 
     @DeleteMapping("/{userId}")
-    public UserDto delUser(@PathVariable long userId) {
+    public UserDto delUser(@PathVariable final long userId) {
 
         log.info("UserController: delUser");
         return userService.delUser(userId);

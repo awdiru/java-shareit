@@ -18,43 +18,43 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repos;
 
     @Autowired
-    public UserServiceImpl(UserRepository repos) {
+    public UserServiceImpl(final UserRepository repos) {
         this.repos = repos;
     }
 
     @Override
-    public UserDto createUser(UserDto UserDto) throws IncorrectEmailException, FailEmailException {
+    public UserDto createUser(final UserDto userDto) throws IncorrectEmailException, FailEmailException {
 
-        if (UserDto.getEmail() == null || UserDto.getEmail().isEmpty()) {
+        if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
             log.warn("UserServiceImpl: createUser FALSE, fail email");
             throw new FailEmailException("Email не может быть пустым.");
         }
         log.info("UserServiceImpl: createUser");
-        return repos.createUser(UserDto);
+        return repos.createUser(userDto);
     }
 
     @Override
-    public UserDto updateUser(long userId, UserDto UserDto)
+    public UserDto updateUser(final long userId, final UserDto userDto)
             throws IncorrectUserIdException, IncorrectEmailException {
 
         if (getUser(userId) == null) {
             log.warn("UserServiceImpl: updateUser FALSE, Incorrect user id");
-            throw new IncorrectUserIdException("Пользователь с идентификатором " + UserDto.getId() + " не найден.");
+            throw new IncorrectUserIdException("Пользователь с идентификатором " + userDto.getId() + " не найден.");
         }
-        UserDto.setId(userId);
+        userDto.setId(userId);
         log.info("UserServiceImpl: updateUser");
-        return repos.updateUser(UserDto);
+        return repos.updateUser(userDto);
     }
 
     @Override
-    public UserDto getUser(long userId) {
+    public UserDto getUser(final long userId) {
 
         log.info("UserServiceImpl: getUser");
         return repos.getUser(userId);
     }
 
     @Override
-    public UserDto delUser(long userId) {
+    public UserDto delUser(final long userId) {
 
         log.info("UserServiceImpl: delUser");
         return repos.delUser(userId);

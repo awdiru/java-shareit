@@ -6,23 +6,23 @@ import java.util.List;
 
 public interface ItemRepository {
     /**
-     * Сохранить новую вещь
+     * Сохранить новую вещь.
      *
-     * @param ItemDto новая вещь
+     * @param itemDto новая вещь
      * @return новая вещь
      */
-    ItemDto createItem(ItemDto ItemDto);
+    ItemDto createItem(ItemDto itemDto);
 
     /**
-     * Редактировать существующую вещь
+     * Редактировать существующую вещь.
      *
-     * @param ItemDto новая вещь
+     * @param itemDto новая вещь
      * @return отредактированная вещь
      */
-    ItemDto updateItem(ItemDto ItemDto);
+    ItemDto updateItem(ItemDto itemDto);
 
     /**
-     * Вернуть вещь по идентификатору
+     * Вернуть вещь по идентификатору.
      *
      * @param itemId идентификатор вещи
      * @return искомая вещь
@@ -30,7 +30,7 @@ public interface ItemRepository {
     ItemDto getItem(long itemId);
 
     /**
-     * Вернуть список всех вещей пользователя
+     * Вернуть список всех вещей пользователя.
      *
      * @param userId идентификатор пользователя
      * @return список вещей пользователя
@@ -38,7 +38,7 @@ public interface ItemRepository {
     List<ItemDto> getItemsUser(long userId);
 
     /**
-     * Поиск вещи по фрагменту текста
+     * Поиск вещи по фрагменту текста.
      *
      * @param text фрагмент текста
      * @return список искомых вещей

@@ -23,9 +23,9 @@ class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public ItemDto createItem(ItemDto ItemDto) {
+    public ItemDto createItem(final ItemDto itemDto) {
 
-        Item item = ItemMapper.toItem(ItemDto);
+        Item item = ItemMapper.toItem(itemDto);
         item.setId(++idCount);
         repos.put(idCount, item);
         log.info("ItemRepositoryImpl: saveItem, idItem: " + idCount);
@@ -33,31 +33,33 @@ class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public ItemDto updateItem(ItemDto ItemDto) {
+    public ItemDto updateItem(final ItemDto itemDto) {
 
-        Item item = repos.get(ItemDto.getId());
-        Item updItem = ItemMapper.toItem(ItemDto);
+        Item item = repos.get(itemDto.getId());
+        Item updItem = ItemMapper.toItem(itemDto);
 
-        if (updItem.getName() != null)
+        if (updItem.getName() != null) {
             item.setName(updItem.getName());
-        if (updItem.getDescription() != null)
+        }
+        if (updItem.getDescription() != null) {
             item.setDescription(updItem.getDescription());
-        if (updItem.getAvailable() != null)
+        }
+        if (updItem.getAvailable() != null) {
             item.setAvailable(updItem.getAvailable());
-
-        log.info("ItemRepositoryImpl: editItem, idItem: " + ItemDto.getId());
+        }
+        log.info("ItemRepositoryImpl: editItem, idItem: " + itemDto.getId());
         return ItemMapper.toItemDto(item);
     }
 
     @Override
-    public ItemDto getItem(long itemId) {
+    public ItemDto getItem(final long itemId) {
 
         log.info("ItemRepositoryImpl: getItem, idItem: " + itemId);
         return ItemMapper.toItemDto(repos.get(itemId));
     }
 
     @Override
-    public List<ItemDto> getItemsUser(long userId) {
+    public List<ItemDto> getItemsUser(final long userId) {
 
         log.info("ItemRepositoryImpl: getItemsUser, idUser: " + userId);
         return repos.values().stream()
@@ -67,7 +69,7 @@ class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<ItemDto> searchItems(String text) {
+    public List<ItemDto> searchItems(final String text) {
 
         log.info("ItemRepositoryImpl: searchItems, text: " + text);
         return repos.values().stream()

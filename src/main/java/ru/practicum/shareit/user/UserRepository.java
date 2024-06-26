@@ -7,23 +7,23 @@ import java.util.List;
 
 public interface UserRepository {
     /**
-     * Создать нового пользователя
+     * Создать нового пользователя.
      *
-     * @param UserDto новый пользователь
+     * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto createUser(UserDto UserDto) throws IncorrectEmailException;
+    UserDto createUser(UserDto userDto) throws IncorrectEmailException;
 
     /**
-     * Обновить пользователя
+     * Обновить пользователя.
      *
-     * @param UserDto новый пользователь
+     * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto updateUser(UserDto UserDto) throws IncorrectEmailException;
+    UserDto updateUser(UserDto userDto) throws IncorrectEmailException;
 
     /**
-     * Вернуть пользователя по идентификатору
+     * Вернуть пользователя по идентификатору.
      *
      * @param userId идентификатор пользователя
      * @return искомый пользователь
@@ -31,7 +31,7 @@ public interface UserRepository {
     UserDto getUser(long userId);
 
     /**
-     * Удалить пользователя
+     * Удалить пользователя.
      *
      * @param userId идентификатор пользователя
      * @return удаленный пользователь
@@ -39,7 +39,7 @@ public interface UserRepository {
     UserDto delUser(long userId);
 
     /**
-     * Вернут список всех пользователей
+     * Вернут список всех пользователей.
      *
      * @return список всех пользователей
      */

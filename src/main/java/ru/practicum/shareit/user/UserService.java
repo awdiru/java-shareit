@@ -9,24 +9,24 @@ import java.util.List;
 
 public interface UserService {
     /**
-     * Создать нового пользователя
+     * Создать нового пользователя.
      *
-     * @param UserDto новый пользователь
+     * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto createUser(UserDto UserDto) throws IncorrectEmailException, FailEmailException;
+    UserDto createUser(UserDto userDto) throws IncorrectEmailException, FailEmailException;
 
     /**
-     * Обновить пользователя
+     * Обновить пользователя.
      *
      * @param userId  идентификатор пользователя
-     * @param UserDto новый пользователь
+     * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto updateUser(long userId, UserDto UserDto) throws IncorrectUserIdException, IncorrectEmailException;
+    UserDto updateUser(long userId, UserDto userDto) throws IncorrectUserIdException, IncorrectEmailException;
 
     /**
-     * Вернуть пользователя по идентификатору
+     * Вернуть пользователя по идентификатору.
      *
      * @param userId идентификатор пользователя
      * @return искомый пользователь
@@ -34,7 +34,7 @@ public interface UserService {
     UserDto getUser(long userId);
 
     /**
-     * Удалить пользователя
+     * Удалить пользователя.
      *
      * @param userId идентификатор пользователя
      * @return удаленный пользователь
@@ -42,7 +42,7 @@ public interface UserService {
     UserDto delUser(long userId);
 
     /**
-     * Вернут список всех пользователей
+     * Вернут список всех пользователей.
      *
      * @return список всех пользователей
      */

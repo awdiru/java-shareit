@@ -2,10 +2,10 @@ package ru.practicum.shareit.user.impliments;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exceptions.IncorrectEmailException;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.exceptions.IncorrectEmailException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
@@ -25,11 +25,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDto createUser(UserDto UserDto)
+    public UserDto createUser(final UserDto userDto)
             throws IncorrectEmailException {
-        checkingUsersEmail(UserDto, "createUser");
+        checkingUsersEmail(userDto, "createUser");
 
-        User user = UserMapper.toUser(UserDto);
+        User user = UserMapper.toUser(userDto);
         user.setId(++idCount);
         repos.put(idCount, user);
         log.info("UserRepositoryImpl: createUser, idUser: " + idCount);
@@ -37,31 +37,32 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDto updateUser(UserDto UserDto)
+    public UserDto updateUser(final UserDto userDto)
             throws IncorrectEmailException {
-        checkingUsersEmail(UserDto, "updateUser");
+        checkingUsersEmail(userDto, "updateUser");
 
-        User user = repos.get(UserDto.getId());
-        User updUser = UserMapper.toUser(UserDto);
+        User user = repos.get(userDto.getId());
+        User updUser = UserMapper.toUser(userDto);
 
-        if (updUser.getName() != null)
+        if (updUser.getName() != null) {
             user.setName(updUser.getName());
-        if (updUser.getEmail() != null)
+        }
+        if (updUser.getEmail() != null) {
             user.setEmail(updUser.getEmail());
-
+        }
         log.info("UserRepositoryImpl: updateUser, idUser: " + idCount);
         return UserMapper.toUserDto(user);
     }
 
     @Override
-    public UserDto getUser(long userId) {
+    public UserDto getUser(final long userId) {
 
         log.info("UserRepositoryImpl: getUser, idUser: " + userId);
         return UserMapper.toUserDto(repos.get(userId));
     }
 
     @Override
-    public UserDto delUser(long userId) {
+    public UserDto delUser(final long userId) {
 
         log.info("UserRepositoryImpl: delUser, idUser: " + userId);
         return UserMapper.toUserDto(repos.remove(userId));
@@ -76,13 +77,13 @@ public class UserRepositoryImpl implements UserRepository {
                 .collect(Collectors.toList());
     }
 
-    private void checkingUsersEmail(UserDto UserDto, String method)
+    private void checkingUsersEmail(final UserDto userDto, final String method)
             throws IncorrectEmailException {
 
         for (User user : repos.values()) {
-            if (user.getEmail().equals(UserDto.getEmail()) && !user.getId().equals(UserDto.getId())) {
+            if (user.getEmail().equals(userDto.getEmail()) && !user.getId().equals(userDto.getId())) {
                 log.warn("UserRepositoryImpl: " + method + " FALSE, Incorrect user email");
-                throw new IncorrectEmailException("Пользователь с email " + UserDto.getEmail() + " уже существует.");
+                throw new IncorrectEmailException("Пользователь с email " + userDto.getEmail() + " уже существует.");
             }
         }
     }

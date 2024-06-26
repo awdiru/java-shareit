@@ -2,7 +2,6 @@ package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,17 +23,17 @@ public class ItemController {
     private final ItemService itemService;
 
     @Autowired
-    public ItemController(ItemService itemService) {
+    public ItemController(final ItemService itemService) {
         this.itemService = itemService;
     }
 
     @PostMapping
-    public ItemDto createItem(@RequestBody @Valid ItemDto ItemDto,
-                              @RequestHeader("X-Sharer-User-Id") @NonNull @NotBlank long userId) {
+    public ItemDto createItem(@RequestBody @Valid final ItemDto itemDto,
+                              @RequestHeader("X-Sharer-User-Id") @NotBlank final long userId) {
 
         log.info("ItemController: createItem");
         try {
-            return itemService.createItem(ItemDto, userId);
+            return itemService.createItem(itemDto, userId);
 
         } catch (IncorrectUserIdException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -47,13 +46,13 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@PathVariable long itemId,
-                              @RequestBody ItemDto ItemDto,
-                              @RequestHeader("X-Sharer-User-Id") long userId) {
+    public ItemDto updateItem(@PathVariable final long itemId,
+                              @RequestBody final ItemDto itemDto,
+                              @RequestHeader("X-Sharer-User-Id") final long userId) {
 
         log.info("ItemController: updateItem");
         try {
-            return itemService.updateItem(itemId, ItemDto, userId);
+            return itemService.updateItem(itemId, itemDto, userId);
 
         } catch (IncorrectUserIdException | IncorrectItemException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -62,21 +61,21 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable long itemId) {
+    public ItemDto getItem(@PathVariable final long itemId) {
 
         log.info("ItemController: getItem");
         return itemService.getItem(itemId);
     }
 
     @GetMapping
-    public List<ItemDto> getItemsUser(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDto> getItemsUser(@RequestHeader("X-Sharer-User-Id") final long userId) {
 
         log.info("ItemController: getItemsUser");
         return itemService.getItemsUser(userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam String text) {
+    public List<ItemDto> searchItems(@RequestParam final String text) {
 
         log.info("ItemController: searchItems");
         return itemService.searchItems(text);

@@ -20,24 +20,24 @@ class ItemServiceImpl implements ItemService {
     private final UserService userService;
 
     @Autowired
-    public ItemServiceImpl(ItemRepository repos, UserService userService) {
+    public ItemServiceImpl(final ItemRepository repos, final UserService userService) {
         this.repos = repos;
         this.userService = userService;
     }
 
     @Override
-    public ItemDto createItem(ItemDto ItemDto, long userId)
+    public ItemDto createItem(final ItemDto itemDto, final long userId)
             throws IncorrectUserIdException, IncorrectItemException {
 
-        if (ItemDto.getName() == null || ItemDto.getName().isBlank()) {
+        if (itemDto.getName() == null || itemDto.getName().isBlank()) {
             log.warn("ItemServiceImpl: createItem FALSE, incorrect item name");
             throw new IncorrectItemException("Название вещи не может быть пустым");
 
-        } else if (ItemDto.getDescription() == null || ItemDto.getDescription().isBlank()) {
+        } else if (itemDto.getDescription() == null || itemDto.getDescription().isBlank()) {
             log.warn("ItemServiceImpl: createItem FALSE, incorrect item description");
             throw new IncorrectItemException("Описание вещи не может быть пустым");
 
-        } else if (ItemDto.getAvailable() == null) {
+        } else if (itemDto.getAvailable() == null) {
             log.warn("ItemServiceImpl: createItem FALSE, incorrect item available");
             throw new IncorrectItemException("Статус вещи не может быть пустым");
         }
@@ -47,13 +47,13 @@ class ItemServiceImpl implements ItemService {
             throw new IncorrectUserIdException("Пользователь с id " + userId + " не найден.");
         }
 
-        ItemDto.setOwner(userId);
+        itemDto.setOwner(userId);
         log.info("ItemServiceImpl: createItem");
-        return repos.createItem(ItemDto);
+        return repos.createItem(itemDto);
     }
 
     @Override
-    public ItemDto updateItem(long itemId, ItemDto ItemDto, long userId)
+    public ItemDto updateItem(final long itemId, ItemDto itemDto, final long userId)
             throws IncorrectUserIdException, IncorrectItemException {
 
         ItemDto item = getItem(itemId);
@@ -65,28 +65,28 @@ class ItemServiceImpl implements ItemService {
             log.warn("ItemServiceImpl: updateItem FALSE. Incorrect user ID");
             throw new IncorrectUserIdException("редактировать вещь может только ее владелец.");
         }
-        ItemDto.setId(itemId);
-        ItemDto.setOwner(userId);
+        itemDto.setId(itemId);
+        itemDto.setOwner(userId);
         log.info("ItemServiceImpl: updateItem");
-        return repos.updateItem(ItemDto);
+        return repos.updateItem(itemDto);
     }
 
     @Override
-    public ItemDto getItem(long itemId) {
+    public ItemDto getItem(final long itemId) {
 
         log.info("ItemServiceImpl: getItem");
         return repos.getItem(itemId);
     }
 
     @Override
-    public List<ItemDto> getItemsUser(long userId) {
+    public List<ItemDto> getItemsUser(final long userId) {
 
         log.info("ItemServiceImpl: getItemsUser");
         return repos.getItemsUser(userId);
     }
 
     @Override
-    public List<ItemDto> searchItems(String text) {
+    public List<ItemDto> searchItems(final String text) {
 
         log.info("ItemServiceImpl: searchItems");
         if (text == null || text.isBlank()) {
