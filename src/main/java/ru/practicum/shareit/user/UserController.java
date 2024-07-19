@@ -13,9 +13,6 @@ import ru.practicum.shareit.exceptions.IncorrectEmailException;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @Slf4j
 @RequestMapping("/users")
