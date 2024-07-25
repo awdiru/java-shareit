@@ -3,7 +3,7 @@ package ru.practicum.shareit.user.impliments;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exceptions.IncorrectEmailException;
-import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.UserRepositoryOld;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryOldImpl implements UserRepositoryOld {
     private final Map<Long, User> repos;
     private long idCount;
 
-    public UserRepositoryImpl() {
+    public UserRepositoryOldImpl() {
         this.repos = new HashMap<>();
         idCount = 0;
     }

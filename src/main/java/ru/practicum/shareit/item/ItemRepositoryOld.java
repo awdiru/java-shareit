@@ -1,31 +1,25 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.exceptions.IncorrectItemException;
-import ru.practicum.shareit.exceptions.IncorrectItemIdException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
 
-public interface ItemService {
+public interface ItemRepositoryOld {
     /**
      * Сохранить новую вещь.
      *
      * @param itemDto новая вещь
-     * @param userId  идентификатор владельца
      * @return новая вещь
      */
-    ItemDto createItem(ItemDto itemDto, long userId) throws IncorrectUserIdException;
+    ItemDto createItem(ItemDto itemDto);
 
     /**
      * Редактировать существующую вещь.
      *
-     * @param itemId  идентификатор вещи
      * @param itemDto новая вещь
-     * @param userId  идентификатор владельца
      * @return отредактированная вещь
      */
-    ItemDto updateItem(long itemId, ItemDto itemDto, long userId) throws IncorrectUserIdException, IncorrectItemException;
+    ItemDto updateItem(ItemDto itemDto);
 
     /**
      * Вернуть вещь по идентификатору.
@@ -33,7 +27,7 @@ public interface ItemService {
      * @param itemId идентификатор вещи
      * @return искомая вещь
      */
-    ItemDto getItem(long itemId) throws IncorrectItemIdException;
+    ItemDto getItem(long itemId);
 
     /**
      * Вернуть список всех вещей пользователя.
@@ -50,4 +44,5 @@ public interface ItemService {
      * @return список искомых вещей
      */
     List<ItemDto> searchItems(String text);
+
 }

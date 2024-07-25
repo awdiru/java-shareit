@@ -9,8 +9,11 @@ import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.exceptions.IncorrectEmailException;
+import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,47 +26,55 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(final UserDto userDto) throws IncorrectEmailException, FailEmailException {
+    public UserDto createUser(final UserDto userDto) throws FailEmailException {
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
             log.warn("UserServiceImpl: createUser FALSE, fail email");
             throw new FailEmailException("Email не может быть пустым.");
         }
         log.info("UserServiceImpl: createUser");
-        return repos.createUser(userDto);
+        User user = repos.save(UserMapper.toUser(userDto));
+        return UserMapper.toUserDto(user);
     }
 
     @Override
     public UserDto updateUser(final long userId, final UserDto userDto)
-            throws IncorrectUserIdException, IncorrectEmailException {
+            throws IncorrectUserIdException {
 
         if (getUser(userId) == null) {
             log.warn("UserServiceImpl: updateUser FALSE, Incorrect user id");
             throw new IncorrectUserIdException("Пользователь с идентификатором " + userDto.getId() + " не найден.");
         }
-        userDto.setId(userId);
         log.info("UserServiceImpl: updateUser");
-        return repos.updateUser(userDto);
+        userDto.setId(userId);
+        User user = repos.findById(userId);
+        if (userDto.getName() != null)
+            user.setName(userDto.getName());
+        if (userDto.getEmail() != null)
+            user.setEmail(userDto.getEmail());
+        return UserMapper.toUserDto(repos.save(user));
     }
 
     @Override
-    public UserDto getUser(final long userId) {
-
+    public UserDto getUser(final long userId) throws IncorrectUserIdException {
         log.info("UserServiceImpl: getUser");
-        return repos.getUser(userId);
+        UserDto userDto = UserMapper.toUserDto(repos.findById(userId));
+        if (userDto != null)
+            return userDto;
+        else throw new IncorrectUserIdException("Пользователь с идентификатором " + userId + " не найден.");
     }
 
     @Override
     public UserDto delUser(final long userId) {
-
         log.info("UserServiceImpl: delUser");
-        return repos.delUser(userId);
+        return UserMapper.toUserDto(repos.deleteById(userId));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-
         log.info("UserServiceImpl: getAllUsers");
-        return repos.getAllUsers();
+        return repos.findAll().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 }

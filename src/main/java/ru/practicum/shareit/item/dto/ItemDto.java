@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.user.model.User;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -11,11 +13,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemDto {
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
-    private Long owner;
+    private User owner;
     private Integer numberOfRentals;
+    @NotNull
     private Boolean available;
-    private String request;
+    private ItemRequest request;
 }
 

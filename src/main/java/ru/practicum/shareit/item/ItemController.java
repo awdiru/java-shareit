@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.exceptions.IncorrectItemIdException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.exceptions.IncorrectItemException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
@@ -36,9 +37,6 @@ public class ItemController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Ошибка создания вещи! " + e.getMessage());
 
-        } catch (IncorrectItemException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Ошибка создания вещи! " + e.getMessage());
         }
     }
 
@@ -61,7 +59,12 @@ public class ItemController {
     public ItemDto getItem(@PathVariable final long itemId) {
 
         log.info("ItemController: getItem");
-        return itemService.getItem(itemId);
+        try {
+            return itemService.getItem(itemId);
+        } catch (IncorrectItemIdException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Ошибка поиска вещи! " + e.getMessage());
+        }
     }
 
     @GetMapping

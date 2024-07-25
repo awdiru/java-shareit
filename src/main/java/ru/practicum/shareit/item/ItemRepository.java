@@ -1,48 +1,14 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.item.dto.ItemDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemRepository {
-    /**
-     * Сохранить новую вещь.
-     *
-     * @param itemDto новая вещь
-     * @return новая вещь
-     */
-    ItemDto createItem(ItemDto itemDto);
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    Item findById(long id);
 
-    /**
-     * Редактировать существующую вещь.
-     *
-     * @param itemDto новая вещь
-     * @return отредактированная вещь
-     */
-    ItemDto updateItem(ItemDto itemDto);
+    List<Item> findAllByOwnerId(long ownerId);
 
-    /**
-     * Вернуть вещь по идентификатору.
-     *
-     * @param itemId идентификатор вещи
-     * @return искомая вещь
-     */
-    ItemDto getItem(long itemId);
-
-    /**
-     * Вернуть список всех вещей пользователя.
-     *
-     * @param userId идентификатор пользователя
-     * @return список вещей пользователя
-     */
-    List<ItemDto> getItemsUser(long userId);
-
-    /**
-     * Поиск вещи по фрагменту текста.
-     *
-     * @param text фрагмент текста
-     * @return список искомых вещей
-     */
-    List<ItemDto> searchItems(String text);
-
+    List<Item> findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableIsTrue(String text, String text2);
 }
