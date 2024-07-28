@@ -1,13 +1,17 @@
 package ru.practicum.shareit.booking.model;
 
 import lombok.*;
-import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.converter.BookingStatusConverter;
+import ru.practicum.shareit.booking.enums.BookingStatusEnum;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Шаблон Booking для работы с базой данных
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,22 +21,24 @@ import java.time.LocalDateTime;
 @Table(name = "Bookings")
 public class Booking {
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "start")
+    @Column(name = "start_time")
     private LocalDateTime start;
 
-    @Column(name = "end")
+    @Column(name = "end_time")
     private LocalDateTime end;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "item", nullable = false)
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "booker", nullable = false)
     private User booker;
 
     @Column(name = "status")
-    private Enum<BookingStatus> status;
+    @Convert(converter = BookingStatusConverter.class)
+    private BookingStatusEnum status;
 }

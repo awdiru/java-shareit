@@ -3,8 +3,10 @@ package ru.practicum.shareit.user.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 
+/**
+ * Шаблон User для работы с базой данных
+ */
 @Getter
 @Setter
 @EqualsAndHashCode

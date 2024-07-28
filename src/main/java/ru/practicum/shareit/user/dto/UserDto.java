@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 
+/**
+ * Шаблон User для передачи данных
+ */
 @Getter
 @Setter
 @EqualsAndHashCode

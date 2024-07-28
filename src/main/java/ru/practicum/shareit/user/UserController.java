@@ -2,21 +2,22 @@ package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.exceptions.FailEmailException;
-import ru.practicum.shareit.exceptions.IncorrectEmailException;
+import ru.practicum.shareit.exceptions.IncorrectUserIdException;
+import ru.practicum.shareit.user.annotations.UserControllerExceptionHandler;
+import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * RestController для работы приложения по пути /users
+ */
 @RestController
 @Slf4j
 @RequestMapping("/users")
+@UserControllerExceptionHandler
 public class UserController {
 
     private final UserService userService;
@@ -26,48 +27,61 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Запрос на создание пользователя
+     *
+     * @param userDto информация о новом пользователе
+     * @return созданный пользователь
+     * @throws FailEmailException исключение при попытке
+     *                            создать пользователя  существующим email
+     */
     @PostMapping
-    public UserDto createUser(@RequestBody @Valid final UserDto userDto) {
+    public UserDto createUser(@RequestBody @Valid final UserDto userDto) throws FailEmailException {
 
         log.info("UserController: createUser");
-        try {
-            return userService.createUser(userDto);
-        } catch (FailEmailException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Ошибка редактирования пользователя! " + e.getMessage());
-        }
+        return userService.createUser(userDto);
+
     }
 
+    /**
+     * Обновление данных о пользователе
+     *
+     * @param userId  id пользователя
+     * @param userDto обновленный данные о пользователе
+     * @return обновленный пользователь
+     * @throws IncorrectUserIdException некорректный id пользователя
+     */
     @PatchMapping("/{userId}")
     public UserDto updateUser(@PathVariable final long userId,
-                              @RequestBody @Valid final UserDto userDto) {
+                              @RequestBody @Valid final UserDto userDto)
+            throws IncorrectUserIdException {
 
         log.info("UserController: updateUser");
-        try {
-            return userService.updateUser(userId, userDto);
+        return userService.updateUser(userId, userDto);
 
-        } catch (IncorrectUserIdException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Ошибка редактирования пользователя! " + e.getMessage());
-
-        } catch (IncorrectEmailException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Ошибка создания пользователя! " + e.getMessage());
-        }
     }
 
+    /**
+     * Вернуть данные о пользователе
+     *
+     * @param userId id пользователя
+     * @return запрашиваемые данные
+     * @throws IncorrectUserIdException некорректный id пользователя
+     */
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable final long userId) {
+    public UserDto getUser(@PathVariable final long userId) throws IncorrectUserIdException {
 
         log.info("UserController: getUser");
-        try {
-            return userService.getUser(userId);
-        } catch (IncorrectUserIdException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Ошибка поиска пользователя! " + e.getMessage());
-        }
+        return userService.getUser(userId);
+
     }
 
+    /**
+     * Удаление пользователя
+     *
+     * @param userId id пользователя
+     * @return удаленный пользователь
+     */
     @DeleteMapping("/{userId}")
     public UserDto delUser(@PathVariable final long userId) {
 
@@ -75,10 +89,16 @@ public class UserController {
         return userService.delUser(userId);
     }
 
+    /**
+     * Вернуть список всех пользователей
+     *
+     * @return список всех пользователей
+     */
     @GetMapping
     public List<UserDto> getAllUsers() {
 
         log.info("UserController: getAllUsers");
         return userService.getAllUsers();
     }
+
 }

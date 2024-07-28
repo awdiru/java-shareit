@@ -8,6 +8,9 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
+/**
+ * Шаблон ItemRequest на создание вещи для передачи данных
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,6 +18,6 @@ import java.time.LocalDateTime;
 public class ItemRequestDto {
     private long id;
     private String description;
-    private long requestor;
+    private User requestor;
     private LocalDateTime created;
 }
