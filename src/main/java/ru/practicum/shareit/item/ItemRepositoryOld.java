@@ -4,6 +4,11 @@ import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
 
+/**
+ * Интерфейс репозитория для хранения информации об Item классах
+ * в оперативной памяти
+ * Устаревший, не используется
+ */
 public interface ItemRepositoryOld {
     /**
      * Сохранить новую вещь.

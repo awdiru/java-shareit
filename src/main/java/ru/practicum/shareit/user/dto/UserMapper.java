@@ -1,9 +1,14 @@
 package ru.practicum.shareit.user.dto;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.model.User;
 
+/**
+ * Конвертер User классов
+ */
+@Component
 public class UserMapper {
-    public static UserDto toUserDto(final User user) {
+    public UserDto toUserDto(final User user) {
 
         if (user == null) {
             return null;
@@ -13,7 +18,7 @@ public class UserMapper {
                 user.getEmail());
     }
 
-    public static User toUser(final UserDto userDto) {
+    public User toUser(final UserDto userDto) {
 
         if (userDto == null) {
             return null;

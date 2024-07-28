@@ -6,6 +6,9 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 
+/**
+ * Шаблон Item для работы с базой данных
+ */
 @Getter
 @Setter
 @EqualsAndHashCode

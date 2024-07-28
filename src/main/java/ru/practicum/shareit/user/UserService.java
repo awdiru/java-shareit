@@ -1,12 +1,14 @@
 package ru.practicum.shareit.user;
 
+import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.exceptions.FailEmailException;
-import ru.practicum.shareit.exceptions.IncorrectEmailException;
 
 import java.util.List;
 
+/**
+ * Интерфейс сервиса для UserController
+ */
 public interface UserService {
     /**
      * Создать нового пользователя.
@@ -23,7 +25,7 @@ public interface UserService {
      * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto updateUser(long userId, UserDto userDto) throws IncorrectUserIdException, IncorrectEmailException;
+    UserDto updateUser(long userId, UserDto userDto) throws IncorrectUserIdException;
 
     /**
      * Вернуть пользователя по идентификатору.

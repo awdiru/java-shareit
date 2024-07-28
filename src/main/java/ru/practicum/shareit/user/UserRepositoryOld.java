@@ -1,10 +1,15 @@
 package ru.practicum.shareit.user;
 
+import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.exceptions.IncorrectEmailException;
 
 import java.util.List;
 
+/**
+ * Интерфейс репозитория для хранения информации об User классах
+ * в оперативной памяти
+ * Устаревший, не используется
+ */
 public interface UserRepositoryOld {
     /**
      * Создать нового пользователя.
@@ -12,7 +17,7 @@ public interface UserRepositoryOld {
      * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto createUser(UserDto userDto) throws IncorrectEmailException;
+    UserDto createUser(UserDto userDto) throws FailEmailException;
 
     /**
      * Обновить пользователя.
@@ -20,7 +25,7 @@ public interface UserRepositoryOld {
      * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto updateUser(UserDto userDto) throws IncorrectEmailException;
+    UserDto updateUser(UserDto userDto) throws FailEmailException;
 
     /**
      * Вернуть пользователя по идентификатору.
