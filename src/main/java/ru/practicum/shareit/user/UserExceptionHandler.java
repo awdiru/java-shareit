@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.practicum.shareit.exceptions.DataException;
 import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.exceptions.handler.DefaultExceptionHandler;
@@ -32,5 +33,10 @@ public class UserExceptionHandler {
     public ResponseEntity<Response> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return DefaultExceptionHandler.response(HttpStatus.BAD_REQUEST, "Передано невалидное значение "
                 + e.getFieldError().getField(), path);
+    }
+
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<Response> handleDataException(DataException e) {
+        return DefaultExceptionHandler.response(HttpStatus.CONFLICT, e.getMessage(), path);
     }
 }

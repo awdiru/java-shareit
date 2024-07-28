@@ -118,12 +118,13 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItems(final String text) {
+    public List<ItemDto> searchItems(String text) {
         log.info("ItemServiceImpl: searchItems");
         if (text == null || text.isBlank()) {
             return new ArrayList<>();
         }
-        return reposItem.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableIsTrue(text, text).stream()
+        text = text.toLowerCase();
+        return reposItem.searchByNameOrDescription(text).stream()
                 .map(itemMapper::toItemDtoFromItem)
                 .collect(Collectors.toList());
     }

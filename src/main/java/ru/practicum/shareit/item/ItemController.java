@@ -107,7 +107,7 @@ public class ItemController {
      * @return найденные вещи
      */
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam final String text) {
+    public List<ItemDto> searchItems(@RequestParam String text) {
 
         log.info("ItemController: searchItems");
         return itemService.searchItems(text);

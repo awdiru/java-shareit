@@ -62,4 +62,9 @@ public class BookingExceptionHandler {
     public ResponseEntity<Response> handleFailCreateBookingOwnerItem(FailCreateBookingOwnerItem e) {
         return DefaultExceptionHandler.response(HttpStatus.NOT_FOUND, e.getMessage(), path);
     }
+
+    @ExceptionHandler(IncorrectOwnerIdException.class)
+    public ResponseEntity<Response> handleIncorrectOwnerIdException(IncorrectOwnerIdException e) {
+        return DefaultExceptionHandler.response(HttpStatus.BAD_REQUEST, e.getMessage(), path);
+    }
 }

@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.impliments;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.DataException;
 import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.user.UserRepository;
@@ -30,30 +31,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(final UserDto userDto) throws FailEmailException {
+    public UserDto createUser(final UserDto userDto) throws FailEmailException, DataException {
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
             log.warn("UserServiceImpl: createUser FALSE, fail email");
-            throw new FailEmailException("Ошибка создания пользователя! Email не может быть пустым.");
+            throw new FailEmailException("Email не может быть пустым.");
         }
         log.info("UserServiceImpl: createUser");
-        User user = repos.save(userMapper.toUser(userDto));
-        return userMapper.toUserDto(user);
+        try {
+            User user = repos.save(userMapper.toUser(userDto));
+            return userMapper.toUserDto(user);
+        } catch (Exception e) {
+            throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
+        }
     }
 
     @Override
-    public UserDto updateUser(final long userId, final UserDto userDto) throws IncorrectUserIdException {
+    public UserDto updateUser(final long userId, final UserDto userDto) throws IncorrectUserIdException, DataException {
 
         if (getUser(userId) == null) {
             log.warn("UserServiceImpl: updateUser FALSE, Incorrect user id");
-            throw new IncorrectUserIdException("Ошибка редактирования пользователя! " + "Пользователь с идентификатором " + userDto.getId() + " не найден.");
+            throw new IncorrectUserIdException("Ошибка редактирования пользователя! "
+                    + "Пользователь с идентификатором " + userDto.getId() + " не найден.");
         }
         log.info("UserServiceImpl: updateUser");
         userDto.setId(userId);
         User user = repos.findById(userId);
         if (userDto.getName() != null) user.setName(userDto.getName());
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
-        return userMapper.toUserDto(repos.save(user));
+        try {
+            return userMapper.toUserDto(repos.save(user));
+        } catch (Exception e) {
+            throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
+        }
     }
 
     @Override

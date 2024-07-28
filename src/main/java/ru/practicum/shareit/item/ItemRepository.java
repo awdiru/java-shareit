@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -28,9 +29,13 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     /**
      * Поиск вещи по содержанию в названии или описании текста
      *
-     * @param text  текст для поиска по названию
-     * @param text2 текст для поиска по описанию
+     * @param text текст для поиска по названию
      * @return список найденных вещей
      */
-    List<Item> findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableIsTrue(String text, String text2);
+    @Query("select it " +
+            "from Item as it " +
+            "where it.available = true " +
+            "and (lower(it.name) like %:text% " +
+            "or lower(it.description) like %:text%) ")
+    List<Item> searchByNameOrDescription(String text);
 }

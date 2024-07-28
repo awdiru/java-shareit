@@ -47,14 +47,14 @@ public class BookingServiceImpl implements BookingService {
             throw new IncorrectUserIdException("Некорректный id пользователя");
 
         if (booking.getItem() == null)
-            throw new IncorrectItemIdException
-                    ("Предмет с id " + bookingIncDto.getItemId() + " не найден");
+            throw new IncorrectItemIdException(
+                    "Предмет с id " + bookingIncDto.getItemId() + " не найден");
 
         if (!booking.getItem().getAvailable())
-            throw new ItemAvailableException
-                    ("Предмет с id " + booking.getItem().getId() + " не доступен для бронирования");
+            throw new ItemAvailableException(
+                    "Предмет с id " + booking.getItem().getId() + " не доступен для бронирования");
 
-        if (booking.getEnd().isBefore(booking.getStart()) | booking.getEnd().equals(booking.getStart()))
+        if (booking.getEnd().isBefore(booking.getStart()) || booking.getEnd().equals(booking.getStart()))
             throw new IncorrectBookingTimeException("Время окончания бронирования не может быть раньше или равно " +
                     "времени начала бронирования");
 
@@ -66,6 +66,7 @@ public class BookingServiceImpl implements BookingService {
 
         if (booking.getItem().getOwner().getId().equals(userId))
             throw new FailCreateBookingOwnerItem("Владелец вещи не может ее забронировать");
+
         booking.setBooker(reposUser.findById((long) userId));
         booking.setStatus(BookingStatusEnum.WAITING);
         booking = reposBooking.save(booking);
@@ -73,21 +74,25 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingOutDto approvedBooking(Long userId, Long bookingId, Boolean approved) throws IncorrectUserIdException, FailApprovedBookingException, IncorrectBookingIdException {
+    public BookingOutDto approvedBooking(Long userId, Long bookingId, Boolean approved)
+            throws FailApprovedBookingException, IncorrectBookingIdException, IncorrectOwnerIdException, IncorrectUserIdException {
         Booking booking = reposBooking.findById((long) bookingId);
         if (booking == null)
             throw new IncorrectBookingIdException("Бронирование с id " + bookingId + " не найдено");
 
+        if ((long) userId == booking.getBooker().getId() && approved)
+            throw new IncorrectUserIdException("Бронирование может подтвердить только владелец вещи");
+
         if ((long) userId != booking.getItem().getOwner().getId())
-            throw new IncorrectUserIdException("Подтверждение запроса бронирования может дать только владелец вещи");
+            throw new IncorrectOwnerIdException("Бронирование может подтвердить только владелец вещи");
 
         if (booking.getStatus().equals(BookingStatusEnum.APPROVED) || booking.getStatus().equals(BookingStatusEnum.REJECTED))
             throw new FailApprovedBookingException("Подтверждение бронирования уже произошло. Статус бронирования: " + booking.getStatus());
 
-        else if (booking.getStatus().equals(BookingStatusEnum.CANCELED))
+        if (booking.getStatus().equals(BookingStatusEnum.CANCELED))
             throw new FailApprovedBookingException("Бронирование отменено пользователем");
 
-        else if (approved) {
+        if (approved) {
             booking.setStatus(BookingStatusEnum.APPROVED);
             Item item = booking.getItem();
 
@@ -97,7 +102,10 @@ public class BookingServiceImpl implements BookingService {
 
             reposItem.save(item);
 
-        } else booking.setStatus(BookingStatusEnum.REJECTED);
+        } else if ((long) userId == booking.getBooker().getId())
+            booking.setStatus(BookingStatusEnum.CANCELED);
+
+        else booking.setStatus(BookingStatusEnum.REJECTED);
 
         reposBooking.save(booking);
         return bookingMapper.toBookingOutDtoFromBooking(booking);

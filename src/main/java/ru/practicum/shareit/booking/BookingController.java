@@ -54,19 +54,20 @@ public class BookingController {
     /**
      * Подтверждение бронирования
      *
-     * @param userId    идентификатор пользователя
-     * @param bookingId идентификатор запроса
-     * @param approved  подтверждение
+     * @param userId    id пользователя
+     * @param bookingId id запроса
+     * @param approved  подтверждение/отклонение запроса
      * @return подтвержденный/отклоненный запрос
-     * @throws IncorrectUserIdException     попытка подтвердить запрос не владельцем вещи
      * @throws FailApprovedBookingException запрос уже был подтвержден ранее
      * @throws IncorrectBookingIdException  некорректный id запроса
+     * @throws IncorrectOwnerIdException    некорректный id владельца
+     * @throws IncorrectUserIdException     некорректный id пользователя
      */
     @PatchMapping("/{bookingId}")
     BookingOutDto approvedBooking(@RequestHeader("X-Sharer-User-Id") @NotBlank final long userId,
                                   @PathVariable Long bookingId,
                                   @RequestParam Boolean approved)
-            throws IncorrectUserIdException, FailApprovedBookingException, IncorrectBookingIdException {
+            throws FailApprovedBookingException, IncorrectBookingIdException, IncorrectOwnerIdException, IncorrectUserIdException {
 
         log.info("BookingController : approvedBooking");
 
