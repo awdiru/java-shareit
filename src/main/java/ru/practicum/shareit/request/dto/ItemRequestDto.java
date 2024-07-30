@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
 /**
- * TODO Sprint add-item-requests.
+ * Шаблон ItemRequest на создание вещи для передачи данных
  */
 @Getter
 @Setter
@@ -17,6 +18,6 @@ import java.time.LocalDateTime;
 public class ItemRequestDto {
     private long id;
     private String description;
-    private long requestor;
+    private User requestor;
     private LocalDateTime created;
 }

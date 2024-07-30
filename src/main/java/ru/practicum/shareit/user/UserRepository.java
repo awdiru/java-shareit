@@ -1,47 +1,33 @@
 package ru.practicum.shareit.user;
 
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.exceptions.IncorrectEmailException;
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.practicum.shareit.user.model.User;
 
-import java.util.List;
-
-public interface UserRepository {
+/**
+ * Интерфейс репозитория для работы с таблицей Users
+ */
+public interface UserRepository extends JpaRepository<User, Long> {
     /**
-     * Создать нового пользователя.
+     * Вернуть пользователя по email
      *
-     * @param userDto новый пользователь
-     * @return новый пользователь
-     */
-    UserDto createUser(UserDto userDto) throws IncorrectEmailException;
-
-    /**
-     * Обновить пользователя.
-     *
-     * @param userDto новый пользователь
-     * @return новый пользователь
-     */
-    UserDto updateUser(UserDto userDto) throws IncorrectEmailException;
-
-    /**
-     * Вернуть пользователя по идентификатору.
-     *
-     * @param userId идентификатор пользователя
+     * @param email email пользователя
      * @return искомый пользователь
      */
-    UserDto getUser(long userId);
+    User findByEmail(String email);
 
     /**
-     * Удалить пользователя.
+     * Вернуть пользователя по id
      *
-     * @param userId идентификатор пользователя
+     * @param id id пользователя
+     * @return запрашиваемый пользователь
+     */
+    User findById(long id);
+
+    /**
+     * Удалить пользователя по id
+     *
+     * @param id id удаляемого пользователя
      * @return удаленный пользователь
      */
-    UserDto delUser(long userId);
-
-    /**
-     * Вернут список всех пользователей.
-     *
-     * @return список всех пользователей
-     */
-    List<UserDto> getAllUsers();
+    User deleteById(long id);
 }

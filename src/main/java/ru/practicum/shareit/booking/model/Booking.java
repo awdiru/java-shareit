@@ -1,25 +1,44 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import ru.practicum.shareit.booking.BookingStatus;
+import lombok.*;
+import ru.practicum.shareit.booking.converter.BookingStatusConverter;
+import ru.practicum.shareit.booking.enums.BookingStatusEnum;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * TODO Sprint add-bookings.
+ * Шаблон Booking для работы с базой данных
  */
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
+@Entity
+@Table(name = "Bookings")
 public class Booking {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "start_time")
     private LocalDateTime start;
+
+    @Column(name = "end_time")
     private LocalDateTime end;
-    private long item;
-    private long booker;
-    private Enum<BookingStatus> status;
+
+    @ManyToOne
+    @JoinColumn(name = "item", nullable = false)
+    private Item item;
+
+    @ManyToOne
+    @JoinColumn(name = "booker", nullable = false)
+    private User booker;
+
+    @Column(name = "status")
+    @Convert(converter = BookingStatusConverter.class)
+    private BookingStatusEnum status;
 }

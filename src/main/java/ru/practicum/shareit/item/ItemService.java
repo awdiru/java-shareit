@@ -1,11 +1,15 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.exceptions.IncorrectItemException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
+import ru.practicum.shareit.item.dto.CommentIncDto;
+import ru.practicum.shareit.item.dto.CommentOutDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemWidthBookingsTimeDto;
 
 import java.util.List;
 
+/**
+ * Интерфейс сервиса для ItemController
+ */
 public interface ItemService {
     /**
      * Сохранить новую вещь.
@@ -14,7 +18,7 @@ public interface ItemService {
      * @param userId  идентификатор владельца
      * @return новая вещь
      */
-    ItemDto createItem(ItemDto itemDto, long userId) throws IncorrectUserIdException, IncorrectItemException;
+    ItemDto createItem(ItemDto itemDto, long userId);
 
     /**
      * Редактировать существующую вещь.
@@ -24,7 +28,7 @@ public interface ItemService {
      * @param userId  идентификатор владельца
      * @return отредактированная вещь
      */
-    ItemDto updateItem(long itemId, ItemDto itemDto, long userId) throws IncorrectUserIdException, IncorrectItemException;
+    ItemDto updateItem(long itemId, ItemDto itemDto, long userId);
 
     /**
      * Вернуть вещь по идентификатору.
@@ -32,7 +36,7 @@ public interface ItemService {
      * @param itemId идентификатор вещи
      * @return искомая вещь
      */
-    ItemDto getItem(long itemId);
+    ItemWidthBookingsTimeDto getItem(long itemId, long userId);
 
     /**
      * Вернуть список всех вещей пользователя.
@@ -40,7 +44,7 @@ public interface ItemService {
      * @param userId идентификатор пользователя
      * @return список вещей пользователя
      */
-    List<ItemDto> getItemsUser(long userId);
+    List<ItemWidthBookingsTimeDto> getItemsUser(long userId);
 
     /**
      * Поиск вещи по фрагменту текста.
@@ -49,4 +53,14 @@ public interface ItemService {
      * @return список искомых вещей
      */
     List<ItemDto> searchItems(String text);
+
+    /**
+     * Добавить комментарий к вещи
+     *
+     * @param comment комментарий
+     * @param itemId  id вещи
+     * @param userId  id пользователя
+     * @return добавленный комментарий
+     */
+    CommentOutDto addComment(CommentIncDto comment, long itemId, long userId);
 }

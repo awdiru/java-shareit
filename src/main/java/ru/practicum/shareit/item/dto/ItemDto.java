@@ -4,9 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.user.model.User;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
- * TODO Sprint add-controllers.
+ * Item шаблон для передачи данных
  */
 @Getter
 @Setter
@@ -14,11 +20,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemDto {
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
-    private Long owner;
+    private User owner;
     private Integer numberOfRentals;
+    @NotNull
     private Boolean available;
-    private String request;
+    private ItemRequest request;
+    private List<CommentOutDto> comments;
 }
-

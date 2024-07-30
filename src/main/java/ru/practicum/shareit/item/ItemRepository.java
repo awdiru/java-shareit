@@ -1,48 +1,41 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.item.dto.ItemDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemRepository {
+/**
+ * Интерфейс репозитория для работы с таблицей Items
+ */
+public interface ItemRepository extends JpaRepository<Item, Long> {
     /**
-     * Сохранить новую вещь.
+     * Вернуть вещь по id
      *
-     * @param itemDto новая вещь
-     * @return новая вещь
-     */
-    ItemDto createItem(ItemDto itemDto);
-
-    /**
-     * Редактировать существующую вещь.
-     *
-     * @param itemDto новая вещь
-     * @return отредактированная вещь
-     */
-    ItemDto updateItem(ItemDto itemDto);
-
-    /**
-     * Вернуть вещь по идентификатору.
-     *
-     * @param itemId идентификатор вещи
+     * @param id id вещи
      * @return искомая вещь
      */
-    ItemDto getItem(long itemId);
+    Item findById(long id);
 
     /**
-     * Вернуть список всех вещей пользователя.
+     * Вернуть список вещей пользователя
      *
-     * @param userId идентификатор пользователя
+     * @param ownerId id пользователя
      * @return список вещей пользователя
      */
-    List<ItemDto> getItemsUser(long userId);
+    List<Item> findAllByOwnerId(Long ownerId);
 
     /**
-     * Поиск вещи по фрагменту текста.
+     * Поиск вещи по содержанию в названии или описании текста
      *
-     * @param text фрагмент текста
-     * @return список искомых вещей
+     * @param text текст для поиска по названию
+     * @return список найденных вещей
      */
-    List<ItemDto> searchItems(String text);
-
+    @Query("select it " +
+            "from Item as it " +
+            "where it.available = true " +
+            "and (lower(it.name) like :text " +
+            "or lower(it.description) like :text) ")
+    List<Item> searchByNameOrDescription(String text);
 }
