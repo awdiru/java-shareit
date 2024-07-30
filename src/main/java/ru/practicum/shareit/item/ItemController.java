@@ -22,6 +22,7 @@ import java.util.List;
 @ItemControllerExceptionHandler
 public class ItemController {
     private final ItemService itemService;
+    private final String userIdHeader = "X-Sharer-User-Id";
 
     @Autowired
     public ItemController(final ItemService itemService) {
@@ -37,7 +38,7 @@ public class ItemController {
      */
     @PostMapping
     public ItemDto createItem(@RequestBody @Valid final ItemDto itemDto,
-                              @RequestHeader("X-Sharer-User-Id") @NotBlank final long userId) {
+                              @RequestHeader(userIdHeader) @NotBlank final Long userId) {
 
         log.info("ItemController: createItem");
         return itemService.createItem(itemDto, userId);
@@ -52,9 +53,9 @@ public class ItemController {
      * @return обновленная вещь
      */
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@PathVariable final long itemId,
+    public ItemDto updateItem(@PathVariable final Long itemId,
                               @RequestBody final ItemDto itemDto,
-                              @RequestHeader("X-Sharer-User-Id") final long userId) {
+                              @RequestHeader(userIdHeader) final Long userId) {
 
         log.info("ItemController: updateItem");
         return itemService.updateItem(itemId, itemDto, userId);
@@ -69,8 +70,8 @@ public class ItemController {
      * @return информация о вещи
      */
     @GetMapping("/{itemId}")
-    public ItemWidthBookingsTimeDto getItem(@RequestHeader("X-Sharer-User-Id") final long userId,
-                                            @PathVariable final long itemId) {
+    public ItemWidthBookingsTimeDto getItem(@RequestHeader(userIdHeader) final Long userId,
+                                            @PathVariable final Long itemId) {
 
         log.info("ItemController: getItem");
         return itemService.getItem(itemId, userId);
@@ -84,7 +85,7 @@ public class ItemController {
      * @return список вещей пользователя
      */
     @GetMapping
-    public List<ItemWidthBookingsTimeDto> getItemsUser(@RequestHeader("X-Sharer-User-Id") final long userId) {
+    public List<ItemWidthBookingsTimeDto> getItemsUser(@RequestHeader(userIdHeader) final Long userId) {
 
         log.info("ItemController: getItemsUser");
         return itemService.getItemsUser(userId);
@@ -112,9 +113,9 @@ public class ItemController {
      * @return добавленный комментарий
      */
     @PostMapping("/{itemId}/comment")
-    public CommentOutDto addComment(@RequestHeader("X-Sharer-User-Id") final long userId,
+    public CommentOutDto addComment(@RequestHeader(userIdHeader) final Long userId,
                                     @RequestBody @Valid final CommentIncDto comment,
-                                    @PathVariable final long itemId) {
+                                    @PathVariable final Long itemId) {
 
         log.info("ItemController: addComment");
         return itemService.addComment(comment, itemId, userId);

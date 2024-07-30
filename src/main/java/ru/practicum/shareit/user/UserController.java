@@ -45,7 +45,7 @@ public class UserController {
      * @return обновленный пользователь
      */
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable final long userId,
+    public UserDto updateUser(@PathVariable final Long userId,
                               @RequestBody @Valid final UserDto userDto) {
 
         log.info("UserController: updateUser");
@@ -60,7 +60,7 @@ public class UserController {
      * @return запрашиваемые данные
      */
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable final long userId) {
+    public UserDto getUser(@PathVariable final Long userId) {
 
         log.info("UserController: getUser");
         return userService.getUser(userId);
@@ -74,7 +74,7 @@ public class UserController {
      * @return удаленный пользователь
      */
     @DeleteMapping("/{userId}")
-    public UserDto delUser(@PathVariable final long userId) {
+    public UserDto delUser(@PathVariable final Long userId) {
 
         log.info("UserController: delUser");
         return userService.delUser(userId);

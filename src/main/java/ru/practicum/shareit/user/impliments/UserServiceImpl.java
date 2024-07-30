@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.impliments;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.DataException;
 import ru.practicum.shareit.exceptions.FailEmailException;
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
         try {
             User user = repos.save(userMapper.toUser(userDto));
             return userMapper.toUserDto(user);
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             log.warn("UserServiceImpl: createUser FALSE, DataException");
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
         }
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
         try {
             return userMapper.toUserDto(repos.save(user));
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             log.warn("UserServiceImpl: updateUser FALSE, DataException");
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
         }
