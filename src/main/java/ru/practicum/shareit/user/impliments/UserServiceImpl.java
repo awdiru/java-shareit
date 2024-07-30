@@ -25,16 +25,18 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(final UserRepository repos, UserMapper userMapper) {
+    public UserServiceImpl(final UserRepository repos,
+                           final UserMapper userMapper) {
         this.repos = repos;
         this.userMapper = userMapper;
     }
 
     @Override
-    public UserDto createUser(final UserDto userDto) throws FailEmailException, DataException {
+    public UserDto createUser(final UserDto userDto)
+            throws FailEmailException, DataException {
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
-            log.warn("UserServiceImpl: createUser FALSE, fail email");
+            log.warn("UserServiceImpl: createUser FALSE, FailEmailException");
             throw new FailEmailException("Email не может быть пустым.");
         }
         log.info("UserServiceImpl: createUser");
@@ -42,15 +44,17 @@ public class UserServiceImpl implements UserService {
             User user = repos.save(userMapper.toUser(userDto));
             return userMapper.toUserDto(user);
         } catch (Exception e) {
+            log.warn("UserServiceImpl: createUser FALSE, DataException");
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
         }
     }
 
     @Override
-    public UserDto updateUser(final long userId, final UserDto userDto) throws IncorrectUserIdException, DataException {
+    public UserDto updateUser(final long userId, final UserDto userDto)
+            throws IncorrectUserIdException, DataException {
 
         if (getUser(userId) == null) {
-            log.warn("UserServiceImpl: updateUser FALSE, Incorrect user id");
+            log.warn("UserServiceImpl: updateUser FALSE, IncorrectUserIdException");
             throw new IncorrectUserIdException("Ошибка редактирования пользователя! "
                     + "Пользователь с идентификатором " + userDto.getId() + " не найден.");
         }
@@ -62,16 +66,23 @@ public class UserServiceImpl implements UserService {
         try {
             return userMapper.toUserDto(repos.save(user));
         } catch (Exception e) {
+            log.warn("UserServiceImpl: updateUser FALSE, DataException");
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
         }
     }
 
     @Override
-    public UserDto getUser(final long userId) throws IncorrectUserIdException {
-        log.info("UserServiceImpl: getUser");
+    public UserDto getUser(final long userId)
+            throws IncorrectUserIdException {
+
         UserDto userDto = userMapper.toUserDto(repos.findById(userId));
-        if (userDto != null) return userDto;
-        else throw new IncorrectUserIdException("Пользователь с идентификатором " + userId + " не найден.");
+        if (userDto != null) {
+            log.info("UserServiceImpl: getUser");
+            return userDto;
+        } else {
+            log.warn("UserServiceImpl: getUser FALSE, IncorrectUserIdException");
+            throw new IncorrectUserIdException("Пользователь с идентификатором " + userId + " не найден.");
+        }
     }
 
     @Override
@@ -83,6 +94,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAllUsers() {
         log.info("UserServiceImpl: getAllUsers");
-        return repos.findAll().stream().map(userMapper::toUserDto).collect(Collectors.toList());
+        return repos.findAll()
+                .stream()
+                .map(userMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 }

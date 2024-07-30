@@ -31,4 +31,3 @@ public class ItemDto {
     private ItemRequest request;
     private List<CommentOutDto> comments;
 }
-

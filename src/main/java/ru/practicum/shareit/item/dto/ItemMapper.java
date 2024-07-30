@@ -7,7 +7,6 @@ import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.model.Item;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,10 +77,8 @@ public class ItemMapper {
                 item.getNumberOfRentals(),
                 item.getAvailable(),
                 item.getRequest(),
-                bookingMapper.toBookingWithItemsDtoFromBooking(
-                        reposBooking.findLastBooking(item.getId(), LocalDateTime.now())),
-                bookingMapper.toBookingWithItemsDtoFromBooking(
-                        reposBooking.findNextBooking(item.getId(), LocalDateTime.now())),
+                null,
+                null,
                 comments);
     }
 }

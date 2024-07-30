@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.annotations.BookingControllerExceptionHandler;
 import ru.practicum.shareit.booking.dto.model.BookingIncDto;
 import ru.practicum.shareit.booking.dto.model.BookingOutDto;
-import ru.practicum.shareit.booking.enums.BookingStateEnum;
-import ru.practicum.shareit.exceptions.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -34,17 +32,10 @@ public class BookingController {
      * @param bookingIncDto входящий Booking
      * @param userId        id пользователя
      * @return созданный запрос на бронирование
-     * @throws IncorrectUserIdException      некорректный id пользователя, пользователь не найден
-     * @throws IncorrectItemIdException      некорректный id вещи, вещь не найдена
-     * @throws ItemAvailableException        вещь не доступна для бронирования
-     * @throws IncorrectBookingTimeException некорректные временный рамки запроса
-     * @throws FailCreateBookingOwnerItem    попытка создания запроса владельцем вещи
      */
     @PostMapping
     BookingOutDto createBooking(@RequestBody @Valid BookingIncDto bookingIncDto,
-                                @RequestHeader("X-Sharer-User-Id") @NotBlank final long userId)
-            throws IncorrectUserIdException, IncorrectItemIdException,
-            ItemAvailableException, IncorrectBookingTimeException, FailCreateBookingOwnerItem {
+                                @RequestHeader("X-Sharer-User-Id") @NotBlank final long userId) {
 
         log.info("BookingController : createBooking");
         return bookingService.createBooking(bookingIncDto, userId);
@@ -58,19 +49,13 @@ public class BookingController {
      * @param bookingId id запроса
      * @param approved  подтверждение/отклонение запроса
      * @return подтвержденный/отклоненный запрос
-     * @throws FailApprovedBookingException запрос уже был подтвержден ранее
-     * @throws IncorrectBookingIdException  некорректный id запроса
-     * @throws IncorrectOwnerIdException    некорректный id владельца
-     * @throws IncorrectUserIdException     некорректный id пользователя
      */
     @PatchMapping("/{bookingId}")
     BookingOutDto approvedBooking(@RequestHeader("X-Sharer-User-Id") @NotBlank final long userId,
                                   @PathVariable Long bookingId,
-                                  @RequestParam Boolean approved)
-            throws FailApprovedBookingException, IncorrectBookingIdException, IncorrectOwnerIdException, IncorrectUserIdException {
+                                  @RequestParam Boolean approved) {
 
         log.info("BookingController : approvedBooking");
-
         return bookingService.approvedBooking(userId, bookingId, approved);
     }
 
@@ -80,16 +65,13 @@ public class BookingController {
      * @param userId    id пользователя
      * @param bookingId id запроса
      * @return запрос на бронирование
-     * @throws IncorrectUserIdException    некорректный id пользователя
-     * @throws IncorrectBookingIdException некорректный id запроса
      */
     @GetMapping("/{bookingId}")
     BookingOutDto getBooking(@RequestHeader("X-Sharer-User-Id") @NotBlank final long userId,
-                             @PathVariable Long bookingId)
-            throws IncorrectUserIdException, IncorrectBookingIdException {
+                             @PathVariable Long bookingId) {
+
         log.info("BookingController : getBookingStatus");
         return bookingService.getBooking(userId, bookingId);
-
     }
 
     /**
@@ -98,25 +80,13 @@ public class BookingController {
      * @param userId id пользователя
      * @param state  необязательный параметр, модификатор запроса
      * @return список запросов на бронирование
-     * @throws UnsupportedStatusException некорректный модификатор запроса
-     * @throws IncorrectUserIdException   некорректный id пользователя
      */
     @GetMapping
     List<BookingOutDto> getAllBookingsUser(@RequestHeader("X-Sharer-User-Id") @NotBlank final long userId,
-                                           @RequestParam(required = false) String state)
-            throws UnsupportedStatusException, IncorrectUserIdException {
-        log.info("BookingController : getAllBookingUser");
+                                           @RequestParam(defaultValue = "ALL") String state) {
 
-        try {
-            BookingStateEnum stateEnum;
-            if (state == null)
-                stateEnum = BookingStateEnum.ALL;
-            else
-                stateEnum = Enum.valueOf(BookingStateEnum.class, state);
-            return bookingService.getAllBookingsUser(userId, stateEnum);
-        } catch (IllegalArgumentException e) {
-            throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
-        }
+        log.info("BookingController : getAllBookingUser");
+        return bookingService.getAllBookingsUser(userId, state);
     }
 
     /**
@@ -125,22 +95,12 @@ public class BookingController {
      * @param userId идентификатор пользователя
      * @param state  необязательный параметр, модификатор запроса
      * @return список запросов на бронирование данной вещи
-     * @throws IncorrectUserIdException   некорректный id пользователя
-     * @throws UnsupportedStatusException некорректный модификатор запроса
      */
     @GetMapping("/owner")
     List<BookingOutDto> getAllBookingsItemsUser(@RequestHeader("X-Sharer-User-Id") @NotBlank final long userId,
-                                                @RequestParam(required = false) String state)
-            throws IncorrectUserIdException, UnsupportedStatusException {
-        try {
-            BookingStateEnum stateEnum;
-            if (state == null)
-                stateEnum = BookingStateEnum.ALL;
-            else
-                stateEnum = Enum.valueOf(BookingStateEnum.class, state);
-            return bookingService.getAllBookingsItemUser(userId, stateEnum);
-        } catch (IllegalArgumentException e) {
-            throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
-        }
+                                                @RequestParam(defaultValue = "ALL") String state) {
+
+        log.info("BookingController : getAllBookingsItemsUser");
+        return bookingService.getAllBookingsItemsUser(userId, state);
     }
 }

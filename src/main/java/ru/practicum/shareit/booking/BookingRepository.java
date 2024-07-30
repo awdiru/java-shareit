@@ -78,7 +78,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByBookerForStatusFuture(long userId, LocalDateTime now);
 
     /**
-     * Получение списка брони для статуса WAITING и REJECTED (ожидающие подтверждения и отклонённые)
+     * Получение списка брони для статуса WAITING или REJECTED (ожидающие подтверждения и отклонённые)
      *
      * @param userId идентификатор пользователя
      * @param status статус WAITING или REJECTED
@@ -90,7 +90,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where u.id = :userId " +
             "and b.status = :status " +
             "order by b.start desc")
-    List<Booking> findAllByBookerForStatusWaitingAndRejected(long userId, BookingStatusEnum status);
+    List<Booking> findAllByBookerForStatusWaitingOrRejected(long userId, BookingStatusEnum status);
 
     /**
      * Посмотреть все запросы на бронирования владельцу вещей

@@ -3,9 +3,6 @@ package ru.practicum.shareit.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exceptions.DataException;
-import ru.practicum.shareit.exceptions.FailEmailException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.user.annotations.UserControllerExceptionHandler;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -33,12 +30,9 @@ public class UserController {
      *
      * @param userDto информация о новом пользователе
      * @return созданный пользователь
-     * @throws FailEmailException исключение при попытке
-     *                            создать пользователя пустым email
-     * @throws DataException      Ошибка базы данных, при попытке создать пользователя с существующим email
      */
     @PostMapping
-    public UserDto createUser(@RequestBody @Valid final UserDto userDto) throws FailEmailException, DataException {
+    public UserDto createUser(@RequestBody @Valid final UserDto userDto) {
         log.info("UserController: createUser");
         return userService.createUser(userDto);
     }
@@ -49,13 +43,10 @@ public class UserController {
      * @param userId  id пользователя
      * @param userDto обновленный данные о пользователе
      * @return обновленный пользователь
-     * @throws IncorrectUserIdException некорректный id пользователя
-     * @throws DataException            Ошибка базы данных, при попытке обновить email пользователя на уже существующий
      */
     @PatchMapping("/{userId}")
     public UserDto updateUser(@PathVariable final long userId,
-                              @RequestBody @Valid final UserDto userDto)
-            throws IncorrectUserIdException, DataException {
+                              @RequestBody @Valid final UserDto userDto) {
 
         log.info("UserController: updateUser");
         return userService.updateUser(userId, userDto);
@@ -67,10 +58,9 @@ public class UserController {
      *
      * @param userId id пользователя
      * @return запрашиваемые данные
-     * @throws IncorrectUserIdException некорректный id пользователя
      */
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable final long userId) throws IncorrectUserIdException {
+    public UserDto getUser(@PathVariable final long userId) {
 
         log.info("UserController: getUser");
         return userService.getUser(userId);

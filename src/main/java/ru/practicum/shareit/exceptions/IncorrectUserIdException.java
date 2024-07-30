@@ -1,9 +1,9 @@
 package ru.practicum.shareit.exceptions;
 
 /**
- * Исключение при попытке пользователя с несуществующим id
+ * Исключение при попытке запросить пользователя с несуществующим id
  */
-public class IncorrectUserIdException extends Exception {
+public class IncorrectUserIdException extends RuntimeException {
     public IncorrectUserIdException(final String message) {
         super(message);
     }

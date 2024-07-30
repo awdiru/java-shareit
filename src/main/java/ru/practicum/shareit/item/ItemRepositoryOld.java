@@ -49,5 +49,4 @@ public interface ItemRepositoryOld {
      * @return список искомых вещей
      */
     List<ItemDto> searchItems(String text);
-
 }
