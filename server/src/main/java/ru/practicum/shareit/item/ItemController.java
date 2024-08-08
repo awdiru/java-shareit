@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.annotations.ItemControllerExceptionHandler;
-import ru.practicum.shareit.item.dto.CommentIncDto;
-import ru.practicum.shareit.item.dto.CommentOutDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.item.dto.model.*;
 
 import java.util.List;
 
@@ -35,8 +32,8 @@ public class ItemController {
      * @return созданная вещь
      */
     @PostMapping
-    public ItemDto createItem(@RequestBody final ItemDto itemDto,
-                              @RequestHeader(USER_ID_HEAD) final Long userId) {
+    public ItemOutDto createItem(@RequestBody final ItemIncDto itemDto,
+                                 @RequestHeader(USER_ID_HEAD) final Long userId) {
 
         log.info("ItemController: createItem");
         return itemService.createItem(itemDto, userId);
@@ -51,9 +48,9 @@ public class ItemController {
      * @return обновленная вещь
      */
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@PathVariable final Long itemId,
-                              @RequestBody final ItemDto itemDto,
-                              @RequestHeader(USER_ID_HEAD) final Long userId) {
+    public ItemOutDto updateItem(@PathVariable final Long itemId,
+                                 @RequestBody final ItemIncDto itemDto,
+                                 @RequestHeader(USER_ID_HEAD) final Long userId) {
 
         log.info("ItemController: updateItem");
         return itemService.updateItem(itemId, itemDto, userId);
@@ -82,8 +79,8 @@ public class ItemController {
      */
     @GetMapping
     public List<ItemWidthBookingsTimeDto> getItemsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
-                                                       @RequestParam Integer from,
-                                                       @RequestParam Integer size) {
+                                                       @RequestParam final Integer from,
+                                                       @RequestParam final Integer size) {
 
         log.info("ItemController: getItemsUser");
         return itemService.getItemsUser(userId, from, size);
@@ -96,7 +93,7 @@ public class ItemController {
      * @return найденные вещи
      */
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam String text) {
+    public List<ItemOutDto> searchItems(@RequestParam final String text) {
 
         log.info("ItemController: searchItems");
         return itemService.searchItems(text);

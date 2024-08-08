@@ -9,8 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemIncDto;
 
+/**
+ * RestController для работы приложения по пути /items
+ */
 @Controller
 @RequestMapping(path = "/items")
 @RequiredArgsConstructor
@@ -27,7 +30,7 @@ public class ItemController {
      * @return ответ сервера
      */
     @PostMapping
-    public ResponseEntity<Object> createItem(@RequestBody @Valid final ItemDto itemDto,
+    public ResponseEntity<Object> createItem(@RequestBody @Valid final ItemIncDto itemDto,
                                              @RequestHeader(USER_ID_HEAD) final Long userId) {
 
         log.info("Create Item; userId={} ", userId);
@@ -44,7 +47,7 @@ public class ItemController {
      */
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@PathVariable final Long itemId,
-                                             @RequestBody final ItemDto itemDto,
+                                             @RequestBody final ItemIncDto itemDto,
                                              @RequestHeader(USER_ID_HEAD) final Long userId) {
 
         log.info("Patch Item; userId={}, itemId={} ", userId, itemId);
@@ -74,8 +77,8 @@ public class ItemController {
      */
     @GetMapping
     public ResponseEntity<Object> getItemsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
-                                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
+                                               @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
         log.info("Get Items; userId={}, from={}, size={}", userId, from, size);
         return client.getItemsUser(userId, from, size);
@@ -88,7 +91,7 @@ public class ItemController {
      * @return ответ сервера
      */
     @GetMapping("/search")
-    public ResponseEntity<Object> searchItems(@RequestParam String text) {
+    public ResponseEntity<Object> searchItems(@RequestParam final String text) {
 
         log.info("Get Items; text={}", text);
         return client.searchItems(text);

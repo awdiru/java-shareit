@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 
+/**
+ * RestController для работы приложения по пути /users
+ */
 @Controller
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor

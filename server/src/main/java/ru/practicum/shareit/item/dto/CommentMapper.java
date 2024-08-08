@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.dto;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.item.dto.model.CommentIncDto;
+import ru.practicum.shareit.item.dto.model.CommentOutDto;
 import ru.practicum.shareit.item.model.Comment;
 
 /**

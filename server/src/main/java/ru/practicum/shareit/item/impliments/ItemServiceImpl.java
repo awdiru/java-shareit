@@ -15,16 +15,17 @@ import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.ItemService;
-import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.dto.CommentMapper;
+import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.model.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.RequestRepository;
 import ru.practicum.shareit.user.UserRepository;
-import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Реализация сервиса для ItemController
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 class ItemServiceImpl implements ItemService {
+    private final RequestRepository reposRequest;
     private final ItemRepository reposItem;
     private final UserRepository reposUser;
     private final CommentRepository reposComment;
@@ -41,13 +43,15 @@ class ItemServiceImpl implements ItemService {
     private final BookingMapper bookingMapper;
 
     @Autowired
-    public ItemServiceImpl(final ItemRepository reposItem,
+    public ItemServiceImpl(final RequestRepository reposRequest,
+                           final ItemRepository reposItem,
                            final UserRepository reposUser,
                            final CommentRepository reposComment,
                            final BookingRepository reposBooking,
                            final ItemMapper itemMapper,
                            final CommentMapper commentMapper,
                            final BookingMapper bookingMapper) {
+        this.reposRequest = reposRequest;
         this.reposItem = reposItem;
         this.reposUser = reposUser;
         this.reposComment = reposComment;
@@ -58,16 +62,24 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto createItem(final ItemDto itemDto, final Long userId) {
-        itemDto.setOwner(reposUser.findById(userId)
+    public ItemOutDto createItem(final ItemIncDto itemDto,
+                                 final Long userId) {
+
+        Item item = itemMapper.toItemFromItemIncDto(itemDto);
+
+        item.setOwner(reposUser.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден.")));
 
-        Item item = itemMapper.toItemFromItemDto(itemDto);
+        if (itemDto.getRequestId() != null)
+            item.setRequest(reposRequest.findById(itemDto.getRequestId()).get());
+
         return itemMapper.toItemDtoFromItem(reposItem.save(item));
     }
 
     @Override
-    public ItemDto updateItem(final Long itemId, ItemDto itemDto, final Long userId) {
+    public ItemOutDto updateItem(final Long itemId,
+                                 final ItemIncDto itemDto,
+                                 final Long userId) {
 
         Item item = reposItem.findById(itemId)
                 .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена."));
@@ -79,11 +91,9 @@ class ItemServiceImpl implements ItemService {
 
         if (itemDto.getDescription() != null) item.setDescription(itemDto.getDescription());
 
-        if (itemDto.getNumberOfRentals() != null) item.setNumberOfRentals(itemDto.getNumberOfRentals());
-
         if (itemDto.getAvailable() != null) item.setAvailable(itemDto.getAvailable());
 
-        ItemDto itemOutDto = itemMapper.toItemDtoFromItem(reposItem.save(item));
+        ItemOutDto itemOutDto = itemMapper.toItemDtoFromItem(reposItem.save(item));
         itemOutDto.setComments(
                 reposComment.findAllByItem(itemId)
                         .stream()
@@ -94,9 +104,11 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemWidthBookingsTimeDto getItem(final Long itemId, Long userId) {
+    public ItemWidthBookingsTimeDto getItem(final Long itemId,
+                                            final Long userId) {
+
         Item item = reposItem.findById(itemId)
-                .orElseThrow(()->new IncorrectItemIdException("Вещь с id " + itemId + " не найдена"));
+                .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена"));
 
         ItemWidthBookingsTimeDto itemWidthBookingsTimeDto = itemMapper.toItemWidthBookingsTimeDtoFromItem(item);
 
@@ -110,20 +122,26 @@ class ItemServiceImpl implements ItemService {
         if (!item.getOwner().getId().equals(userId))
             return itemWidthBookingsTimeDto;
 
+        Pageable paging = PageRequest.of(0, 1);
+
         itemWidthBookingsTimeDto.setLastBooking(
                 bookingMapper.toBookingWithItemsDtoFromBooking(
-                        reposBooking.findLastBooking(item.getId(), LocalDateTime.now())));
+                        reposBooking.findLastBooking(item.getId(), LocalDateTime.now(), paging)
+                                .toList().getFirst()));
 
         itemWidthBookingsTimeDto.setNextBooking(
                 bookingMapper.toBookingWithItemsDtoFromBooking(
-                        reposBooking.findNextBooking(item.getId(), LocalDateTime.now())));
+                        reposBooking.findNextBooking(item.getId(), LocalDateTime.now(), paging)
+                                .toList().getFirst()));
 
 
         return itemWidthBookingsTimeDto;
     }
 
     @Override
-    public List<ItemWidthBookingsTimeDto> getItemsUser(final Long userId, Integer from, Integer size) {
+    public List<ItemWidthBookingsTimeDto> getItemsUser(final Long userId,
+                                                       final Integer from,
+                                                       final Integer size) {
         Pageable paging = PageRequest.of(from, size);
         return reposItem.findAllByOwnerId(userId, paging)
                 .stream()
@@ -135,41 +153,46 @@ class ItemServiceImpl implements ItemService {
                                         .map(commentMapper::toCommentOutDtoFromComment)
                                         .toList()
                         ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
-    public List<ItemDto> searchItems(String text) {
+    public List<ItemOutDto> searchItems(final String text) {
+
         if (text == null || text.isBlank())
             return new ArrayList<>();
 
         return reposItem.searchByNameOrDescription("%" + text.toLowerCase() + "%")
                 .stream()
                 .map(itemMapper::toItemDtoFromItem)
-                .peek(itemDto -> itemDto.setComments(
-                        reposComment.findAllByItem(itemDto.getId())
-                                .stream()
-                                .map(commentMapper::toCommentOutDtoFromComment)
-                                .toList()
-                ))
-                .collect(Collectors.toList());
+                .peek(itemDto ->
+                        itemDto.setComments(
+                                reposComment.findAllByItem(itemDto.getId())
+                                        .stream()
+                                        .map(commentMapper::toCommentOutDtoFromComment)
+                                        .toList()
+                        ))
+                .toList();
     }
 
     @Override
-    public CommentOutDto addComment(CommentIncDto commentIncDto, Long itemId, Long userId) {
+    public CommentOutDto addComment(final CommentIncDto commentIncDto,
+                                    final Long itemId,
+                                    final Long userId) {
 
-        Booking booking = reposBooking.searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now());
+        Booking booking = reposBooking
+                .searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), PageRequest.of(0, 1))
+                .toList()
+                .getFirst();
 
         if (booking == null || !booking.getStatus().equals(BookingStatusEnum.APPROVED))
             throw new IncorrectCommentatorException(
                     "Комментарии могут оставлять только те пользователи, которые брали вещь в аренду");
 
-        log.info("ItemServiceImpl: addComment");
-
         Comment comment = commentMapper.toCommentFromCommentIncDto(commentIncDto);
 
         comment.setAuthor(reposUser.findById(userId)
-                .orElseThrow(() -> new IncorrectUserIdException("Редактировать вещь может только ее владелец.")));
+                .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден")));
 
         comment.setItem(reposItem.findById(itemId)
                 .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена.")));

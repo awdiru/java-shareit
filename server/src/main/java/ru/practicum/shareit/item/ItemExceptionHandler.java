@@ -9,7 +9,7 @@ import ru.practicum.shareit.exceptions.IncorrectCommentatorException;
 import ru.practicum.shareit.exceptions.IncorrectItemIdException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.exceptions.handler.DefaultExceptionHandler;
-import ru.practicum.shareit.exceptions.handler.Response;
+import ru.practicum.shareit.exceptions.handler.ErrorResponse;
 import ru.practicum.shareit.item.annotations.ItemControllerExceptionHandler;
 
 /**
@@ -20,23 +20,23 @@ public class ItemExceptionHandler {
     private final String path = "/items";
 
     @ExceptionHandler(IncorrectItemIdException.class)
-    public ResponseEntity<Response> handleIncorrectItemIdException(IncorrectItemIdException e) {
+    public ResponseEntity<ErrorResponse> handleIncorrectItemIdException(IncorrectItemIdException e) {
         return DefaultExceptionHandler.response(HttpStatus.NOT_FOUND, e.getMessage(), path);
     }
 
     @ExceptionHandler(IncorrectUserIdException.class)
-    public ResponseEntity<Response> handleIncorrectUserIdException(IncorrectUserIdException e) {
+    public ResponseEntity<ErrorResponse> handleIncorrectUserIdException(IncorrectUserIdException e) {
         return DefaultExceptionHandler.response(HttpStatus.NOT_FOUND, e.getMessage(), path);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Response> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return DefaultExceptionHandler.response(HttpStatus.BAD_REQUEST, "Передано невалидное значение "
                 + e.getFieldError().getField(), path);
     }
 
     @ExceptionHandler(IncorrectCommentatorException.class)
-    public ResponseEntity<Response> handleIncorrectCommentatorException(IncorrectCommentatorException e) {
+    public ResponseEntity<ErrorResponse> handleIncorrectCommentatorException(IncorrectCommentatorException e) {
         return DefaultExceptionHandler.response(HttpStatus.BAD_REQUEST, e.getMessage(), path);
     }
 }

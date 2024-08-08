@@ -14,7 +14,6 @@ CREATE TABLE public.users (
 
 CREATE TABLE public.item_requests (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
-	"name" varchar NOT NULL,
 	description varchar NULL,
 	requestor int4 NOT NULL,
 	created timestamp NULL,

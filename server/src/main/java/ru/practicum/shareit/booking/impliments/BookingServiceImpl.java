@@ -20,7 +20,6 @@ import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -126,30 +125,23 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingOutDto> getAllBookingsUser(Long userId, String state, Integer from, Integer size) {
         Pageable paging = PageRequest.of(from, size);
 
-        BookingStateEnum stateEnum = BookingStateEnum.from(state)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
+        BookingStateEnum stateEnum = BookingStateEnum.from(state).get();
         reposUser.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
 
         Stream<Booking> stream = switch (stateEnum) {
             case CURRENT -> reposBooking
-                    .findAllByBookerForStatusCurrent(userId, LocalDateTime.now(), paging)
-                    .stream();
+                    .findAllByBookerForStatusCurrent(userId, LocalDateTime.now(), paging).stream();
             case PAST -> reposBooking
-                    .findAllByBookerForStatusPast(userId, LocalDateTime.now(), paging)
-                    .stream();
+                    .findAllByBookerForStatusPast(userId, LocalDateTime.now(), paging).stream();
             case FUTURE -> reposBooking
-                    .findAllByBookerForStatusFuture(userId, LocalDateTime.now(), paging)
-                    .stream();
+                    .findAllByBookerForStatusFuture(userId, LocalDateTime.now(), paging).stream();
             case WAITING -> reposBooking
-                    .findAllByBookerForStatusWaitingOrRejected(userId, BookingStatusEnum.WAITING, paging)
-                    .stream();
+                    .findAllByBookerForStatusWaitingOrRejected(userId, BookingStatusEnum.WAITING, paging).stream();
             case REJECTED -> reposBooking
-                    .findAllByBookerForStatusWaitingOrRejected(userId, BookingStatusEnum.REJECTED, paging)
-                    .stream();
+                    .findAllByBookerForStatusWaitingOrRejected(userId, BookingStatusEnum.REJECTED, paging).stream();
             default -> reposBooking
-                    .findAllByBooker(userId, paging)
-                    .stream();
+                    .findAllByBooker(userId, paging).stream();
         };
         return stream
                 .map(bookingMapper::toBookingOutDtoFromBooking)
@@ -160,30 +152,23 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingOutDto> getAllBookingsItemsUser(Long userId, String state, Integer from, Integer size) {
         Pageable paging = PageRequest.of(from, size);
 
-        BookingStateEnum stateEnum = BookingStateEnum.from(state)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
+        BookingStateEnum stateEnum = BookingStateEnum.from(state).get();
         reposUser.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
 
         Stream<Booking> stream = switch (stateEnum) {
             case CURRENT -> reposBooking
-                    .findAllBookingsItemsUserForStatusCurrent(userId, LocalDateTime.now(), paging)
-                    .stream();
+                    .findAllBookingsItemsUserForStatusCurrent(userId, LocalDateTime.now(), paging).stream();
             case PAST -> reposBooking
-                    .findAllBookingsItemsUserForStatusPast(userId, LocalDateTime.now(), paging)
-                    .stream();
+                    .findAllBookingsItemsUserForStatusPast(userId, LocalDateTime.now(), paging).stream();
             case FUTURE -> reposBooking
-                    .findAllBookingsItemsUserForStatusFuture(userId, LocalDateTime.now(), paging)
-                    .stream();
+                    .findAllBookingsItemsUserForStatusFuture(userId, LocalDateTime.now(), paging).stream();
             case WAITING -> reposBooking
-                    .findAllBookingsItemsUserForStatusWaitingOrRejected(userId, BookingStatusEnum.WAITING, paging)
-                    .stream();
+                    .findAllBookingsItemsUserForStatusWaitingOrRejected(userId, BookingStatusEnum.WAITING, paging).stream();
             case REJECTED -> reposBooking
-                    .findAllBookingsItemsUserForStatusWaitingOrRejected(userId, BookingStatusEnum.REJECTED, paging)
-                    .stream();
+                    .findAllBookingsItemsUserForStatusWaitingOrRejected(userId, BookingStatusEnum.REJECTED, paging).stream();
             default -> reposBooking
-                    .findAllBookingsItemsUser(userId, paging)
-                    .stream();
+                    .findAllBookingsItemsUser(userId, paging).stream();
         };
         return stream
                 .map(bookingMapper::toBookingOutDtoFromBooking)

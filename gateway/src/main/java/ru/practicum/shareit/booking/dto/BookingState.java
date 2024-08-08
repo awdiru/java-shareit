@@ -2,20 +2,41 @@ package ru.practicum.shareit.booking.dto;
 
 import java.util.Optional;
 
+/**
+ * Модификатор запросов
+ */
 public enum BookingState {
-    // Все
+    /**
+     * Все
+     */
     ALL,
-    // Текущие
+    /**
+     * Текущие
+     */
     CURRENT,
-    // Будущие
+    /**
+     * Будущие
+     */
     FUTURE,
-    // Завершенные
+    /**
+     * Завершенные
+     */
     PAST,
-    // Отклоненные
+    /**
+     * Отклоненные
+     */
     REJECTED,
-    // Ожидающие подтверждения
+    /**
+     * Ожидающие подтверждения
+     */
     WAITING;
 
+    /**
+     * Преобразование из строки в статус
+     *
+     * @param stringState строка
+     * @return статус
+     */
     public static Optional<BookingState> from(String stringState) {
         for (BookingState state : values()) {
             if (state.name().equalsIgnoreCase(stringState)) {

@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +34,7 @@ public class BookingController {
      * @return созданный запрос на бронирование
      */
     @PostMapping
-    public BookingOutDto createBooking(@RequestBody @Valid BookingIncDto bookingIncDto,
+    public BookingOutDto createBooking(@RequestBody BookingIncDto bookingIncDto,
                                        @RequestHeader(USER_ID_HEAD) final Long userId) {
 
         log.info("BookingController : createBooking");
@@ -80,8 +79,8 @@ public class BookingController {
      *
      * @param userId id пользователя
      * @param state  необязательный параметр, модификатор запроса
-     * @param from индекс страницы
-     * @param size размер страницы
+     * @param from   индекс страницы
+     * @param size   размер страницы
      * @return список запросов на бронирование
      */
     @GetMapping
@@ -99,8 +98,8 @@ public class BookingController {
      *
      * @param userId идентификатор пользователя
      * @param state  необязательный параметр, модификатор запроса
-     * @param from индекс страницы
-     * @param size размер страницы
+     * @param from   индекс страницы
+     * @param size   размер страницы
      * @return список запросов на бронирование данной вещи
      */
     @GetMapping("/owner")

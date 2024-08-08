@@ -1,4 +1,4 @@
-package ru.practicum.shareit.exceptions;
+package ru.practicum.shareit.exception;
 
 /**
  * Исключение при попытке создать пользователя с уже существующим email

@@ -3,17 +3,16 @@ package ru.practicum.shareit.user.impliments;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.DataException;
-import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -36,63 +35,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(final UserDto userDto)
-            throws FailEmailException, DataException {
-
-        if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
-            log.warn("UserServiceImpl: createUser FALSE, FailEmailException");
-            throw new FailEmailException("Email не может быть пустым.");
-        }
-        log.info("UserServiceImpl: createUser");
+    public UserDto createUser(final UserDto userDto) {
         try {
             User user = repos.save(userMapper.toUser(userDto));
             return userMapper.toUserDto(user);
         } catch (DataIntegrityViolationException e) {
-            log.warn("UserServiceImpl: createUser FALSE, DataException");
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
         }
     }
 
     @Override
-    public UserDto updateUser(final long userId, final UserDto userDto)
-            throws IncorrectUserIdException, DataException {
+    public UserDto updateUser(final Long userId, final UserDto userDto) {
 
-        if (getUser(userId) == null) {
-            log.warn("UserServiceImpl: updateUser FALSE, IncorrectUserIdException");
-            throw new IncorrectUserIdException("Ошибка редактирования пользователя! "
-                    + "Пользователь с идентификатором " + userDto.getId() + " не найден.");
-        }
-        log.info("UserServiceImpl: updateUser");
-        userDto.setId(userId);
-        User user = repos.findById(userId);
+        User user = repos.findById(userId)
+                .orElseThrow(() -> new IncorrectUserIdException(
+                        "Пользователь с id " + userId + " не найден."));
+
         if (userDto.getName() != null) user.setName(userDto.getName());
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
+
         try {
             return userMapper.toUserDto(repos.save(user));
         } catch (DataIntegrityViolationException e) {
-            log.warn("UserServiceImpl: updateUser FALSE, DataException");
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
         }
     }
 
     @Override
-    public UserDto getUser(final long userId)
-            throws IncorrectUserIdException {
-
-        UserDto userDto = userMapper.toUserDto(repos.findById(userId));
-        if (userDto != null) {
-            log.info("UserServiceImpl: getUser");
-            return userDto;
-        } else {
-            log.warn("UserServiceImpl: getUser FALSE, IncorrectUserIdException");
-            throw new IncorrectUserIdException("Пользователь с идентификатором " + userId + " не найден.");
-        }
+    public UserDto getUser(final Long userId) {
+        return userMapper.toUserDto(repos.findById(userId)
+                .orElseThrow(() -> new IncorrectUserIdException(
+                        "Пользователь с id " + userId + " не найден.")));
     }
 
     @Override
-    public UserDto delUser(final long userId) {
-        log.info("UserServiceImpl: delUser");
-        return userMapper.toUserDto(repos.deleteById(userId));
+    public ResponseToUserDeletion delUser(final Long userId) {
+        repos.deleteById(userId);
+        return new ResponseToUserDeletion(200, "Пользователь успешно удален", "/users");
     }
 
     @Override

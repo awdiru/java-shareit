@@ -1,12 +1,11 @@
 package ru.practicum.shareit.user;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.annotations.UserControllerExceptionHandler;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class UserController {
      */
     @PatchMapping("/{userId}")
     public UserDto updateUser(@PathVariable final Long userId,
-                              @RequestBody  final UserDto userDto) {
+                              @RequestBody final UserDto userDto) {
 
         log.info("UserController: updateUser");
         return userService.updateUser(userId, userDto);
@@ -68,13 +67,12 @@ public class UserController {
     }
 
     /**
-     * Удаление пользователя
+     * Удалить пользователя
      *
      * @param userId id пользователя
-     * @return удаленный пользователь
      */
     @DeleteMapping("/{userId}")
-    public UserDto delUser(@PathVariable final Long userId) {
+    public ResponseToUserDeletion delUser(@PathVariable final Long userId) {
 
         log.info("UserController: delUser");
         return userService.delUser(userId);
@@ -82,6 +80,7 @@ public class UserController {
 
     /**
      * Вернуть список всех пользователей
+     *
      * @param from индекс страницы (0 по умолчанию)
      * @param size размер страницы (10 по умолчанию)
      * @return список @size пользователей, страница @from

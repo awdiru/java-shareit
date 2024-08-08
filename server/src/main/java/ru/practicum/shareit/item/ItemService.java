@@ -1,10 +1,6 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.practicum.shareit.item.dto.CommentIncDto;
-import ru.practicum.shareit.item.dto.CommentOutDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.item.dto.model.*;
 
 import java.util.List;
 
@@ -19,7 +15,7 @@ public interface ItemService {
      * @param userId  идентификатор владельца
      * @return новая вещь
      */
-    ItemDto createItem(ItemDto itemDto, Long userId);
+    ItemOutDto createItem(ItemIncDto itemDto, Long userId);
 
     /**
      * Редактировать существующую вещь.
@@ -29,7 +25,7 @@ public interface ItemService {
      * @param userId  идентификатор владельца
      * @return отредактированная вещь
      */
-    ItemDto updateItem(Long itemId, ItemDto itemDto, Long userId);
+    ItemOutDto updateItem(Long itemId, ItemIncDto itemDto, Long userId);
 
     /**
      * Вернуть вещь по идентификатору.
@@ -55,7 +51,7 @@ public interface ItemService {
      * @param text фрагмент текста
      * @return список искомых вещей
      */
-    List<ItemDto> searchItems(String text);
+    List<ItemOutDto> searchItems(String text);
 
     /**
      * Добавить комментарий к вещи

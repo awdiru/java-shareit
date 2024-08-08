@@ -13,6 +13,9 @@ import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
 
+/**
+ * Клиент приложения по пути /bookings
+ */
 @Service
 public class BookingClient extends BaseClient {
     private static final String API_PREFIX = "/bookings";
@@ -27,12 +30,27 @@ public class BookingClient extends BaseClient {
         );
     }
 
+    /**
+     * Создание запроса на бронирование вещи
+     *
+     * @param bookingDto входящий Booking
+     * @param userId     id пользователя
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> createBooking(final Long userId,
-                                                final BookingDto requestDto) {
+                                                final BookingDto bookingDto) {
 
-        return post("", userId, requestDto);
+        return post("", userId, bookingDto);
     }
 
+    /**
+     * Подтверждение бронирования
+     *
+     * @param userId    id пользователя
+     * @param bookingId id запроса
+     * @param approved  подтверждение/отклонение запроса
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> approvedBooking(final Long userId,
                                                   final Long bookingId,
                                                   final Boolean approved) {
@@ -41,11 +59,27 @@ public class BookingClient extends BaseClient {
         return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
     }
 
+    /**
+     * Посмотреть запрос на бронирование
+     *
+     * @param userId    id пользователя
+     * @param bookingId id запроса
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> getBooking(final Long userId,
                                              final Long bookingId) {
         return get("/" + bookingId, userId);
     }
 
+    /**
+     * Посмотреть все запросы на бронирования данного пользователя
+     *
+     * @param userId id пользователя
+     * @param state  необязательный параметр, модификатор запроса
+     * @param from   индекс страницы
+     * @param size   размер страницы
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> getAllBookingsUser(final Long userId,
                                                      final BookingState state,
                                                      final Integer from,
@@ -58,6 +92,15 @@ public class BookingClient extends BaseClient {
         return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
+    /**
+     * Посмотреть все запросы на бронирования владельцу вещей
+     *
+     * @param userId идентификатор пользователя
+     * @param state  необязательный параметр, модификатор запроса
+     * @param from   индекс страницы
+     * @param size   размер страницы
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> getAllBookingsItemsUser(final Long userId,
                                                           final BookingState state,
                                                           final Integer from,

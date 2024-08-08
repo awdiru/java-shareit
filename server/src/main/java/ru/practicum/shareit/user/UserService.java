@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface UserService {
      * @param userDto новый пользователь
      * @return новый пользователь
      */
-    UserDto updateUser(long userId, UserDto userDto);
+    UserDto updateUser(Long userId, UserDto userDto);
 
     /**
      * Вернуть пользователя по идентификатору.
@@ -31,15 +32,14 @@ public interface UserService {
      * @param userId идентификатор пользователя
      * @return искомый пользователь
      */
-    UserDto getUser(long userId);
+    UserDto getUser(Long userId);
 
     /**
      * Удалить пользователя.
      *
      * @param userId идентификатор пользователя
-     * @return удаленный пользователь
      */
-    UserDto delUser(long userId);
+    ResponseToUserDeletion delUser(Long userId);
 
     /**
      * Вернут список всех пользователей.

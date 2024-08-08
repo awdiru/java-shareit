@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemIncDto;
 
 import java.util.Map;
 
+
+/**
+ * Клиент приложения по пути /items
+ */
 @Service
 public class ItemClient extends BaseClient {
     private static final String API_PREFIX = "/items";
@@ -27,28 +31,56 @@ public class ItemClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> createItem(final ItemDto itemDto,
+    /**
+     * Запрос на создание вещи
+     *
+     * @param itemDto входящий запрос на создание вещи
+     * @param userId  id пользователя
+     * @return ответ сервера
+     */
+    public ResponseEntity<Object> createItem(final ItemIncDto itemDto,
                                              final Long userId) {
 
         return post("", userId, itemDto);
     }
 
+    /**
+     * Обновление вещи
+     *
+     * @param itemId  id вещи
+     * @param itemDto входящий запрос для обновления вещи
+     * @param userId  id пользователя
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> updateItem(final Long itemId,
-                                             final ItemDto itemDto,
+                                             final ItemIncDto itemDto,
                                              final Long userId) {
 
         return patch("/" + itemId, userId, itemDto);
     }
 
+    /**
+     * Посмотреть информацию о вещи
+     *
+     * @param userId id пользователя
+     * @param itemId id вещи
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> getItem(final Long userId,
                                           final Long itemId) {
 
         return get("/" + itemId, userId);
     }
 
+    /**
+     * Посмотреть все вещи пользователя
+     *
+     * @param userId id пользователя
+     * @return ответ сервера
+     */
     public ResponseEntity<Object> getItemsUser(final Long userId,
-                                               Integer from,
-                                               Integer size) {
+                                               final Integer from,
+                                               final Integer size) {
 
         Map<String, Object> parameters = Map.of(
                 "from", from,
@@ -57,11 +89,25 @@ public class ItemClient extends BaseClient {
         return get("?from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> searchItems(String text) {
+    /**
+     * Найти вещь по совпадению с текстом запроса
+     *
+     * @param text текст запроса
+     * @return ответ сервера
+     */
+    public ResponseEntity<Object> searchItems(final String text) {
         Map<String, Object> parameters = Map.of("text", text);
         return get("/search?text={text}", null, parameters);
     }
 
+    /**
+     * Добавить комментарий к вещи
+     *
+     * @param userId  id пользователя
+     * @param comment комментарий
+     * @param itemId  id вещи
+     * @return добавленный комментарий
+     */
     public ResponseEntity<Object> addComment(final Long userId,
                                              final CommentDto comment,
                                              final Long itemId) {

@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.booking.dto.model.BookingIncDto;
 import ru.practicum.shareit.booking.dto.model.BookingOutDto;
 

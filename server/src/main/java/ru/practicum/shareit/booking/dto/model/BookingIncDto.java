@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.dto.model;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,11 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class BookingIncDto {
-    @NotNull
     private Long itemId;
-    @NotNull
     private LocalDateTime start;
-    @NotNull
     private LocalDateTime end;
-
 }

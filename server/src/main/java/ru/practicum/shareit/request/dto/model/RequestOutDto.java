@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.request.dto.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -9,15 +9,14 @@ import ru.practicum.shareit.user.model.User;
 import java.time.LocalDateTime;
 
 /**
- * Шаблон ItemRequest на создание вещи для передачи данных
+ * Шаблон Request для исходящих данных
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @EqualsAndHashCode
-public class ItemRequestDto {
-    private long id;
+public class RequestOutDto {
+    private Long id;
     private String description;
-    private User requestor;
     private LocalDateTime created;
 }

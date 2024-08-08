@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Шаблон Comment для входящих запросов на создание комментария
+ * Шаблон Comment для передачи данных
  */
 @Getter
 @Setter

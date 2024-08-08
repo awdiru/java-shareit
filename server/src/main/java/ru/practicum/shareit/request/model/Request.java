@@ -6,17 +6,20 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
+/**
+ * Шаблон Request для работы с базой данных
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "ItemRequests")
-public class ItemRequest {
+@Table(name = "Item_Requests")
+public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "description")
     private String description;

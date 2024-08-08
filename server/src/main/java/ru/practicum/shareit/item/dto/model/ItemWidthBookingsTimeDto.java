@@ -1,11 +1,11 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.dto.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.booking.dto.model.BookingWithItemsDto;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class ItemWidthBookingsTimeDto {
     private User owner;
     private Integer numberOfRentals;
     private Boolean available;
-    private ItemRequest request;
+    private Request request;
     private BookingWithItemsDto lastBooking;
     private BookingWithItemsDto nextBooking;
     private List<CommentOutDto> comments;

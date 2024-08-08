@@ -13,14 +13,6 @@ import java.util.List;
  */
 public interface ItemRepository extends JpaRepository<Item, Long> {
     /**
-     * Вернуть вещь по id
-     *
-     * @param id id вещи
-     * @return искомая вещь
-     */
-    Item findById(long id);
-
-    /**
      * Вернуть список вещей пользователя
      *
      * @param ownerId id пользователя
@@ -38,6 +30,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "from Item as it " +
             "where it.available = true " +
             "and (lower(it.name) like :text " +
-            "or lower(it.description) like :text) ")
+            "or lower(it.description) like :text)")
     List<Item> searchByNameOrDescription(String text);
+
+    List<Item> findAllByRequestId(Long requestId);
 }

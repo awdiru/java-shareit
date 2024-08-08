@@ -1,12 +1,10 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.dto.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.dto.model.RequestOutDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -18,16 +16,13 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
-public class ItemDto {
+public class ItemOutDto {
     private Long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private String description;
     private User owner;
     private Integer numberOfRentals;
-    @NotNull
     private Boolean available;
-    private ItemRequest request;
+    private RequestOutDto request;
     private List<CommentOutDto> comments;
 }

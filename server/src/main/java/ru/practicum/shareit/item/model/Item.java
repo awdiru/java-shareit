@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 /**
@@ -26,7 +26,7 @@ public class Item {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne/*(fetch = FetchType.LAZY)*/
+    @ManyToOne
     @JoinColumn(name = "owner", nullable = false)
     private User owner;
 
@@ -38,5 +38,5 @@ public class Item {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request")
-    private ItemRequest request;
+    private Request request;
 }

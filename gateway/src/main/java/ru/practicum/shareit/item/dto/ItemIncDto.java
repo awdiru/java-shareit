@@ -1,24 +1,24 @@
 package ru.practicum.shareit.item.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Item шаблон для передачи данных
+ * Шаблон Item для передачи данных
  */
 @Getter
 @Setter
-@EqualsAndHashCode
 @AllArgsConstructor
-public class ItemDto {
-    @NotBlank
+@NoArgsConstructor
+public class ItemIncDto {
+    @NotNull
     private String name;
-    @NotBlank
+    @NotNull
     private String description;
     @NotNull
     private Boolean available;
+    private Long requestId;
 }

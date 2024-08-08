@@ -11,14 +11,6 @@ import java.time.LocalDateTime;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     /**
-     * Получение бронирования по идентификатору
-     *
-     * @param bookingId идентификатор бронирования
-     * @return бронь
-     */
-    Booking findById(long bookingId);
-
-    /**
      * Получение списка брони для статуса ALL (все)
      *
      * @param userId идентификатор пользователя
@@ -174,14 +166,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param now    точка во времени
      * @return последнее бронирование для заданной точки
      */
-    @Query(value = "select * " +
-            "from bookings as b " +
-            "where b.item = :itemId " +
+    @Query("select b " +
+            "from Booking as b " +
+            "where b.item.id = :itemId " +
             "and b.status = 'APPROVED' " +
-            "and b.start_time < :now " +
-            "order by b.end_time desc " +
-            "limit 1", nativeQuery = true)
-    Booking findLastBooking(Long itemId, LocalDateTime now);
+            "and b.start < :now " +
+            "order by b.end desc")
+    Page<Booking> findLastBooking(Long itemId, LocalDateTime now, Pageable paging);
 
     /**
      * Посмотреть следующее бронирование вещи пользователя
@@ -190,14 +181,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param now    точка во времени
      * @return следующее бронирование для заданной точки
      */
-    @Query(value = "select * " +
-            "from bookings as b " +
-            "where b.item = :itemId " +
-            "and b.start_time > :now " +
+    @Query("select b " +
+            "from Booking as b " +
+            "where b.item.id = :itemId " +
+            "and b.start > :now " +
             "and b.status <> 'REJECTED' " +
-            "order by b.start_time " +
-            "limit 1", nativeQuery = true)
-    Booking findNextBooking(Long itemId, LocalDateTime now);
+            "order by b.start ")
+    Page<Booking> findNextBooking(Long itemId, LocalDateTime now, Pageable paging);
 
     /**
      * Поиск бронирования по id пользователя и вещи
@@ -207,12 +197,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param now      точка во времени
      * @return последнее бронирование пользователя для заданной точки
      */
-    @Query(value = "select * " +
-            "from bookings as b " +
-            "where b.item = :itemId " +
-            "and b.booker = :bookerId " +
-            "and b.start_time < :now " +
-            "order by b.start_time desc " +
-            "limit 1", nativeQuery = true)
-    Booking searchForBookerIdAndItemId(Long bookerId, Long itemId, LocalDateTime now);
+    @Query("select b " +
+            "from Booking as b " +
+            "where b.item.id = :itemId " +
+            "and b.booker.id = :bookerId " +
+            "and b.start < :now " +
+            "order by b.start desc ")
+    Page<Booking> searchForBookerIdAndItemId(Long bookerId, Long itemId, LocalDateTime now, Pageable paging);
 }

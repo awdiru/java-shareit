@@ -30,6 +30,7 @@ public enum BookingStateEnum {
      * Отклоненные
      */
     REJECTED;
+
     public static Optional<BookingStateEnum> from(String stringState) {
         for (BookingStateEnum state : values())
             if (state.name().equalsIgnoreCase(stringState))

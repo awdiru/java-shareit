@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
  * Шаблон ответа для обработки исключений
  */
 public class DefaultExceptionHandler {
-    public static ResponseEntity<Response> response(HttpStatus status, String message, String path) {
-        Response response = new Response(status.value(), message, path);
+    public static ResponseEntity<ErrorResponse> response(HttpStatus status, String message, String path) {
+        ErrorResponse response = new ErrorResponse(status.value(), message, path);
         return new ResponseEntity<>(response, status);
     }
 }

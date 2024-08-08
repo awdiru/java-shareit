@@ -6,10 +6,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.practicum.shareit.exceptions.DataException;
-import ru.practicum.shareit.exceptions.FailEmailException;
 import ru.practicum.shareit.exceptions.IncorrectUserIdException;
 import ru.practicum.shareit.exceptions.handler.DefaultExceptionHandler;
-import ru.practicum.shareit.exceptions.handler.Response;
+import ru.practicum.shareit.exceptions.handler.ErrorResponse;
 import ru.practicum.shareit.user.annotations.UserControllerExceptionHandler;
 
 /**
@@ -20,23 +19,18 @@ public class UserExceptionHandler {
     private final String path = "/users";
 
     @ExceptionHandler(IncorrectUserIdException.class)
-    public ResponseEntity<Response> handleIncorrectUserIdException(IncorrectUserIdException e) {
+    public ResponseEntity<ErrorResponse> handleIncorrectUserIdException(IncorrectUserIdException e) {
         return DefaultExceptionHandler.response(HttpStatus.NOT_FOUND, e.getMessage(), path);
     }
 
-    @ExceptionHandler(FailEmailException.class)
-    public ResponseEntity<Response> handleFailEmailException(FailEmailException e) {
-        return DefaultExceptionHandler.response(HttpStatus.BAD_REQUEST, e.getMessage(), path);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Response> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return DefaultExceptionHandler.response(HttpStatus.BAD_REQUEST, "Передано невалидное значение "
                 + e.getFieldError().getField(), path);
     }
 
     @ExceptionHandler(DataException.class)
-    public ResponseEntity<Response> handleDataException(DataException e) {
+    public ResponseEntity<ErrorResponse> handleDataException(DataException e) {
         return DefaultExceptionHandler.response(HttpStatus.CONFLICT, e.getMessage(), path);
     }
 }

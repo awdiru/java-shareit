@@ -1,48 +1,37 @@
 package ru.practicum.shareit.item.dto;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.item.CommentRepository;
+import ru.practicum.shareit.item.dto.model.ItemIncDto;
+import ru.practicum.shareit.item.dto.model.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.ItemToRequestDto;
+import ru.practicum.shareit.item.dto.model.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.item.model.Item;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import ru.practicum.shareit.request.dto.RequestMapper;
 
 /**
  * Конвертер Item классов
  */
 @Component
 public class ItemMapper {
-    public ItemDto toItemDtoFromItem(final Item item) {
+    private final RequestMapper requestMapper = new RequestMapper();
+    public ItemOutDto toItemDtoFromItem(final Item item) {
         if (item == null) {
             return null;
         }
 
-        return new ItemDto(item.getId(),
+        ItemOutDto itemOutDto = new  ItemOutDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getOwner(),
                 item.getNumberOfRentals(),
                 item.getAvailable(),
-                item.getRequest(),
+                null,
                 null);
-    }
 
-    public Item toItemFromItemDto(final ItemDto itemDto) {
+        if (item.getRequest() != null)
+            itemOutDto.setRequest(requestMapper.toRequestOutDtoFromRequest(item.getRequest()));
 
-        if (itemDto == null) {
-            return null;
-        }
-
-        return new Item(itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getOwner(),
-                itemDto.getNumberOfRentals(),
-                itemDto.getAvailable(),
-                itemDto.getRequest());
+        return itemOutDto;
     }
 
     public ItemWidthBookingsTimeDto toItemWidthBookingsTimeDtoFromItem(Item item) {
@@ -55,6 +44,22 @@ public class ItemMapper {
                 item.getRequest(),
                 null,
                 null,
+                null);
+    }
+
+    public ItemToRequestDto toItemToRequestFromItem(Item item) {
+        return new ItemToRequestDto(item.getId(),
+                item.getName(),
+                item.getOwner().getId());
+    }
+
+    public Item toItemFromItemIncDto(ItemIncDto item) {
+        return new Item(null,
+                item.getName(),
+                item.getDescription(),
+                null,
+                null,
+                item.getAvailable(),
                 null);
     }
 }
