@@ -5,11 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.practicum.shareit.exceptions.IncorrectCommentatorException;
-import ru.practicum.shareit.exceptions.IncorrectItemIdException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
-import ru.practicum.shareit.exceptions.handler.DefaultExceptionHandler;
-import ru.practicum.shareit.exceptions.handler.ErrorResponse;
+import ru.practicum.shareit.exception.IncorrectCommentatorException;
+import ru.practicum.shareit.exception.IncorrectItemIdException;
+import ru.practicum.shareit.exception.IncorrectRequestIdException;
+import ru.practicum.shareit.exception.IncorrectUserIdException;
+import ru.practicum.shareit.exception.handler.DefaultExceptionHandler;
+import ru.practicum.shareit.exception.handler.ErrorResponse;
 import ru.practicum.shareit.item.annotations.ItemControllerExceptionHandler;
 
 /**
@@ -38,5 +39,10 @@ public class ItemExceptionHandler {
     @ExceptionHandler(IncorrectCommentatorException.class)
     public ResponseEntity<ErrorResponse> handleIncorrectCommentatorException(IncorrectCommentatorException e) {
         return DefaultExceptionHandler.response(HttpStatus.BAD_REQUEST, e.getMessage(), path);
+    }
+
+    @ExceptionHandler(IncorrectRequestIdException.class)
+    public ResponseEntity<ErrorResponse> handleIncorrectRequestIdException(IncorrectRequestIdException e) {
+        return DefaultExceptionHandler.response(HttpStatus.NOT_FOUND, e.getMessage(), path);
     }
 }

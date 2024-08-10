@@ -12,10 +12,11 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     /**
      * Вернуть все запросы пользователя
      *
-     * @param RequestorId id пользователя
+     * @param requestorId id пользователя
      * @return все запросы пользователя
      */
-    List<Request> findAllByRequestorIdOrderByCreatedDesc(Long RequestorId);
+
+    List<Request> findAllByRequestorIdOrderByCreatedDesc(Long requestorId);
 
     /**
      * Вернуть все запросы других пользователей

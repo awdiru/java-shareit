@@ -7,6 +7,7 @@ import ru.practicum.shareit.item.dto.model.ItemToRequestDto;
 import ru.practicum.shareit.item.dto.model.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dto.RequestMapper;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 /**
  * Конвертер Item классов
@@ -14,15 +15,14 @@ import ru.practicum.shareit.request.dto.RequestMapper;
 @Component
 public class ItemMapper {
     private final RequestMapper requestMapper = new RequestMapper();
-    public ItemOutDto toItemDtoFromItem(final Item item) {
-        if (item == null) {
-            return null;
-        }
+    private final UserMapper userMapper = new UserMapper();
 
-        ItemOutDto itemOutDto = new  ItemOutDto(item.getId(),
+    public ItemOutDto toItemDtoFromItem(final Item item) {
+        if (item == null) return null;
+        ItemOutDto itemOutDto = new ItemOutDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getOwner(),
+                userMapper.toUserDto(item.getOwner()),
                 item.getNumberOfRentals(),
                 item.getAvailable(),
                 null,
@@ -38,10 +38,10 @@ public class ItemMapper {
         return new ItemWidthBookingsTimeDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getOwner(),
+                userMapper.toUserDto(item.getOwner()),
                 item.getNumberOfRentals(),
                 item.getAvailable(),
-                item.getRequest(),
+                requestMapper.toRequestOutDtoFromRequest(item.getRequest()),
                 null,
                 null,
                 null);

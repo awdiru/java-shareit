@@ -18,7 +18,7 @@ import java.util.List;
 @BookingControllerExceptionHandler
 public class BookingController {
     private final BookingService bookingService;
-    private final String USER_ID_HEAD = "X-Sharer-User-Id";
+    private final String userIdHead = "X-Sharer-User-Id";
 
 
     @Autowired
@@ -35,7 +35,7 @@ public class BookingController {
      */
     @PostMapping
     public BookingOutDto createBooking(@RequestBody BookingIncDto bookingIncDto,
-                                       @RequestHeader(USER_ID_HEAD) final Long userId) {
+                                       @RequestHeader(userIdHead) final Long userId) {
 
         log.info("BookingController : createBooking");
         return bookingService.createBooking(bookingIncDto, userId);
@@ -51,7 +51,7 @@ public class BookingController {
      * @return подтвержденный/отклоненный запрос
      */
     @PatchMapping("/{bookingId}")
-    public BookingOutDto approvedBooking(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public BookingOutDto approvedBooking(@RequestHeader(userIdHead) final Long userId,
                                          @PathVariable Long bookingId,
                                          @RequestParam Boolean approved) {
 
@@ -67,7 +67,7 @@ public class BookingController {
      * @return запрос на бронирование
      */
     @GetMapping("/{bookingId}")
-    public BookingOutDto getBooking(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public BookingOutDto getBooking(@RequestHeader(userIdHead) final Long userId,
                                     @PathVariable Long bookingId) {
 
         log.info("BookingController : getBookingStatus");
@@ -84,8 +84,8 @@ public class BookingController {
      * @return список запросов на бронирование
      */
     @GetMapping
-    public List<BookingOutDto> getAllBookingsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
-                                                  @RequestParam(defaultValue = "ALL") String state,
+    public List<BookingOutDto> getAllBookingsUser(@RequestHeader(userIdHead) final Long userId,
+                                                  @RequestParam String state,
                                                   @RequestParam Integer from,
                                                   @RequestParam Integer size) {
 
@@ -103,8 +103,8 @@ public class BookingController {
      * @return список запросов на бронирование данной вещи
      */
     @GetMapping("/owner")
-    public List<BookingOutDto> getAllBookingsItemsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
-                                                       @RequestParam(defaultValue = "ALL") String state,
+    public List<BookingOutDto> getAllBookingsItemsUser(@RequestHeader(userIdHead) final Long userId,
+                                                       @RequestParam String state,
                                                        @RequestParam Integer from,
                                                        @RequestParam Integer size) {
 

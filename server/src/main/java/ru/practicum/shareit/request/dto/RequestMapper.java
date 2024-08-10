@@ -19,12 +19,14 @@ public class RequestMapper {
     }
 
     public RequestOutDto toRequestOutDtoFromRequest(Request request) {
+        if (request == null) return null;
         return new RequestOutDto(request.getId(),
                 request.getDescription(),
                 request.getCreated());
     }
 
     public RequestWithItemDto toRequestWithItemDtoFromRequest(Request request) {
+        if (request == null) return null;
         return new RequestWithItemDto(request.getId(),
                 request.getDescription(),
                 request.getCreated(),

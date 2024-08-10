@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.practicum.shareit.exceptions.IncorrectRequestIdException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
-import ru.practicum.shareit.exceptions.handler.DefaultExceptionHandler;
-import ru.practicum.shareit.exceptions.handler.ErrorResponse;
+import ru.practicum.shareit.exception.IncorrectRequestIdException;
+import ru.practicum.shareit.exception.IncorrectUserIdException;
+import ru.practicum.shareit.exception.handler.DefaultExceptionHandler;
+import ru.practicum.shareit.exception.handler.ErrorResponse;
 import ru.practicum.shareit.request.annotations.RequestControllerExceptionHandler;
 
 /**
@@ -15,7 +15,7 @@ import ru.practicum.shareit.request.annotations.RequestControllerExceptionHandle
  */
 @ControllerAdvice(annotations = RequestControllerExceptionHandler.class)
 public class RequestExceptionHandler {
-    private final String path = "/users";
+    private final String path = "/requests";
 
     @ExceptionHandler(IncorrectUserIdException.class)
     public ResponseEntity<ErrorResponse> handleIncorrectUserIdException(IncorrectUserIdException e) {

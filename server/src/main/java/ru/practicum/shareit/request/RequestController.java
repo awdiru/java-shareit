@@ -19,7 +19,7 @@ import java.util.List;
 @RequestControllerExceptionHandler
 public class RequestController {
     private final RequestService requestService;
-    private final String USER_ID_HEAD = "X-Sharer-User-Id";
+    private final String userIdHead = "X-Sharer-User-Id";
 
     @Autowired
     public RequestController(RequestService requestService) {
@@ -34,7 +34,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @PostMapping
-    public RequestOutDto createRequest(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public RequestOutDto createRequest(@RequestHeader(userIdHead) final Long userId,
                                        @RequestBody final RequestIncDto requestIncDto) {
 
         log.info("Post request; userId={}", userId);
@@ -48,7 +48,7 @@ public class RequestController {
      * @return список запросов с ответами
      */
     @GetMapping
-    public List<RequestWithItemDto> getRequestsUser(@RequestHeader(USER_ID_HEAD) final Long userId) {
+    public List<RequestWithItemDto> getRequestsUser(@RequestHeader(userIdHead) final Long userId) {
 
         log.info("Get requests; userId={}", userId);
         return requestService.getRequestsUser(userId);
@@ -63,7 +63,7 @@ public class RequestController {
      * @return список запросов пользователей
      */
     @GetMapping("/all")
-    public List<RequestOutDto> getAllRequests(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public List<RequestOutDto> getAllRequests(@RequestHeader(userIdHead) final Long userId,
                                               @RequestParam final Integer from,
                                               @RequestParam final Integer size) {
 

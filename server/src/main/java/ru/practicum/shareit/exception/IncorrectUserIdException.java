@@ -1,4 +1,4 @@
-package ru.practicum.shareit.exceptions;
+package ru.practicum.shareit.exception;
 
 /**
  * Исключение при попытке запросить пользователя с несуществующим id

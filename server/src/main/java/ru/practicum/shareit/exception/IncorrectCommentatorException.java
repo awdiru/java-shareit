@@ -1,4 +1,4 @@
-package ru.practicum.shareit.exceptions;
+package ru.practicum.shareit.exception;
 
 /**
  * Исключение при попытке добавить комментарий пользователем, который не арендовал вещь

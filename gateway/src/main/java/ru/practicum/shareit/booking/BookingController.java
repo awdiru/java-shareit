@@ -20,7 +20,7 @@ import ru.practicum.shareit.booking.dto.BookingState;
 @Slf4j
 public class BookingController {
     private final BookingClient bookingClient;
-    private final String USER_ID_HEAD = "X-Sharer-User-Id";
+    private final String userIdHead = "X-Sharer-User-Id";
 
     /**
      * Создание запроса на бронирование вещи
@@ -31,7 +31,7 @@ public class BookingController {
      */
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestBody @Valid final BookingDto bookingDto,
-                                                @RequestHeader(USER_ID_HEAD) final Long userId) {
+                                                @RequestHeader(userIdHead) final Long userId) {
 
         log.info("Post booking; userId={}, itemId={}", userId, bookingDto.getItemId());
         return bookingClient.createBooking(userId, bookingDto);
@@ -46,7 +46,7 @@ public class BookingController {
      * @return ответ сервера
      */
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<Object> approvedBooking(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> approvedBooking(@RequestHeader(userIdHead) final Long userId,
                                                   @PathVariable final Long bookingId,
                                                   @RequestParam final Boolean approved) {
 
@@ -62,7 +62,7 @@ public class BookingController {
      * @return ответ сервера
      */
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Object> getBooking(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> getBooking(@RequestHeader(userIdHead) final Long userId,
                                              @PathVariable final Long bookingId) {
         log.info("Get booking; {}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
@@ -78,7 +78,7 @@ public class BookingController {
      * @return ответ сервера
      */
     @GetMapping
-    public ResponseEntity<Object> getAllBookingsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> getAllBookingsUser(@RequestHeader(userIdHead) final Long userId,
                                                      @RequestParam(name = "state", defaultValue = "all") final String stateParam,
                                                      @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                      @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
@@ -100,7 +100,7 @@ public class BookingController {
      * @return ответ сервера
      */
     @GetMapping("/owner")
-    public ResponseEntity<Object> getAllBookingsItemsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> getAllBookingsItemsUser(@RequestHeader(userIdHead) final Long userId,
                                                           @RequestParam(name = "state", defaultValue = "all") final String stateParam,
                                                           @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                           @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {

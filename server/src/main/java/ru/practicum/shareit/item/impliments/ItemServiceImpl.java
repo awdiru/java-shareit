@@ -7,11 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.booking.enums.BookingStatusEnum;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.exceptions.IncorrectCommentatorException;
-import ru.practicum.shareit.exceptions.IncorrectItemIdException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
+import ru.practicum.shareit.exception.IncorrectCommentatorException;
+import ru.practicum.shareit.exception.IncorrectItemIdException;
+import ru.practicum.shareit.exception.IncorrectRequestIdException;
+import ru.practicum.shareit.exception.IncorrectUserIdException;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.ItemService;
@@ -71,7 +71,8 @@ class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден.")));
 
         if (itemDto.getRequestId() != null)
-            item.setRequest(reposRequest.findById(itemDto.getRequestId()).get());
+            item.setRequest(reposRequest.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new IncorrectRequestIdException("Запрос с id " + itemDto.getRequestId() + " не найден")));
 
         return itemMapper.toItemDtoFromItem(reposItem.save(item));
     }
@@ -124,16 +125,15 @@ class ItemServiceImpl implements ItemService {
 
         Pageable paging = PageRequest.of(0, 1);
 
-        itemWidthBookingsTimeDto.setLastBooking(
-                bookingMapper.toBookingWithItemsDtoFromBooking(
-                        reposBooking.findLastBooking(item.getId(), LocalDateTime.now(), paging)
-                                .toList().getFirst()));
+        List<Booking> lastBookings = reposBooking.findLastBooking(item.getId(), LocalDateTime.now(), paging).toList();
+        if (!lastBookings.isEmpty())
+            itemWidthBookingsTimeDto.setLastBooking(bookingMapper
+                    .toBookingWithItemsDtoFromBooking(lastBookings.getFirst()));
 
-        itemWidthBookingsTimeDto.setNextBooking(
-                bookingMapper.toBookingWithItemsDtoFromBooking(
-                        reposBooking.findNextBooking(item.getId(), LocalDateTime.now(), paging)
-                                .toList().getFirst()));
-
+        List<Booking> nextBookings = reposBooking.findNextBooking(item.getId(), LocalDateTime.now(), paging).toList();
+        if (!nextBookings.isEmpty())
+            itemWidthBookingsTimeDto.setNextBooking(bookingMapper
+                    .toBookingWithItemsDtoFromBooking(nextBookings.getFirst()));
 
         return itemWidthBookingsTimeDto;
     }
@@ -180,12 +180,11 @@ class ItemServiceImpl implements ItemService {
                                     final Long itemId,
                                     final Long userId) {
 
-        Booking booking = reposBooking
+        List<Booking> bookings = reposBooking
                 .searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), PageRequest.of(0, 1))
-                .toList()
-                .getFirst();
+                .toList();
 
-        if (booking == null || !booking.getStatus().equals(BookingStatusEnum.APPROVED))
+        if (bookings.isEmpty())
             throw new IncorrectCommentatorException(
                     "Комментарии могут оставлять только те пользователи, которые брали вещь в аренду");
 

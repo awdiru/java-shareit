@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.practicum.shareit.exceptions.DataException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
-import ru.practicum.shareit.exceptions.handler.DefaultExceptionHandler;
-import ru.practicum.shareit.exceptions.handler.ErrorResponse;
+import ru.practicum.shareit.exception.DataException;
+import ru.practicum.shareit.exception.IncorrectUserIdException;
+import ru.practicum.shareit.exception.handler.DefaultExceptionHandler;
+import ru.practicum.shareit.exception.handler.ErrorResponse;
 import ru.practicum.shareit.user.annotations.UserControllerExceptionHandler;
 
 /**

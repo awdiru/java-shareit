@@ -1,9 +1,6 @@
 package ru.practicum.shareit.booking.dto.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.shareit.booking.enums.BookingStatusEnum;
 
 import java.time.LocalDateTime;
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class BookingWithItemsDto {
     private Long id;
     private LocalDateTime start;

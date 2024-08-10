@@ -1,10 +1,6 @@
 package ru.practicum.shareit.request.dto.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import ru.practicum.shareit.user.model.User;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @EqualsAndHashCode
+@NoArgsConstructor
+@ToString
 public class RequestOutDto {
     private Long id;
     private String description;

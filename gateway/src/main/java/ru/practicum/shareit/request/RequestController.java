@@ -19,7 +19,7 @@ import ru.practicum.shareit.request.dto.RequestDto;
 @Slf4j
 public class RequestController {
     private final RequestClient client;
-    private final String USER_ID_HEAD = "X-Sharer-User-Id";
+    private final String userIdHead = "X-Sharer-User-Id";
 
     /**
      * Создать запрос на вещь
@@ -29,7 +29,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @PostMapping
-    public ResponseEntity<Object> createRequest(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> createRequest(@RequestHeader(userIdHead) final Long userId,
                                                 @RequestBody @Valid final RequestDto requestDto) {
 
         log.info("Post request; userId={}", userId);
@@ -43,7 +43,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @GetMapping
-    public ResponseEntity<Object> getRequestsUser(@RequestHeader(USER_ID_HEAD) final Long userId) {
+    public ResponseEntity<Object> getRequestsUser(@RequestHeader(userIdHead) final Long userId) {
 
         log.info("Get user requests; userId={}", userId);
         return client.getRequestsUser(userId);
@@ -58,7 +58,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllRequests(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> getAllRequests(@RequestHeader(userIdHead) final Long userId,
                                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                  @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 

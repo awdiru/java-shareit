@@ -202,6 +202,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where b.item.id = :itemId " +
             "and b.booker.id = :bookerId " +
             "and b.start < :now " +
+            //"and b.end < :now " +
+            "and b.status = 'APPROVED' " +
             "order by b.start desc ")
     Page<Booking> searchForBookerIdAndItemId(Long bookerId, Long itemId, LocalDateTime now, Pageable paging);
 }

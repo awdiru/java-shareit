@@ -17,7 +17,7 @@ import java.util.List;
 @ItemControllerExceptionHandler
 public class ItemController {
     private final ItemService itemService;
-    private final String USER_ID_HEAD = "X-Sharer-User-Id";
+    private final String userIdHead = "X-Sharer-User-Id";
 
     @Autowired
     public ItemController(final ItemService itemService) {
@@ -33,7 +33,7 @@ public class ItemController {
      */
     @PostMapping
     public ItemOutDto createItem(@RequestBody final ItemIncDto itemDto,
-                                 @RequestHeader(USER_ID_HEAD) final Long userId) {
+                                 @RequestHeader(userIdHead) final Long userId) {
 
         log.info("ItemController: createItem");
         return itemService.createItem(itemDto, userId);
@@ -50,7 +50,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ItemOutDto updateItem(@PathVariable final Long itemId,
                                  @RequestBody final ItemIncDto itemDto,
-                                 @RequestHeader(USER_ID_HEAD) final Long userId) {
+                                 @RequestHeader(userIdHead) final Long userId) {
 
         log.info("ItemController: updateItem");
         return itemService.updateItem(itemId, itemDto, userId);
@@ -64,7 +64,7 @@ public class ItemController {
      * @return информация о вещи
      */
     @GetMapping("/{itemId}")
-    public ItemWidthBookingsTimeDto getItem(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ItemWidthBookingsTimeDto getItem(@RequestHeader(userIdHead) final Long userId,
                                             @PathVariable final Long itemId) {
 
         log.info("ItemController: getItem");
@@ -78,7 +78,7 @@ public class ItemController {
      * @return список вещей пользователя
      */
     @GetMapping
-    public List<ItemWidthBookingsTimeDto> getItemsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public List<ItemWidthBookingsTimeDto> getItemsUser(@RequestHeader(userIdHead) final Long userId,
                                                        @RequestParam final Integer from,
                                                        @RequestParam final Integer size) {
 
@@ -108,7 +108,7 @@ public class ItemController {
      * @return добавленный комментарий
      */
     @PostMapping("/{itemId}/comment")
-    public CommentOutDto addComment(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public CommentOutDto addComment(@RequestHeader(userIdHead) final Long userId,
                                     @RequestBody final CommentIncDto comment,
                                     @PathVariable final Long itemId) {
 

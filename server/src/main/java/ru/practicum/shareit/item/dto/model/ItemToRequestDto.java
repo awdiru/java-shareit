@@ -1,9 +1,6 @@
 package ru.practicum.shareit.item.dto.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * Item шаблон для передачи ответа на запрос
@@ -12,6 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class ItemToRequestDto {
     private Long id;
     private String name;

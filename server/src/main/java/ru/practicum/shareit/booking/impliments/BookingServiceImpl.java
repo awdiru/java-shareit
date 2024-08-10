@@ -13,7 +13,7 @@ import ru.practicum.shareit.booking.dto.model.BookingOutDto;
 import ru.practicum.shareit.booking.enums.BookingStateEnum;
 import ru.practicum.shareit.booking.enums.BookingStatusEnum;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.exceptions.*;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
@@ -47,7 +47,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingOutDto createBooking(BookingIncDto bookingIncDto, Long userId) {
 
-        Booking booking = bookingMapper.toBookingFromBookingIncDto(bookingIncDto, userId);
+        Booking booking = bookingMapper.toBookingFromBookingIncDto(bookingIncDto);
         booking.setBooker(reposUser.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден")));
 

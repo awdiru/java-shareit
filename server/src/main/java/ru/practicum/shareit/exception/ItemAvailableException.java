@@ -1,4 +1,4 @@
-package ru.practicum.shareit.exceptions;
+package ru.practicum.shareit.exception;
 
 /**
  * Исключение при попытке сделать запрос на бронирование для вещи, закрытой для бронирования

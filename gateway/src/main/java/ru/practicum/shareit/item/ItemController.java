@@ -20,7 +20,7 @@ import ru.practicum.shareit.item.dto.ItemIncDto;
 @Slf4j
 public class ItemController {
     private final ItemClient client;
-    private final String USER_ID_HEAD = "X-Sharer-User-Id";
+    private final String userIdHead = "X-Sharer-User-Id";
 
     /**
      * Запрос на создание вещи
@@ -31,7 +31,7 @@ public class ItemController {
      */
     @PostMapping
     public ResponseEntity<Object> createItem(@RequestBody @Valid final ItemIncDto itemDto,
-                                             @RequestHeader(USER_ID_HEAD) final Long userId) {
+                                             @RequestHeader(userIdHead) final Long userId) {
 
         log.info("Create Item; userId={} ", userId);
         return client.createItem(itemDto, userId);
@@ -48,7 +48,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@PathVariable final Long itemId,
                                              @RequestBody final ItemIncDto itemDto,
-                                             @RequestHeader(USER_ID_HEAD) final Long userId) {
+                                             @RequestHeader(userIdHead) final Long userId) {
 
         log.info("Patch Item; userId={}, itemId={} ", userId, itemId);
         return client.updateItem(itemId, itemDto, userId);
@@ -62,7 +62,7 @@ public class ItemController {
      * @return ответ сервера
      */
     @GetMapping("/{itemId}")
-    public ResponseEntity<Object> getItem(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> getItem(@RequestHeader(userIdHead) final Long userId,
                                           @PathVariable final Long itemId) {
 
         log.info("Get Item; userId={}, itemId={} ", userId, itemId);
@@ -76,7 +76,7 @@ public class ItemController {
      * @return ответ сервера
      */
     @GetMapping
-    public ResponseEntity<Object> getItemsUser(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> getItemsUser(@RequestHeader(userIdHead) final Long userId,
                                                @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
@@ -106,7 +106,7 @@ public class ItemController {
      * @return добавленный комментарий
      */
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<Object> addComment(@RequestHeader(USER_ID_HEAD) final Long userId,
+    public ResponseEntity<Object> addComment(@RequestHeader(userIdHead) final Long userId,
                                              @RequestBody @Valid final CommentDto comment,
                                              @PathVariable final Long itemId) {
 

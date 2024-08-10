@@ -6,9 +6,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.practicum.shareit.booking.annotations.BookingControllerExceptionHandler;
-import ru.practicum.shareit.exceptions.*;
-import ru.practicum.shareit.exceptions.handler.DefaultExceptionHandler;
-import ru.practicum.shareit.exceptions.handler.ErrorResponse;
+import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.exception.handler.DefaultExceptionHandler;
+import ru.practicum.shareit.exception.handler.ErrorResponse;
 
 /**
  * Обработчик исключений для класса BookingController

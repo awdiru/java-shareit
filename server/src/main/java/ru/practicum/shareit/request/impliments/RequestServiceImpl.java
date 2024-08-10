@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.IncorrectRequestIdException;
-import ru.practicum.shareit.exceptions.IncorrectUserIdException;
+import ru.practicum.shareit.exception.IncorrectRequestIdException;
+import ru.practicum.shareit.exception.IncorrectUserIdException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.request.RequestRepository;
@@ -75,7 +75,8 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestOutDto> getAllRequests(final Long userId,
                                               final Integer from,
                                               final Integer size) {
-
+        reposUser.findById(userId)
+                .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
         Pageable paging = PageRequest.of(from, size);
         return reposRequest.getAllRequests(userId, paging)
                 .stream()

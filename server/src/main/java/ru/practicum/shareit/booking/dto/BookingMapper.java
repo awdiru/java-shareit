@@ -6,13 +6,18 @@ import ru.practicum.shareit.booking.dto.model.BookingOutDto;
 import ru.practicum.shareit.booking.dto.model.BookingWithItemsDto;
 import ru.practicum.shareit.booking.enums.BookingStatusEnum;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 /**
  * Конвертер Booking классов
  */
 @Component
 public class BookingMapper {
-    public Booking toBookingFromBookingIncDto(BookingIncDto booking, Long userId) {
+    private final ItemMapper itemMapper = new ItemMapper();
+    private final UserMapper userMapper = new UserMapper();
+
+    public Booking toBookingFromBookingIncDto(BookingIncDto booking) {
         if (booking == null) return null;
         return new Booking(null,
                 booking.getStart(),
@@ -27,8 +32,8 @@ public class BookingMapper {
         return new BookingOutDto(booking.getId(),
                 booking.getStart(),
                 booking.getEnd(),
-                booking.getItem(),
-                booking.getBooker(),
+                itemMapper.toItemDtoFromItem(booking.getItem()),
+                userMapper.toUserDto(booking.getBooker()),
                 booking.getStatus());
     }
 
