@@ -1,3 +1,4 @@
+--Схема для postgreSQL
 DROP TABLE IF EXISTS PUBLIC."comments";
 DROP TABLE IF EXISTS PUBLIC.bookings;
 DROP TABLE IF EXISTS PUBLIC.items;

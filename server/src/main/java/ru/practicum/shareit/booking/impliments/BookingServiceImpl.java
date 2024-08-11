@@ -58,10 +58,9 @@ public class BookingServiceImpl implements BookingService {
             throw new ItemAvailableException(
                     "Предмет с id " + booking.getItem().getId() + " не доступен для бронирования");
 
-        if (booking.getEnd().isBefore(booking.getStart()) || booking.getEnd().equals(booking.getStart())) {
+        if (booking.getEnd().isBefore(booking.getStart()) || booking.getEnd().equals(booking.getStart()))
             throw new IncorrectBookingTimeException(
                     "Время окончания бронирования не может быть раньше или равно времени начала бронирования");
-        }
 
         if (booking.getItem().getOwner().getId().equals(userId))
             throw new FailCreateBookingOwnerItem("Владелец вещи не может ее забронировать");

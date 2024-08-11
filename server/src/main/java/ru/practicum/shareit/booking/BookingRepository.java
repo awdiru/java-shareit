@@ -14,6 +14,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * Получение списка брони для статуса ALL (все)
      *
      * @param userId идентификатор пользователя
+     * @param paging пагинация для ограничения ответа
      * @return список брони
      */
     @Query("select b " +
@@ -28,6 +29,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      *
      * @param userId идентификатор пользователя
      * @param now    текущее время
+     * @param paging пагинация для ограничения ответа
      * @return список брони
      */
     @Query("select b " +
@@ -44,6 +46,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      *
      * @param userId идентификатор пользователя
      * @param now    конец брони
+     * @param paging пагинация для ограничения ответа
      * @return список брони
      */
     @Query("select b " +
@@ -59,6 +62,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      *
      * @param userId идентификатор пользователя
      * @param now    начало брони
+     * @param paging пагинация для ограничения ответа
      * @return список брони
      */
 
@@ -75,6 +79,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      *
      * @param userId идентификатор пользователя
      * @param status статус WAITING или REJECTED
+     * @param paging пагинация для ограничения ответа
      * @return список брони
      */
     @Query("select b " +
@@ -89,6 +94,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * Посмотреть все запросы на бронирования владельцу вещей
      *
      * @param userId идентификатор пользователя
+     * @param paging пагинация для ограничения ответа
+     * @return список брони
      */
     @Query("select b " +
             "from Booking as b " +
@@ -103,6 +110,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * для модификатора CURRENT
      *
      * @param userId идентификатор пользователя
+     * @param now    точка во времени
+     * @param paging пагинация для ограничения ответа
+     * @return список брони
      */
     @Query("select b " +
             "from Booking as b " +
@@ -119,6 +129,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * для модификатора PAST
      *
      * @param userId идентификатор пользователя
+     * @param now    точка во времени
+     * @param paging пагинация для ограничения ответа
+     * @return список брони
      */
     @Query("select b " +
             "from Booking as b " +
@@ -134,6 +147,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * для модификатора FUTURE
      *
      * @param userId идентификатор пользователя
+     * @param now    точка во времени
+     * @param paging пагинация для ограничения ответа
+     * @return список брони
      */
     @Query("select b " +
             "from Booking as b " +
@@ -149,6 +165,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * для модификатора WAITING или REJECTED
      *
      * @param userId идентификатор пользователя
+     * @param status статус запрос WAITING или REJECT
+     * @param paging пагинация для ограничения ответа
+     * @return список брони
      */
     @Query("select b " +
             "from Booking as b " +
@@ -164,6 +183,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      *
      * @param itemId id вещи
      * @param now    точка во времени
+     * @param paging пагинация для ограничения ответа
      * @return последнее бронирование для заданной точки
      */
     @Query("select b " +
@@ -179,6 +199,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      *
      * @param itemId id вещи
      * @param now    точка во времени
+     * @param paging пагинация для ограничения ответа
      * @return следующее бронирование для заданной точки
      */
     @Query("select b " +
@@ -195,6 +216,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param bookerId id пользователя
      * @param itemId   id вещи
      * @param now      точка во времени
+     * @param paging   пагинация для ограничения ответа не более чем одним результатом
      * @return последнее бронирование пользователя для заданной точки
      */
     @Query("select b " +
@@ -202,8 +224,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where b.item.id = :itemId " +
             "and b.booker.id = :bookerId " +
             "and b.start < :now " +
-            //"and b.end < :now " +
-            "and b.status = 'APPROVED' " +
-            "order by b.start desc ")
+            "and b.status = 'APPROVED' ")
     Page<Booking> searchForBookerIdAndItemId(Long bookerId, Long itemId, LocalDateTime now, Pageable paging);
 }
