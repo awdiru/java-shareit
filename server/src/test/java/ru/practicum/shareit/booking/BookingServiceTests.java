@@ -20,7 +20,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
+        properties = "spring.profiles.active=test")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BookingServiceTests {
     private final BookingService bookingService;
