@@ -43,7 +43,7 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@PathVariable final Long userId,
                                              @RequestBody @Valid final UserDto userDto) {
 
-        log.info("Patch user; userId={}", userId);
+        log.info("PATCH update user; userId={}", userId);
         return client.updateUser(userId, userDto);
     }
 
@@ -56,7 +56,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUser(@PathVariable final Long userId) {
 
-        log.info("Get user; userId={}", userId);
+        log.info("GET user; userId={}", userId);
         return client.getUser(userId);
     }
 
@@ -69,7 +69,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> delUser(@PathVariable final Long userId) {
 
-        log.info("Delete user; userId={}", userId);
+        log.info("DELETE user; userId={}", userId);
         return client.delUser(userId);
     }
 
@@ -84,7 +84,7 @@ public class UserController {
     public ResponseEntity<Object> getAllUsers(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
 
-        log.info("Get all users; from={}, size={}", from, size);
+        log.info("GET all users; from={}, size={}", from, size);
         return client.getAllUsers(from, size);
     }
 }

@@ -29,7 +29,7 @@ public class RequestController {
     /**
      * Создать запрос на вещь
      *
-     * @param userId     id пользователя
+     * @param userId        id пользователя
      * @param requestIncDto запрос на вещь
      * @return ответ сервера
      */
@@ -37,7 +37,7 @@ public class RequestController {
     public RequestOutDto createRequest(@RequestHeader(userIdHead) final Long userId,
                                        @RequestBody final RequestIncDto requestIncDto) {
 
-        log.info("Post request; userId={}", userId);
+        log.info("POST create request; userId={}", userId);
         return requestService.createRequest(userId, requestIncDto);
     }
 
@@ -50,7 +50,7 @@ public class RequestController {
     @GetMapping
     public List<RequestWithItemDto> getRequestsUser(@RequestHeader(userIdHead) final Long userId) {
 
-        log.info("Get requests; userId={}", userId);
+        log.info("GET requests; userId={}", userId);
         return requestService.getRequestsUser(userId);
     }
 
@@ -67,7 +67,7 @@ public class RequestController {
                                               @RequestParam final Integer from,
                                               @RequestParam final Integer size) {
 
-        log.info("Get all requests; userId={}, from={}, size={}", userId, from, size);
+        log.info("GET all requests; userId={}, from={}, size={}", userId, from, size);
         return requestService.getAllRequests(userId, from, size);
     }
 
@@ -80,7 +80,7 @@ public class RequestController {
     @GetMapping("/{requestId}")
     public RequestWithItemDto getRequest(@PathVariable final Long requestId) {
 
-        log.info("Get request; requestId={}", requestId);
+        log.info("GET request; requestId={}", requestId);
         return requestService.getRequest(requestId);
     }
 }

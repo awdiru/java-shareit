@@ -76,6 +76,8 @@ public class ItemClient extends BaseClient {
      * Посмотреть все вещи пользователя
      *
      * @param userId id пользователя
+     * @param from   индекс страницы
+     * @param size   размер страницы
      * @return ответ сервера
      */
     public ResponseEntity<Object> getItemsUser(final Long userId,
@@ -106,7 +108,7 @@ public class ItemClient extends BaseClient {
      * @param userId  id пользователя
      * @param comment комментарий
      * @param itemId  id вещи
-     * @return добавленный комментарий
+     * @return ответ сервера
      */
     public ResponseEntity<Object> addComment(final Long userId,
                                              final CommentDto comment,

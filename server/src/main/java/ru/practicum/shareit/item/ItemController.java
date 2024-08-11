@@ -35,7 +35,7 @@ public class ItemController {
     public ItemOutDto createItem(@RequestBody final ItemIncDto itemDto,
                                  @RequestHeader(userIdHead) final Long userId) {
 
-        log.info("ItemController: createItem");
+        log.info("Create Item; userId={} ", userId);
         return itemService.createItem(itemDto, userId);
     }
 
@@ -52,7 +52,7 @@ public class ItemController {
                                  @RequestBody final ItemIncDto itemDto,
                                  @RequestHeader(userIdHead) final Long userId) {
 
-        log.info("ItemController: updateItem");
+        log.info("Update Item; userId={}, itemId={} ", userId, itemId);
         return itemService.updateItem(itemId, itemDto, userId);
     }
 
@@ -67,7 +67,7 @@ public class ItemController {
     public ItemWidthBookingsTimeDto getItem(@RequestHeader(userIdHead) final Long userId,
                                             @PathVariable final Long itemId) {
 
-        log.info("ItemController: getItem");
+        log.info("Get Item; userId={}, itemId={} ", userId, itemId);
         return itemService.getItem(itemId, userId);
     }
 
@@ -82,7 +82,7 @@ public class ItemController {
                                                        @RequestParam final Integer from,
                                                        @RequestParam final Integer size) {
 
-        log.info("ItemController: getItemsUser");
+        log.info("Get Items user; userId={}, from={}, size={}", userId, from, size);
         return itemService.getItemsUser(userId, from, size);
     }
 
@@ -95,7 +95,7 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemOutDto> searchItems(@RequestParam final String text) {
 
-        log.info("ItemController: searchItems");
+        log.info("Search Items; text={}", text);
         return itemService.searchItems(text);
     }
 
@@ -112,7 +112,7 @@ public class ItemController {
                                     @RequestBody final CommentIncDto comment,
                                     @PathVariable final Long itemId) {
 
-        log.info("ItemController: addComment");
+        log.info("Add Comment; userId={}, itemId={}", userId, itemId);
         return itemService.addComment(comment, itemId, userId);
     }
 }

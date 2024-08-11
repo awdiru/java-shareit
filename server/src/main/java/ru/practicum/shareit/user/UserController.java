@@ -33,7 +33,7 @@ public class UserController {
      */
     @PostMapping
     public UserDto createUser(@RequestBody final UserDto userDto) {
-        log.info("UserController: createUser");
+        log.info("Create user");
         return userService.createUser(userDto);
     }
 
@@ -48,7 +48,7 @@ public class UserController {
     public UserDto updateUser(@PathVariable final Long userId,
                               @RequestBody final UserDto userDto) {
 
-        log.info("UserController: updateUser");
+        log.info("PATCH update user; userId={}", userId);
         return userService.updateUser(userId, userDto);
     }
 
@@ -61,7 +61,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserDto getUser(@PathVariable final Long userId) {
 
-        log.info("UserController: getUser");
+        log.info("Get user; userId={}", userId);
         return userService.getUser(userId);
 
     }
@@ -74,7 +74,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseToUserDeletion delUser(@PathVariable final Long userId) {
 
-        log.info("UserController: delUser");
+        log.info("Delete user; userId={}", userId);
         return userService.delUser(userId);
     }
 
@@ -89,7 +89,7 @@ public class UserController {
     public List<UserDto> getAllUsers(@RequestParam Integer from,
                                      @RequestParam Integer size) {
 
-        log.info("UserController: getAllUsers");
+        log.info("Get all users; from={}, size={}", from, size);
         return userService.getAllUsers(from, size);
     }
 }

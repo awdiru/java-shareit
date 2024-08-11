@@ -50,7 +50,7 @@ public class BookingController {
                                                   @PathVariable final Long bookingId,
                                                   @RequestParam final Boolean approved) {
 
-        log.info("Patch booking; userId={}, approved={}", userId, approved);
+        log.info("Patch booking; userId={}, bookingId={}, approved={}", userId, bookingId, approved);
         return bookingClient.approvedBooking(userId, bookingId, approved);
     }
 
@@ -64,7 +64,7 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@RequestHeader(userIdHead) final Long userId,
                                              @PathVariable final Long bookingId) {
-        log.info("Get booking; {}, userId={}", bookingId, userId);
+        log.info("Get booking; bookingId={}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
     }
 
@@ -86,7 +86,7 @@ public class BookingController {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
 
-        log.info("Get bookings user; state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+        log.info("Get bookings user; state={}, userId={}, from={}, size={}", stateParam, userId, from, size);
         return bookingClient.getAllBookingsUser(userId, state, from, size);
     }
 

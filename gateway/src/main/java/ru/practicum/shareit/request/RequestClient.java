@@ -74,7 +74,7 @@ public class RequestClient extends BaseClient {
      * Вернуть конкретный запрос
      *
      * @param requestId id запроса
-     * @return нужный запрос
+     * @return ответ сервера
      */
     public ResponseEntity<Object> getRequest(final Long requestId) {
         return get("/" + requestId);

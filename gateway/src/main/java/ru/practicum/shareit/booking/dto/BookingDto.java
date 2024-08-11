@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * Шаблон Item для передачи данных
+ * Шаблон Booking для передачи данных
  */
 @Getter
 @NoArgsConstructor

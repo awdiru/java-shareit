@@ -37,7 +37,7 @@ public class BookingController {
     public BookingOutDto createBooking(@RequestBody BookingIncDto bookingIncDto,
                                        @RequestHeader(userIdHead) final Long userId) {
 
-        log.info("BookingController : createBooking");
+        log.info("Post booking; userId={}, itemId={}", userId, bookingIncDto.getItemId());
         return bookingService.createBooking(bookingIncDto, userId);
 
     }
@@ -55,7 +55,7 @@ public class BookingController {
                                          @PathVariable Long bookingId,
                                          @RequestParam Boolean approved) {
 
-        log.info("BookingController : approvedBooking");
+        log.info("Patch booking; userId={}, bookingId={}, approved={}", userId, bookingId, approved);
         return bookingService.approvedBooking(userId, bookingId, approved);
     }
 
@@ -70,7 +70,7 @@ public class BookingController {
     public BookingOutDto getBooking(@RequestHeader(userIdHead) final Long userId,
                                     @PathVariable Long bookingId) {
 
-        log.info("BookingController : getBookingStatus");
+        log.info("Get booking; bookingId={}, userId={}", bookingId, userId);
         return bookingService.getBooking(userId, bookingId);
     }
 
@@ -89,7 +89,7 @@ public class BookingController {
                                                   @RequestParam Integer from,
                                                   @RequestParam Integer size) {
 
-        log.info("BookingController : getAllBookingUser");
+        log.info("Get bookings user; state={}, userId={}, from={}, size={}", state, userId, from, size);
         return bookingService.getAllBookingsUser(userId, state, from, size);
     }
 
@@ -108,7 +108,7 @@ public class BookingController {
                                                        @RequestParam Integer from,
                                                        @RequestParam Integer size) {
 
-        log.info("BookingController : getAllBookingsItemsUser");
+        log.info("Get bookings owner items user; state {}, userId={}, from={}, size={}", state, userId, from, size);
         return bookingService.getAllBookingsItemsUser(userId, state, from, size);
     }
 }

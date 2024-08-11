@@ -32,7 +32,7 @@ public class RequestController {
     public ResponseEntity<Object> createRequest(@RequestHeader(userIdHead) final Long userId,
                                                 @RequestBody @Valid final RequestDto requestDto) {
 
-        log.info("Post request; userId={}", userId);
+        log.info("Create request; userId={}", userId);
         return client.createRequest(userId, requestDto);
     }
 
@@ -70,7 +70,7 @@ public class RequestController {
      * Вернуть конкретный запрос
      *
      * @param requestId id запроса
-     * @return нужный запрос
+     * @return ответ сервера
      */
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getRequest(@PathVariable final Long requestId) {

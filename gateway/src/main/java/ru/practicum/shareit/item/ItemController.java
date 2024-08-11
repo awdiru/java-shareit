@@ -33,7 +33,7 @@ public class ItemController {
     public ResponseEntity<Object> createItem(@RequestBody @Valid final ItemIncDto itemDto,
                                              @RequestHeader(userIdHead) final Long userId) {
 
-        log.info("Create Item; userId={} ", userId);
+        log.info("POST create Item; userId={} ", userId);
         return client.createItem(itemDto, userId);
     }
 
@@ -50,7 +50,7 @@ public class ItemController {
                                              @RequestBody final ItemIncDto itemDto,
                                              @RequestHeader(userIdHead) final Long userId) {
 
-        log.info("Patch Item; userId={}, itemId={} ", userId, itemId);
+        log.info("PATCH update Item; userId={}, itemId={} ", userId, itemId);
         return client.updateItem(itemId, itemDto, userId);
     }
 
@@ -65,7 +65,7 @@ public class ItemController {
     public ResponseEntity<Object> getItem(@RequestHeader(userIdHead) final Long userId,
                                           @PathVariable final Long itemId) {
 
-        log.info("Get Item; userId={}, itemId={} ", userId, itemId);
+        log.info("GET Item; userId={}, itemId={} ", userId, itemId);
         return client.getItem(userId, itemId);
     }
 
@@ -73,6 +73,8 @@ public class ItemController {
      * Посмотреть все вещи пользователя
      *
      * @param userId id пользователя
+     * @param from   индекс страницы
+     * @param size   размер страницы
      * @return ответ сервера
      */
     @GetMapping
@@ -80,7 +82,7 @@ public class ItemController {
                                                @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
-        log.info("Get Items; userId={}, from={}, size={}", userId, from, size);
+        log.info("GET Items user; userId={}, from={}, size={}", userId, from, size);
         return client.getItemsUser(userId, from, size);
     }
 
@@ -93,7 +95,7 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(@RequestParam final String text) {
 
-        log.info("Get Items; text={}", text);
+        log.info("GET search Items; text={}", text);
         return client.searchItems(text);
     }
 
@@ -103,14 +105,14 @@ public class ItemController {
      * @param userId  id пользователя
      * @param comment комментарий
      * @param itemId  id вещи
-     * @return добавленный комментарий
+     * @return ответ сервера
      */
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@RequestHeader(userIdHead) final Long userId,
                                              @RequestBody @Valid final CommentDto comment,
                                              @PathVariable final Long itemId) {
 
-        log.info("Post Comment; userId={}, itemId={}", userId, itemId);
+        log.info("POST add Comment; userId={}, itemId={}", userId, itemId);
         return client.addComment(userId, comment, itemId);
     }
 }
