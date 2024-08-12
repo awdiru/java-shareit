@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.annotations.RequestControllerExceptionHandler;
 import ru.practicum.shareit.request.dto.model.RequestIncDto;
@@ -17,14 +17,10 @@ import java.util.List;
 @RequestMapping(path = "/requests")
 @Slf4j
 @RequestControllerExceptionHandler
+@RequiredArgsConstructor
 public class RequestController {
     private final RequestService requestService;
     private final String userIdHead = "X-Sharer-User-Id";
-
-    @Autowired
-    public RequestController(RequestService requestService) {
-        this.requestService = requestService;
-    }
 
     /**
      * Создать запрос на вещь

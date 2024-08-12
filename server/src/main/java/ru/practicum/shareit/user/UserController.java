@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.annotations.UserControllerExceptionHandler;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -16,14 +16,10 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/users")
 @UserControllerExceptionHandler
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    @Autowired
-    public UserController(final UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Запрос на создание пользователя
@@ -86,8 +82,8 @@ public class UserController {
      * @return список @size пользователей, страница @from
      */
     @GetMapping
-    public List<UserDto> getAllUsers(@RequestParam Integer from,
-                                     @RequestParam Integer size) {
+    public List<UserDto> getAllUsers(@RequestParam final Integer from,
+                                     @RequestParam final Integer size) {
 
         log.info("Get all users; from={}, size={}", from, size);
         return userService.getAllUsers(from, size);

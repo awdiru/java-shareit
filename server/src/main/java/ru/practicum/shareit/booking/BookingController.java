@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.annotations.BookingControllerExceptionHandler;
 import ru.practicum.shareit.booking.dto.model.BookingIncDto;
@@ -16,15 +16,11 @@ import java.util.List;
 @Slf4j
 @RequestMapping(path = "/bookings")
 @BookingControllerExceptionHandler
+@RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
     private final String userIdHead = "X-Sharer-User-Id";
 
-
-    @Autowired
-    public BookingController(final BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
 
     /**
      * Создание запроса на бронирование вещи
@@ -34,7 +30,7 @@ public class BookingController {
      * @return созданный запрос на бронирование
      */
     @PostMapping
-    public BookingOutDto createBooking(@RequestBody BookingIncDto bookingIncDto,
+    public BookingOutDto createBooking(@RequestBody final BookingIncDto bookingIncDto,
                                        @RequestHeader(userIdHead) final Long userId) {
 
         log.info("Post booking; userId={}, itemId={}", userId, bookingIncDto.getItemId());
@@ -52,8 +48,8 @@ public class BookingController {
      */
     @PatchMapping("/{bookingId}")
     public BookingOutDto approvedBooking(@RequestHeader(userIdHead) final Long userId,
-                                         @PathVariable Long bookingId,
-                                         @RequestParam Boolean approved) {
+                                         @PathVariable final Long bookingId,
+                                         @RequestParam final Boolean approved) {
 
         log.info("Patch booking; userId={}, bookingId={}, approved={}", userId, bookingId, approved);
         return bookingService.approvedBooking(userId, bookingId, approved);
@@ -68,7 +64,7 @@ public class BookingController {
      */
     @GetMapping("/{bookingId}")
     public BookingOutDto getBooking(@RequestHeader(userIdHead) final Long userId,
-                                    @PathVariable Long bookingId) {
+                                    @PathVariable final Long bookingId) {
 
         log.info("Get booking; bookingId={}, userId={}", bookingId, userId);
         return bookingService.getBooking(userId, bookingId);
@@ -85,9 +81,9 @@ public class BookingController {
      */
     @GetMapping
     public List<BookingOutDto> getAllBookingsUser(@RequestHeader(userIdHead) final Long userId,
-                                                  @RequestParam String state,
-                                                  @RequestParam Integer from,
-                                                  @RequestParam Integer size) {
+                                                  @RequestParam final String state,
+                                                  @RequestParam final Integer from,
+                                                  @RequestParam final Integer size) {
 
         log.info("Get bookings user; state={}, userId={}, from={}, size={}", state, userId, from, size);
         return bookingService.getAllBookingsUser(userId, state, from, size);
@@ -104,9 +100,9 @@ public class BookingController {
      */
     @GetMapping("/owner")
     public List<BookingOutDto> getAllBookingsItemsUser(@RequestHeader(userIdHead) final Long userId,
-                                                       @RequestParam String state,
-                                                       @RequestParam Integer from,
-                                                       @RequestParam Integer size) {
+                                                       @RequestParam final String state,
+                                                       @RequestParam final Integer from,
+                                                       @RequestParam final Integer size) {
 
         log.info("Get bookings owner items user; state {}, userId={}, from={}, size={}", state, userId, from, size);
         return bookingService.getAllBookingsItemsUser(userId, state, from, size);

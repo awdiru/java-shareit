@@ -1,6 +1,6 @@
 package ru.practicum.shareit.request.impliments;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,49 +21,37 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
-    private final RequestRepository reposRequest;
-    private final ItemRepository reposItem;
-    private final UserRepository reposUser;
+    private final RequestRepository requestRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
     private final RequestMapper requestMapper;
     private final ItemMapper itemMapper;
-
-    @Autowired
-    public RequestServiceImpl(final RequestRepository reposRequest,
-                              final ItemRepository reposItem,
-                              final UserRepository reposUser,
-                              final RequestMapper requestMapper,
-                              final ItemMapper itemMapper) {
-        this.reposRequest = reposRequest;
-        this.reposItem = reposItem;
-        this.reposUser = reposUser;
-        this.requestMapper = requestMapper;
-        this.itemMapper = itemMapper;
-    }
 
     @Override
     public RequestOutDto createRequest(final Long userId,
                                        final RequestIncDto requestIncDto) {
 
         Request request = requestMapper.toRequestFromRequestIncDto(requestIncDto);
-        request.setRequestor(reposUser.findById(userId)
+        request.setRequestor(userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден")));
 
         request.setCreated(LocalDateTime.now());
-        return requestMapper.toRequestOutDtoFromRequest(reposRequest.save(request));
+        return requestMapper.toRequestOutDtoFromRequest(requestRepository.save(request));
     }
 
     @Override
     public List<RequestWithItemDto> getRequestsUser(final Long userId) {
 
-        reposUser.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
-        return reposRequest.findAllByRequestorIdOrderByCreatedDesc(userId)
+        return requestRepository.findAllByRequestorIdOrderByCreatedDesc(userId)
                 .stream()
                 .map(requestMapper::toRequestWithItemDtoFromRequest)
                 .peek(requestWithItemDto ->
                         requestWithItemDto.setItems(
-                                reposItem.findAllByRequestId(requestWithItemDto.getId())
+                                itemRepository.findAllByRequestId(requestWithItemDto.getId())
                                         .stream()
                                         .map(itemMapper::toItemToRequestFromItem)
                                         .toList()
@@ -75,10 +63,10 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestOutDto> getAllRequests(final Long userId,
                                               final Integer from,
                                               final Integer size) {
-        reposUser.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
         Pageable paging = PageRequest.of(from, size);
-        return reposRequest.getAllRequests(userId, paging)
+        return requestRepository.getAllRequests(userId, paging)
                 .stream()
                 .map(requestMapper::toRequestOutDtoFromRequest)
                 .toList();
@@ -87,11 +75,11 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestWithItemDto getRequest(final Long requestId) {
 
-        RequestWithItemDto request = requestMapper.toRequestWithItemDtoFromRequest(reposRequest.findById(requestId)
+        RequestWithItemDto request = requestMapper.toRequestWithItemDtoFromRequest(requestRepository.findById(requestId)
                 .orElseThrow(() -> new IncorrectRequestIdException("Запрос с id " + requestId + " не найден")));
 
         request.setItems(
-                reposItem.findAllByRequestId(requestId)
+                itemRepository.findAllByRequestId(requestId)
                         .stream()
                         .map(itemMapper::toItemToRequestFromItem)
                         .toList()

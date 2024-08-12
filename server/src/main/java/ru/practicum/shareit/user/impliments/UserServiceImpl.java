@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.impliments;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,22 +21,15 @@ import java.util.stream.Collectors;
  * Реализация сервиса для ItemController
  */
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository repos;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    @Autowired
-    public UserServiceImpl(final UserRepository repos,
-                           final UserMapper userMapper) {
-        this.repos = repos;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public UserDto createUser(final UserDto userDto) {
         try {
-            User user = repos.save(userMapper.toUser(userDto));
+            User user = userRepository.save(userMapper.toUser(userDto));
             return userMapper.toUserDto(user);
         } catch (DataIntegrityViolationException e) {
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
@@ -45,9 +37,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(final Long userId, final UserDto userDto) {
+    public UserDto updateUser(final Long userId,
+                              final UserDto userDto) {
 
-        User user = repos.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException(
                         "Пользователь с id " + userId + " не найден."));
 
@@ -55,7 +48,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
 
         try {
-            return userMapper.toUserDto(repos.save(user));
+            return userMapper.toUserDto(userRepository.save(user));
         } catch (DataIntegrityViolationException e) {
             throw new DataException("Пользователь с email " + userDto.getEmail() + " уже существует");
         }
@@ -63,21 +56,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(final Long userId) {
-        return userMapper.toUserDto(repos.findById(userId)
+        return userMapper.toUserDto(userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException(
                         "Пользователь с id " + userId + " не найден.")));
     }
 
     @Override
     public ResponseToUserDeletion delUser(final Long userId) {
-        repos.deleteById(userId);
+        userRepository.deleteById(userId);
         return new ResponseToUserDeletion(200, "Пользователь успешно удален", "/users");
     }
 
     @Override
-    public List<UserDto> getAllUsers(Integer from, Integer size) {
+    public List<UserDto> getAllUsers(final Integer from,
+                                     final Integer size) {
+
         Pageable paging = PageRequest.of(from, size);
-        return repos.findAll(paging)
+        return userRepository.findAll(paging)
                 .stream()
                 .map(userMapper::toUserDto)
                 .collect(Collectors.toList());

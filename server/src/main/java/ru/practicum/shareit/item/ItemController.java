@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.annotations.ItemControllerExceptionHandler;
 import ru.practicum.shareit.item.dto.model.*;
@@ -15,14 +15,10 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/items")
 @ItemControllerExceptionHandler
+@RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
     private final String userIdHead = "X-Sharer-User-Id";
-
-    @Autowired
-    public ItemController(final ItemService itemService) {
-        this.itemService = itemService;
-    }
 
     /**
      * Запрос на создание вещи

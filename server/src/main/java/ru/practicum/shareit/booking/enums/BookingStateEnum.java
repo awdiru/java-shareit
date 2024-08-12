@@ -1,7 +1,5 @@
 package ru.practicum.shareit.booking.enums;
 
-import java.util.Optional;
-
 /**
  * Статус запросов вещей пользователя
  */
@@ -31,11 +29,11 @@ public enum BookingStateEnum {
      */
     REJECTED;
 
-    public static Optional<BookingStateEnum> from(String stringState) {
+    public static BookingStateEnum from(String stringState) {
         for (BookingStateEnum state : values())
             if (state.name().equalsIgnoreCase(stringState))
-                return Optional.of(state);
+                return state;
 
-        return Optional.empty();
+        return ALL;
     }
 }

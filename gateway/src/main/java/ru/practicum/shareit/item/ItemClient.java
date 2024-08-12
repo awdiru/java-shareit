@@ -98,6 +98,7 @@ public class ItemClient extends BaseClient {
      * @return ответ сервера
      */
     public ResponseEntity<Object> searchItems(final String text) {
+
         Map<String, Object> parameters = Map.of("text", text);
         return get("/search?text={text}", null, parameters);
     }

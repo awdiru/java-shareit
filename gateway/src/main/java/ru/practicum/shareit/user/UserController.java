@@ -81,8 +81,8 @@ public class UserController {
      * @return ответ сервера
      */
     @GetMapping
-    public ResponseEntity<Object> getAllUsers(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                              @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+    public ResponseEntity<Object> getAllUsers(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
+                                              @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
         log.info("GET all users; from={}, size={}", from, size);
         return client.getAllUsers(from, size);

@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.impliments;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,35 +30,16 @@ import java.util.List;
  * Реализация сервиса для ItemController
  */
 @Service
-@Slf4j
+@RequiredArgsConstructor
 class ItemServiceImpl implements ItemService {
-    private final RequestRepository reposRequest;
-    private final ItemRepository reposItem;
-    private final UserRepository reposUser;
-    private final CommentRepository reposComment;
-    private final BookingRepository reposBooking;
+    private final RequestRepository requestRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final BookingRepository bookingRepository;
     private final ItemMapper itemMapper;
     private final CommentMapper commentMapper;
     private final BookingMapper bookingMapper;
-
-    @Autowired
-    public ItemServiceImpl(final RequestRepository reposRequest,
-                           final ItemRepository reposItem,
-                           final UserRepository reposUser,
-                           final CommentRepository reposComment,
-                           final BookingRepository reposBooking,
-                           final ItemMapper itemMapper,
-                           final CommentMapper commentMapper,
-                           final BookingMapper bookingMapper) {
-        this.reposRequest = reposRequest;
-        this.reposItem = reposItem;
-        this.reposUser = reposUser;
-        this.reposComment = reposComment;
-        this.reposBooking = reposBooking;
-        this.itemMapper = itemMapper;
-        this.commentMapper = commentMapper;
-        this.bookingMapper = bookingMapper;
-    }
 
     @Override
     public ItemOutDto createItem(final ItemIncDto itemDto,
@@ -67,14 +47,14 @@ class ItemServiceImpl implements ItemService {
 
         Item item = itemMapper.toItemFromItemIncDto(itemDto);
 
-        item.setOwner(reposUser.findById(userId)
+        item.setOwner(userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден.")));
 
         if (itemDto.getRequestId() != null)
-            item.setRequest(reposRequest.findById(itemDto.getRequestId())
+            item.setRequest(requestRepository.findById(itemDto.getRequestId())
                     .orElseThrow(() -> new IncorrectRequestIdException("Запрос с id " + itemDto.getRequestId() + " не найден")));
 
-        return itemMapper.toItemDtoFromItem(reposItem.save(item));
+        return itemMapper.toItemDtoFromItem(itemRepository.save(item));
     }
 
     @Override
@@ -82,7 +62,7 @@ class ItemServiceImpl implements ItemService {
                                  final ItemIncDto itemDto,
                                  final Long userId) {
 
-        Item item = reposItem.findById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена."));
 
         if (!item.getOwner().getId().equals(userId))
@@ -94,9 +74,9 @@ class ItemServiceImpl implements ItemService {
 
         if (itemDto.getAvailable() != null) item.setAvailable(itemDto.getAvailable());
 
-        ItemOutDto itemOutDto = itemMapper.toItemDtoFromItem(reposItem.save(item));
+        ItemOutDto itemOutDto = itemMapper.toItemDtoFromItem(itemRepository.save(item));
         itemOutDto.setComments(
-                reposComment.findAllByItem(itemId)
+                commentRepository.findAllByItem(itemId)
                         .stream()
                         .map(commentMapper::toCommentOutDtoFromComment)
                         .toList()
@@ -108,13 +88,13 @@ class ItemServiceImpl implements ItemService {
     public ItemWidthBookingsTimeDto getItem(final Long itemId,
                                             final Long userId) {
 
-        Item item = reposItem.findById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена"));
 
         ItemWidthBookingsTimeDto itemWidthBookingsTimeDto = itemMapper.toItemWidthBookingsTimeDtoFromItem(item);
 
         itemWidthBookingsTimeDto.setComments(
-                reposComment.findAllByItem(itemId)
+                commentRepository.findAllByItem(itemId)
                         .stream()
                         .map(commentMapper::toCommentOutDtoFromComment)
                         .toList()
@@ -125,12 +105,12 @@ class ItemServiceImpl implements ItemService {
 
         Pageable paging = PageRequest.of(0, 1);
 
-        List<Booking> lastBookings = reposBooking.findLastBooking(item.getId(), LocalDateTime.now(), paging).toList();
+        List<Booking> lastBookings = bookingRepository.findLastBooking(item.getId(), LocalDateTime.now(), paging).toList();
         if (!lastBookings.isEmpty())
             itemWidthBookingsTimeDto.setLastBooking(bookingMapper
                     .toBookingWithItemsDtoFromBooking(lastBookings.getFirst()));
 
-        List<Booking> nextBookings = reposBooking.findNextBooking(item.getId(), LocalDateTime.now(), paging).toList();
+        List<Booking> nextBookings = bookingRepository.findNextBooking(item.getId(), LocalDateTime.now(), paging).toList();
         if (!nextBookings.isEmpty())
             itemWidthBookingsTimeDto.setNextBooking(bookingMapper
                     .toBookingWithItemsDtoFromBooking(nextBookings.getFirst()));
@@ -143,12 +123,12 @@ class ItemServiceImpl implements ItemService {
                                                        final Integer from,
                                                        final Integer size) {
         Pageable paging = PageRequest.of(from, size);
-        return reposItem.findAllByOwnerId(userId, paging)
+        return itemRepository.findAllByOwnerId(userId, paging)
                 .stream()
                 .map(itemMapper::toItemWidthBookingsTimeDtoFromItem)
                 .peek(itemWidthBookingsTimeDto ->
                         itemWidthBookingsTimeDto.setComments(
-                                reposComment.findAllByItem(itemWidthBookingsTimeDto.getId())
+                                commentRepository.findAllByItem(itemWidthBookingsTimeDto.getId())
                                         .stream()
                                         .map(commentMapper::toCommentOutDtoFromComment)
                                         .toList()
@@ -162,12 +142,12 @@ class ItemServiceImpl implements ItemService {
         if (text == null || text.isBlank())
             return new ArrayList<>();
 
-        return reposItem.searchByNameOrDescription("%" + text.toLowerCase() + "%")
+        return itemRepository.searchByNameOrDescription("%" + text.toLowerCase() + "%")
                 .stream()
                 .map(itemMapper::toItemDtoFromItem)
                 .peek(itemDto ->
                         itemDto.setComments(
-                                reposComment.findAllByItem(itemDto.getId())
+                                commentRepository.findAllByItem(itemDto.getId())
                                         .stream()
                                         .map(commentMapper::toCommentOutDtoFromComment)
                                         .toList()
@@ -180,7 +160,7 @@ class ItemServiceImpl implements ItemService {
                                     final Long itemId,
                                     final Long userId) {
 
-        List<Booking> bookings = reposBooking
+        List<Booking> bookings = bookingRepository
                 .searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), PageRequest.of(0, 1))
                 .toList();
 
@@ -190,14 +170,14 @@ class ItemServiceImpl implements ItemService {
 
         Comment comment = commentMapper.toCommentFromCommentIncDto(commentIncDto);
 
-        comment.setAuthor(reposUser.findById(userId)
+        comment.setAuthor(userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден")));
 
-        comment.setItem(reposItem.findById(itemId)
+        comment.setItem(itemRepository.findById(itemId)
                 .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена.")));
 
         comment.setCreated(LocalDateTime.now());
-        reposComment.save(comment);
+        commentRepository.save(comment);
         return commentMapper.toCommentOutDtoFromComment(comment);
     }
 }

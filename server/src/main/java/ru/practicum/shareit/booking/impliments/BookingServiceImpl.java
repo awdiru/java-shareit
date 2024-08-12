@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.impliments;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,32 +25,22 @@ import java.util.stream.Stream;
  * Реализация сервиса для BookingController
  */
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
-    private final BookingRepository reposBooking;
-    private final UserRepository reposUser;
-    private final ItemRepository reposItem;
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
     private final BookingMapper bookingMapper;
 
-    @Autowired
-    public BookingServiceImpl(final BookingRepository reposBooking,
-                              final ItemRepository reposItem,
-                              final UserRepository repsUser,
-                              final BookingMapper bookingMapper) {
-        this.reposBooking = reposBooking;
-        this.reposUser = repsUser;
-        this.reposItem = reposItem;
-        this.bookingMapper = bookingMapper;
-    }
-
     @Override
-    public BookingOutDto createBooking(BookingIncDto bookingIncDto, Long userId) {
+    public BookingOutDto createBooking(final BookingIncDto bookingIncDto,
+                                       final Long userId) {
 
         Booking booking = bookingMapper.toBookingFromBookingIncDto(bookingIncDto);
-        booking.setBooker(reposUser.findById(userId)
+        booking.setBooker(userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден")));
 
-        booking.setItem(reposItem.findById(bookingIncDto.getItemId())
+        booking.setItem(itemRepository.findById(bookingIncDto.getItemId())
                 .orElseThrow(() -> new IncorrectItemIdException("Предмет с id " + bookingIncDto.getItemId() + " не найден")));
 
         if (!booking.getItem().getAvailable())
@@ -66,14 +55,16 @@ public class BookingServiceImpl implements BookingService {
             throw new FailCreateBookingOwnerItem("Владелец вещи не может ее забронировать");
 
         booking.setStatus(BookingStatusEnum.WAITING);
-        booking = reposBooking.save(booking);
+        booking = bookingRepository.save(booking);
         return bookingMapper.toBookingOutDtoFromBooking(booking);
     }
 
     @Override
-    public BookingOutDto approvedBooking(Long userId, Long bookingId, Boolean approved) {
+    public BookingOutDto approvedBooking(final Long userId,
+                                         final Long bookingId,
+                                         final Boolean approved) {
 
-        Booking booking = reposBooking.findById(bookingId)
+        Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IncorrectBookingIdException("Бронирование с id " + bookingId + " не найдено"));
 
         if (booking.getBooker().getId().equals(userId) && approved)
@@ -96,21 +87,22 @@ public class BookingServiceImpl implements BookingService {
                 item.setNumberOfRentals(item.getNumberOfRentals() + 1);
             } else item.setNumberOfRentals(1);
 
-            reposItem.save(item);
+            itemRepository.save(item);
 
         } else if (booking.getBooker().getId().equals(userId))
             booking.setStatus(BookingStatusEnum.CANCELED);
 
         else booking.setStatus(BookingStatusEnum.REJECTED);
 
-        reposBooking.save(booking);
+        bookingRepository.save(booking);
         return bookingMapper.toBookingOutDtoFromBooking(booking);
     }
 
     @Override
-    public BookingOutDto getBooking(Long userId, Long bookingId) {
+    public BookingOutDto getBooking(final Long userId,
+                                    final Long bookingId) {
 
-        Booking booking = reposBooking.findById(bookingId)
+        Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IncorrectBookingIdException("Бронирование с id " + bookingId + " не найдено"));
 
         if (!(booking.getItem().getOwner().getId().equals(userId) || booking.getBooker().getId().equals(userId)))
@@ -121,25 +113,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutDto> getAllBookingsUser(Long userId, String state, Integer from, Integer size) {
+    public List<BookingOutDto> getAllBookingsUser(final Long userId,
+                                                  final String state,
+                                                  final Integer from,
+                                                  final Integer size) {
+
         Pageable paging = PageRequest.of(from, size);
 
-        BookingStateEnum stateEnum = BookingStateEnum.from(state).get();
-        reposUser.findById(userId)
+        BookingStateEnum stateEnum = BookingStateEnum.from(state);
+        userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
 
         Stream<Booking> stream = switch (stateEnum) {
-            case CURRENT -> reposBooking
+            case CURRENT -> bookingRepository
                     .findAllByBookerForStatusCurrent(userId, LocalDateTime.now(), paging).stream();
-            case PAST -> reposBooking
+            case PAST -> bookingRepository
                     .findAllByBookerForStatusPast(userId, LocalDateTime.now(), paging).stream();
-            case FUTURE -> reposBooking
+            case FUTURE -> bookingRepository
                     .findAllByBookerForStatusFuture(userId, LocalDateTime.now(), paging).stream();
-            case WAITING -> reposBooking
+            case WAITING -> bookingRepository
                     .findAllByBookerForStatusWaitingOrRejected(userId, BookingStatusEnum.WAITING, paging).stream();
-            case REJECTED -> reposBooking
+            case REJECTED -> bookingRepository
                     .findAllByBookerForStatusWaitingOrRejected(userId, BookingStatusEnum.REJECTED, paging).stream();
-            default -> reposBooking
+            default -> bookingRepository
                     .findAllByBooker(userId, paging).stream();
         };
         return stream
@@ -148,25 +144,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutDto> getAllBookingsItemsUser(Long userId, String state, Integer from, Integer size) {
+    public List<BookingOutDto> getAllBookingsItemsUser(final Long userId,
+                                                       final String state,
+                                                       final Integer from,
+                                                       final Integer size) {
+
         Pageable paging = PageRequest.of(from, size);
 
-        BookingStateEnum stateEnum = BookingStateEnum.from(state).get();
-        reposUser.findById(userId)
+        BookingStateEnum stateEnum = BookingStateEnum.from(state);
+        userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
 
         Stream<Booking> stream = switch (stateEnum) {
-            case CURRENT -> reposBooking
+            case CURRENT -> bookingRepository
                     .findAllBookingsItemsUserForStatusCurrent(userId, LocalDateTime.now(), paging).stream();
-            case PAST -> reposBooking
+            case PAST -> bookingRepository
                     .findAllBookingsItemsUserForStatusPast(userId, LocalDateTime.now(), paging).stream();
-            case FUTURE -> reposBooking
+            case FUTURE -> bookingRepository
                     .findAllBookingsItemsUserForStatusFuture(userId, LocalDateTime.now(), paging).stream();
-            case WAITING -> reposBooking
+            case WAITING -> bookingRepository
                     .findAllBookingsItemsUserForStatusWaitingOrRejected(userId, BookingStatusEnum.WAITING, paging).stream();
-            case REJECTED -> reposBooking
+            case REJECTED -> bookingRepository
                     .findAllBookingsItemsUserForStatusWaitingOrRejected(userId, BookingStatusEnum.REJECTED, paging).stream();
-            default -> reposBooking
+            default -> bookingRepository
                     .findAllBookingsItemsUser(userId, paging).stream();
         };
         return stream

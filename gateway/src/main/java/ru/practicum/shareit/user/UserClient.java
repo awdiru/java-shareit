@@ -8,7 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
-import ru.practicum.shareit.exception.FailEmailException;
+import ru.practicum.shareit.exception.IncorrectEmailException;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.Map;
@@ -37,8 +37,9 @@ public class UserClient extends BaseClient {
      * @return ответ сервера
      */
     public ResponseEntity<Object> createUser(final UserDto userDto) {
+
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty())
-            throw new FailEmailException("Email не может быть пустым.");
+            throw new IncorrectEmailException("Email не может быть пустым.");
 
         return post("", userDto);
     }
@@ -52,6 +53,7 @@ public class UserClient extends BaseClient {
      */
     public ResponseEntity<Object> updateUser(final Long userId,
                                              final UserDto userDto) {
+
         return patch("/" + userId, userDto);
     }
 
@@ -82,8 +84,8 @@ public class UserClient extends BaseClient {
      * @param size размер страницы (10 по умолчанию)
      * @return ответ сервера
      */
-    public ResponseEntity<Object> getAllUsers(Integer from,
-                                              Integer size) {
+    public ResponseEntity<Object> getAllUsers(final Integer from,
+                                              final Integer size) {
 
         Map<String, Object> parameters = Map.of(
                 "from", from,
