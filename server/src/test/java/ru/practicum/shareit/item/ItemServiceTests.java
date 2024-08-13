@@ -13,7 +13,11 @@ import ru.practicum.shareit.booking.dto.model.BookingWithItemsDto;
 import ru.practicum.shareit.exception.IncorrectItemIdException;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.item.dto.model.*;
+import ru.practicum.shareit.item.dto.model.comment.CommentIncDto;
+import ru.practicum.shareit.item.dto.model.comment.CommentOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemIncDto;
+import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.request.RequestService;
 import ru.practicum.shareit.request.dto.model.RequestIncDto;
 import ru.practicum.shareit.request.dto.model.RequestOutDto;
@@ -27,7 +31,7 @@ import java.util.List;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         properties = "spring.profiles.active=test")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class ItemServiceTests {
     private final ItemService itemService;
     private final UserService userService;

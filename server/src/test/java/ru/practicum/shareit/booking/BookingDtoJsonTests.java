@@ -10,7 +10,7 @@ import ru.practicum.shareit.booking.dto.model.BookingIncDto;
 import ru.practicum.shareit.booking.dto.model.BookingOutDto;
 import ru.practicum.shareit.booking.dto.model.BookingWithItemsDto;
 import ru.practicum.shareit.booking.enums.BookingStatusEnum;
-import ru.practicum.shareit.item.dto.model.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @JsonTest
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class BookingDtoJsonTests {
     private final JacksonTester<BookingIncDto> jsonBookingIncDto;
     private final JacksonTester<BookingOutDto> jsonBookingOutDto;

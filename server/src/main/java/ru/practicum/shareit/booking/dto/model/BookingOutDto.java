@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.dto.model;
 
 import lombok.*;
 import ru.practicum.shareit.booking.enums.BookingStatusEnum;
-import ru.practicum.shareit.item.dto.model.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;

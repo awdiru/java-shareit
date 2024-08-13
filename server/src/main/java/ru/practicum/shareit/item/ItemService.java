@@ -1,6 +1,10 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.item.dto.model.*;
+import ru.practicum.shareit.item.dto.model.comment.CommentIncDto;
+import ru.practicum.shareit.item.dto.model.comment.CommentOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemIncDto;
+import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemWidthBookingsTimeDto;
 
 import java.util.List;
 

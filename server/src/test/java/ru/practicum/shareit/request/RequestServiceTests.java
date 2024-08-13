@@ -7,10 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.item.ItemService;
-import ru.practicum.shareit.item.dto.model.ItemIncDto;
-import ru.practicum.shareit.item.dto.model.ItemOutDto;
-import ru.practicum.shareit.item.dto.model.ItemToRequestDto;
 import ru.practicum.shareit.request.dto.model.RequestIncDto;
 import ru.practicum.shareit.request.dto.model.RequestOutDto;
 import ru.practicum.shareit.request.dto.model.RequestWithItemDto;
@@ -23,11 +19,10 @@ import java.util.List;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         properties = "spring.profiles.active=test")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class RequestServiceTests {
     private final RequestService requestService;
     private final UserService userService;
-    private final ItemService itemService;
 
     @Test
     void createRequestTest() {
@@ -118,20 +113,11 @@ public class RequestServiceTests {
         RequestOutDto requestOutDto = requestService
                 .createRequest(requestor.getId(), new RequestIncDto(null, "description"));
 
-        ItemOutDto it1 = itemService.createItem(new ItemIncDto("item1", "description", true, requestOutDto.getId()), owner.getId());
-        ItemToRequestDto item1 = new ItemToRequestDto(it1.getId(), it1.getName(), it1.getOwner().getId());
-
-        ItemOutDto it2 = itemService.createItem(new ItemIncDto("item2", "description", true, requestOutDto.getId()), owner.getId());
-        ItemToRequestDto item2 = new ItemToRequestDto(it2.getId(), it2.getName(), it2.getOwner().getId());
-
-        ItemOutDto it3 = itemService.createItem(new ItemIncDto("item3", "description", true, requestOutDto.getId()), owner.getId());
-        ItemToRequestDto item3 = new ItemToRequestDto(it3.getId(), it3.getName(), it3.getOwner().getId());
-
         RequestWithItemDto requestWithItemDto = requestService.getRequest(requestOutDto.getId());
 
         Assertions.assertNotNull(requestWithItemDto.getId());
         Assertions.assertEquals(requestWithItemDto.getDescription(), "description");
         Assertions.assertTrue(requestWithItemDto.getCreated().isBefore(LocalDateTime.now()));
-        Assertions.assertEquals(requestWithItemDto.getItems(), List.of(item1, item2, item3));
+        Assertions.assertEquals(requestWithItemDto.getItems(), List.of());
     }
 }

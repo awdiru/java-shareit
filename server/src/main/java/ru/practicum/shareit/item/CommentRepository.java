@@ -16,10 +16,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @param itemId id вещи
      * @return список комментариев
      */
-    @Query("select c " +
-            "from Comment as c " +
-            "join Item as it on c.item.id = it.id " +
-            "and c.item.id = :itemId " +
-            "order by c.id")
+    @Query("""
+            select c
+            from Comment as c
+            join Item as it on c.item.id = it.id
+            and c.item.id = :itemId
+            order by c.id
+            """)
     List<Comment> findAllByItem(Long itemId);
 }

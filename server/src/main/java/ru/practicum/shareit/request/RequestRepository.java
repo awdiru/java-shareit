@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.request.model.Request;
@@ -25,9 +25,11 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
      * @param paging параметры страницы
      * @return страница с запросами других пользователей
      */
-    @Query("select r " +
-            "from Request as r " +
-            "where r.requestor.id <> :userId " +
-            "order by r.created")
-    Page<Request> getAllRequests(Long userId, Pageable paging);
+    @Query("""
+            select r
+            from Request as r
+            where r.requestor.id <> :userId
+            order by r.created
+            """)
+    Slice<Request> getAllRequests(Long userId, Pageable paging);
 }

@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.impliments;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.DataException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
@@ -15,7 +14,6 @@ import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Реализация сервиса для ItemController
@@ -71,10 +69,9 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAllUsers(final Integer from,
                                      final Integer size) {
 
-        Pageable paging = PageRequest.of(from, size);
-        return userRepository.findAll(paging)
+        return userRepository.findAll(PageRequest.of(from, size))
                 .stream()
                 .map(userMapper::toUserDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

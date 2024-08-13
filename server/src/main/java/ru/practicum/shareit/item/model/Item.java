@@ -39,4 +39,8 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request")
     private Request request;
+
+    public Long getOwnerId() {
+        return owner != null ? owner.getId() : null;
+    }
 }

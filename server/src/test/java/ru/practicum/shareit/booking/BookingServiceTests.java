@@ -11,8 +11,8 @@ import ru.practicum.shareit.booking.dto.model.BookingOutDto;
 import ru.practicum.shareit.booking.enums.BookingStatusEnum;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.ItemService;
-import ru.practicum.shareit.item.dto.model.ItemIncDto;
-import ru.practicum.shareit.item.dto.model.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemIncDto;
+import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -22,7 +22,7 @@ import java.util.List;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         properties = "spring.profiles.active=test")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class BookingServiceTests {
     private final BookingService bookingService;
     private final UserService userService;

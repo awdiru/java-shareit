@@ -12,24 +12,25 @@ import ru.practicum.shareit.request.model.Request;
 @Component
 public class RequestMapper {
     public Request toRequestFromRequestIncDto(RequestIncDto request) {
-        return new Request(null,
-                request.getDescription(),
-                null,
-                null);
+        return request == null ? null :
+                new Request(null,
+                        request.getDescription(),
+                        null,
+                        null);
     }
 
     public RequestOutDto toRequestOutDtoFromRequest(Request request) {
-        if (request == null) return null;
-        return new RequestOutDto(request.getId(),
-                request.getDescription(),
-                request.getCreated());
+        return request == null ? null :
+                new RequestOutDto(request.getId(),
+                        request.getDescription(),
+                        request.getCreated());
     }
 
     public RequestWithItemDto toRequestWithItemDtoFromRequest(Request request) {
-        if (request == null) return null;
-        return new RequestWithItemDto(request.getId(),
-                request.getDescription(),
-                request.getCreated(),
-                null);
+        return request == null ? null :
+                new RequestWithItemDto(request.getId(),
+                        request.getDescription(),
+                        request.getCreated(),
+                        null);
     }
 }

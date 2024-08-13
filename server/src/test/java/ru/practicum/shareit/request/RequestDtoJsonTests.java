@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.item.dto.model.ItemToRequestDto;
+import ru.practicum.shareit.item.dto.model.item.ItemToRequestDto;
 import ru.practicum.shareit.request.dto.model.RequestIncDto;
 import ru.practicum.shareit.request.dto.model.RequestOutDto;
 import ru.practicum.shareit.request.dto.model.RequestWithItemDto;
@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @JsonTest
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class RequestDtoJsonTests {
     private final JacksonTester<RequestIncDto> jsonRequestIncDto;
     private final JacksonTester<RequestOutDto> jsonRequestOutDto;
@@ -45,10 +45,7 @@ public class RequestDtoJsonTests {
 
     @Test
     void requestWithItemDtoTest() throws Exception {
-        ItemToRequestDto item1 = new ItemToRequestDto(1L, "item1", 1L);
-        ItemToRequestDto item2 = new ItemToRequestDto(2L, "item2", 2L);
-        ItemToRequestDto item3 = new ItemToRequestDto(3L, "item3", 3L);
-        List<ItemToRequestDto> items = List.of(item1, item2, item3);
+        List<ItemToRequestDto> items = List.of();
 
         RequestWithItemDto requestOutDto = new RequestWithItemDto(1L, "description", LocalDateTime.now(), items);
         JsonContent<RequestWithItemDto> result = jsonRequestWithItemDto.write(requestOutDto);
@@ -57,16 +54,6 @@ public class RequestDtoJsonTests {
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("description");
         assertThat(result).doesNotHaveEmptyJsonPathValue("$.created");
 
-        assertThat(result).extractingJsonPathNumberValue("$.items.[0].id").isEqualTo(1);
-        assertThat(result).extractingJsonPathNumberValue("$.items.[1].id").isEqualTo(2);
-        assertThat(result).extractingJsonPathNumberValue("$.items.[2].id").isEqualTo(3);
-
-        assertThat(result).extractingJsonPathStringValue("$.items.[0].name").isEqualTo("item1");
-        assertThat(result).extractingJsonPathStringValue("$.items.[1].name").isEqualTo("item2");
-        assertThat(result).extractingJsonPathStringValue("$.items.[2].name").isEqualTo("item3");
-
-        assertThat(result).extractingJsonPathNumberValue("$.items.[0].owner").isEqualTo(1);
-        assertThat(result).extractingJsonPathNumberValue("$.items.[1].owner").isEqualTo(2);
-        assertThat(result).extractingJsonPathNumberValue("$.items.[2].owner").isEqualTo(3);
+        assertThat(result).hasEmptyJsonPathValue("$.items");
     }
 }

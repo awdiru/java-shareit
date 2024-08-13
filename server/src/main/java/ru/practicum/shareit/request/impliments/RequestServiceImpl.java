@@ -50,12 +50,8 @@ public class RequestServiceImpl implements RequestService {
                 .stream()
                 .map(requestMapper::toRequestWithItemDtoFromRequest)
                 .peek(requestWithItemDto ->
-                        requestWithItemDto.setItems(
-                                itemRepository.findAllByRequestId(requestWithItemDto.getId())
-                                        .stream()
-                                        .map(itemMapper::toItemToRequestFromItem)
-                                        .toList()
-                        ))
+                        requestWithItemDto
+                                .setItems(itemRepository.findAllByRequestId(requestWithItemDto.getId())))
                 .toList();
     }
 
@@ -78,12 +74,7 @@ public class RequestServiceImpl implements RequestService {
         RequestWithItemDto request = requestMapper.toRequestWithItemDtoFromRequest(requestRepository.findById(requestId)
                 .orElseThrow(() -> new IncorrectRequestIdException("Запрос с id " + requestId + " не найден")));
 
-        request.setItems(
-                itemRepository.findAllByRequestId(requestId)
-                        .stream()
-                        .map(itemMapper::toItemToRequestFromItem)
-                        .toList()
-        );
+        request.setItems(itemRepository.findAllByRequestId(requestId));
         return request;
     }
 }

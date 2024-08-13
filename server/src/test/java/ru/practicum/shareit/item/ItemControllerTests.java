@@ -10,7 +10,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exception.IncorrectItemIdException;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.item.dto.model.*;
+import ru.practicum.shareit.item.dto.model.comment.CommentIncDto;
+import ru.practicum.shareit.item.dto.model.comment.CommentOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemIncDto;
+import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;

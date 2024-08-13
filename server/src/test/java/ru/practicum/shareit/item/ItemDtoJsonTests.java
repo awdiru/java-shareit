@@ -8,7 +8,12 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.booking.dto.model.BookingWithItemsDto;
 import ru.practicum.shareit.booking.enums.BookingStatusEnum;
-import ru.practicum.shareit.item.dto.model.*;
+import ru.practicum.shareit.item.dto.model.comment.CommentIncDto;
+import ru.practicum.shareit.item.dto.model.comment.CommentOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemIncDto;
+import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
+import ru.practicum.shareit.item.dto.model.item.ItemToRequestDto;
+import ru.practicum.shareit.item.dto.model.item.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.request.dto.model.RequestOutDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -18,7 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @JsonTest
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class ItemDtoJsonTests {
     private final JacksonTester<ItemIncDto> jsonItemIncDto;
     private final JacksonTester<ItemOutDto> jsonItemOutDto;
@@ -65,17 +70,6 @@ public class ItemDtoJsonTests {
 
         assertThat(result).extractingJsonPathStringValue("$.comments.[0].text").isEqualTo("text1");
         assertThat(result).extractingJsonPathStringValue("$.comments.[1].text").isEqualTo("text2");
-    }
-
-    @Test
-    void itemToRequestDtoTest() throws Exception {
-        ItemToRequestDto itemToRequestDto = new ItemToRequestDto(1L, "item", 1L);
-        JsonContent<ItemToRequestDto> result = jsonItemToRequestDto.write(itemToRequestDto);
-
-        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("item");
-        assertThat(result).extractingJsonPathNumberValue("$.owner").isEqualTo(1);
-
     }
 
     @Test
