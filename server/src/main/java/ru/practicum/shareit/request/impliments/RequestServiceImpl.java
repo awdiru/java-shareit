@@ -8,12 +8,8 @@ import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.request.RequestRepository;
-import ru.practicum.shareit.request.RequestService;
+import ru.practicum.shareit.request.*;
 import ru.practicum.shareit.request.dto.RequestMapper;
-import ru.practicum.shareit.request.dto.model.RequestIncDto;
-import ru.practicum.shareit.request.dto.model.RequestOutDto;
-import ru.practicum.shareit.request.dto.model.RequestWithItemDto;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.UserRepository;
 

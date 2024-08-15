@@ -8,8 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemIncDto;
+import ru.practicum.shareit.comment.CommentIncDto;
 
 /**
  * RestController для работы приложения по пути /items
@@ -109,7 +108,7 @@ public class ItemController {
      */
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@RequestHeader(userIdHead) final Long userId,
-                                             @RequestBody @Valid final CommentDto comment,
+                                             @RequestBody @Valid final CommentIncDto comment,
                                              @PathVariable final Long itemId) {
 
         log.info("POST add Comment; userId={}, itemId={}", userId, itemId);

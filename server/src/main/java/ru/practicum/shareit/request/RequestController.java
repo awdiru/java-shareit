@@ -4,9 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.annotations.RequestControllerExceptionHandler;
-import ru.practicum.shareit.request.dto.model.RequestIncDto;
-import ru.practicum.shareit.request.dto.model.RequestOutDto;
-import ru.practicum.shareit.request.dto.model.RequestWithItemDto;
 
 import java.util.List;
 

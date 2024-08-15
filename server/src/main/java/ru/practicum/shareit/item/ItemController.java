@@ -3,12 +3,9 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.comment.CommentIncDto;
+import ru.practicum.shareit.comment.CommentOutDto;
 import ru.practicum.shareit.item.annotations.ItemControllerExceptionHandler;
-import ru.practicum.shareit.item.dto.model.comment.CommentIncDto;
-import ru.practicum.shareit.item.dto.model.comment.CommentOutDto;
-import ru.practicum.shareit.item.dto.model.item.ItemIncDto;
-import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
-import ru.practicum.shareit.item.dto.model.item.ItemWidthBookingsTimeDto;
 
 import java.util.List;
 

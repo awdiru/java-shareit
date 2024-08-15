@@ -4,7 +4,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.shareit.item.dto.model.item.ItemToRequestDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;

@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.annotations.BookingControllerExceptionHandler;
-import ru.practicum.shareit.booking.dto.model.BookingIncDto;
-import ru.practicum.shareit.booking.dto.model.BookingOutDto;
 
 import java.util.List;
 

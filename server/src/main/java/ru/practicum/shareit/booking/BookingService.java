@@ -1,8 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import ru.practicum.shareit.booking.dto.model.BookingIncDto;
-import ru.practicum.shareit.booking.dto.model.BookingOutDto;
-
 import java.util.List;
 
 /**

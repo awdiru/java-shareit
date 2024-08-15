@@ -8,8 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.enums.BookingStateEnum;
 
 /**
  * RestController для работы приложения по пути /bookings
@@ -30,7 +29,7 @@ public class BookingController {
      * @return ответ сервера
      */
     @PostMapping
-    public ResponseEntity<Object> createBooking(@RequestBody @Valid final BookingDto bookingDto,
+    public ResponseEntity<Object> createBooking(@RequestBody @Valid final BookingIncDto bookingDto,
                                                 @RequestHeader(userIdHead) final Long userId) {
 
         log.info("Post booking; userId={}, itemId={}", userId, bookingDto.getItemId());
@@ -83,7 +82,7 @@ public class BookingController {
                                                      @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                      @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
-        BookingState state = BookingState.from(stateParam)
+        BookingStateEnum state = BookingStateEnum.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
 
         log.info("Get bookings user; state={}, userId={}, from={}, size={}", stateParam, userId, from, size);
@@ -105,7 +104,7 @@ public class BookingController {
                                                           @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                           @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
-        BookingState state = BookingState.from(stateParam)
+        BookingStateEnum state = BookingStateEnum.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
 
         log.info("Get bookings owner items user; state {}, userId={}, from={}, size={}", stateParam, userId, from, size);

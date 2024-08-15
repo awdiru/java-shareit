@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.request.dto.RequestDto;
 
 /**
  * RestController для работы приложения по пути /requests
@@ -30,7 +29,7 @@ public class RequestController {
      */
     @PostMapping
     public ResponseEntity<Object> createRequest(@RequestHeader(userIdHead) final Long userId,
-                                                @RequestBody @Valid final RequestDto requestDto) {
+                                                @RequestBody @Valid final RequestIncDto requestDto) {
 
         log.info("Create request; userId={}", userId);
         return client.createRequest(userId, requestDto);
