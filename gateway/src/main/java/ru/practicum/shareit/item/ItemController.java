@@ -8,7 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.comment.CommentIncDto;
+import ru.practicum.shareit.model.dto.comment.CommentIncDto;
+import ru.practicum.shareit.model.dto.item.ItemIncDto;
+
+import static ru.practicum.shareit.constants.Headers.USER_ID_HEADER;
 
 /**
  * RestController для работы приложения по пути /items
@@ -19,7 +22,6 @@ import ru.practicum.shareit.comment.CommentIncDto;
 @Slf4j
 public class ItemController {
     private final ItemClient client;
-    private final String userIdHead = "X-Sharer-User-Id";
 
     /**
      * Запрос на создание вещи
@@ -30,7 +32,7 @@ public class ItemController {
      */
     @PostMapping
     public ResponseEntity<Object> createItem(@RequestBody @Valid final ItemIncDto itemDto,
-                                             @RequestHeader(userIdHead) final Long userId) {
+                                             @RequestHeader(USER_ID_HEADER) final Long userId) {
 
         log.info("POST create Item; userId={} ", userId);
         return client.createItem(itemDto, userId);
@@ -47,7 +49,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@PathVariable final Long itemId,
                                              @RequestBody final ItemIncDto itemDto,
-                                             @RequestHeader(userIdHead) final Long userId) {
+                                             @RequestHeader(USER_ID_HEADER) final Long userId) {
 
         log.info("PATCH update Item; userId={}, itemId={} ", userId, itemId);
         return client.updateItem(itemId, itemDto, userId);
@@ -61,7 +63,7 @@ public class ItemController {
      * @return ответ сервера
      */
     @GetMapping("/{itemId}")
-    public ResponseEntity<Object> getItem(@RequestHeader(userIdHead) final Long userId,
+    public ResponseEntity<Object> getItem(@RequestHeader(USER_ID_HEADER) final Long userId,
                                           @PathVariable final Long itemId) {
 
         log.info("GET Item; userId={}, itemId={} ", userId, itemId);
@@ -77,7 +79,7 @@ public class ItemController {
      * @return ответ сервера
      */
     @GetMapping
-    public ResponseEntity<Object> getItemsUser(@RequestHeader(userIdHead) final Long userId,
+    public ResponseEntity<Object> getItemsUser(@RequestHeader(USER_ID_HEADER) final Long userId,
                                                @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
@@ -107,7 +109,7 @@ public class ItemController {
      * @return ответ сервера
      */
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<Object> addComment(@RequestHeader(userIdHead) final Long userId,
+    public ResponseEntity<Object> addComment(@RequestHeader(USER_ID_HEADER) final Long userId,
                                              @RequestBody @Valid final CommentIncDto comment,
                                              @PathVariable final Long itemId) {
 

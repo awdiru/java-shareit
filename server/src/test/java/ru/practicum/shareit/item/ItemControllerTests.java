@@ -7,12 +7,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.comment.CommentIncDto;
-import ru.practicum.shareit.comment.CommentOutDto;
+import ru.practicum.shareit.model.dto.comment.CommentIncDto;
+import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.exception.IncorrectItemIdException;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.user.UserDto;
+import ru.practicum.shareit.model.dto.item.ItemIncDto;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;

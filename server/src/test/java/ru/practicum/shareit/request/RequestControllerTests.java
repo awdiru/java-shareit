@@ -9,6 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
+import ru.practicum.shareit.model.dto.request.RequestIncDto;
+import ru.practicum.shareit.model.dto.request.RequestOutDto;
+import ru.practicum.shareit.model.dto.request.RequestWithItemDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;

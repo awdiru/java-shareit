@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import ru.practicum.shareit.enums.BookingStatusEnum;
+import ru.practicum.shareit.model.enums.BookingStatusEnum;
 
 
 /**

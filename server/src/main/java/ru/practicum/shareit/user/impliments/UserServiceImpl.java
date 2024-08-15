@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.DataException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.user.UserDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserMapper;

@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.item.ItemToRequestDto;
+import ru.practicum.shareit.model.dto.item.ItemToRequestDto;
+import ru.practicum.shareit.model.dto.request.RequestIncDto;
+import ru.practicum.shareit.model.dto.request.RequestOutDto;
+import ru.practicum.shareit.model.dto.request.RequestWithItemDto;
 
 
 import java.time.LocalDateTime;

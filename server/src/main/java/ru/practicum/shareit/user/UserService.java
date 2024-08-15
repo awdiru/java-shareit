@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import ru.practicum.shareit.model.dto.user.UserDto;
 import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 
 import java.util.List;

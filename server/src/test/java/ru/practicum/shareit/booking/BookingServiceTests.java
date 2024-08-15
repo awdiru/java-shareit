@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.enums.BookingStatusEnum;
+import ru.practicum.shareit.model.dto.booking.BookingIncDto;
+import ru.practicum.shareit.model.dto.booking.BookingOutDto;
+import ru.practicum.shareit.model.enums.BookingStatusEnum;
 import ru.practicum.shareit.exception.*;
-import ru.practicum.shareit.item.ItemIncDto;
-import ru.practicum.shareit.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.item.ItemIncDto;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
 import ru.practicum.shareit.item.ItemService;
-import ru.practicum.shareit.user.UserDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
 import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;

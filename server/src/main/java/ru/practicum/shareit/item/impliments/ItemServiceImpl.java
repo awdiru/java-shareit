@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.comment.CommentIncDto;
-import ru.practicum.shareit.comment.CommentOutDto;
+import ru.practicum.shareit.model.dto.comment.CommentIncDto;
+import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.exception.IncorrectCommentatorException;
 import ru.practicum.shareit.exception.IncorrectItemIdException;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
@@ -19,12 +19,19 @@ import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.model.dto.item.ItemIncDto;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
 import ru.practicum.shareit.request.RequestRepository;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.practicum.shareit.constants.TopicNames.ADD_COMMENT;
+import static ru.practicum.shareit.constants.TopicNames.CREATING_ITEM_ON_REQUESTS;
 
 /**
  * Реализация сервиса для ItemController
@@ -58,7 +65,7 @@ class ItemServiceImpl implements ItemService {
             item.setRequest(requestRepository.findById(itemDto.getRequestId())
                     .orElseThrow(() -> new IncorrectRequestIdException("Запрос с id " + itemDto.getRequestId() + " не найден")));
 
-            itemWithoutCommentsDtoKafka.send("creating-item-on-request", itemMapper.toItemWithoutCommentsDtoFromItem(item));
+            itemWithoutCommentsDtoKafka.send(CREATING_ITEM_ON_REQUESTS, itemMapper.toItemWithoutCommentsDtoFromItem(item));
         }
         return itemMapper.toItemDtoFromItem(itemRepository.save(item));
     }
@@ -185,7 +192,7 @@ class ItemServiceImpl implements ItemService {
         comment.setCreated(LocalDateTime.now());
 
         CommentOutDto commentOutDto = commentMapper.toCommentOutDtoFromComment(commentRepository.save(comment));
-        commentOutDtoKafka.send("add-comment", commentOutDto);
+        commentOutDtoKafka.send(ADD_COMMENT, commentOutDto);
         return commentOutDto;
     }
 }

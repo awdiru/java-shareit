@@ -2,11 +2,11 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.item.ItemIncDto;
-import ru.practicum.shareit.item.ItemOutDto;
-import ru.practicum.shareit.item.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.model.dto.item.ItemIncDto;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.ItemWithoutCommentsDto;
+import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
 import ru.practicum.shareit.request.dto.RequestMapper;
 import ru.practicum.shareit.user.dto.UserMapper;
 

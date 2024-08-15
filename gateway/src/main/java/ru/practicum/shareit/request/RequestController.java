@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.model.dto.request.RequestIncDto;
+
+import static ru.practicum.shareit.constants.Headers.USER_ID_HEADER;
 
 /**
  * RestController для работы приложения по пути /requests
@@ -18,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class RequestController {
     private final RequestClient client;
-    private final String userIdHead = "X-Sharer-User-Id";
 
     /**
      * Создать запрос на вещь
@@ -28,7 +30,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @PostMapping
-    public ResponseEntity<Object> createRequest(@RequestHeader(userIdHead) final Long userId,
+    public ResponseEntity<Object> createRequest(@RequestHeader(USER_ID_HEADER) final Long userId,
                                                 @RequestBody @Valid final RequestIncDto requestDto) {
 
         log.info("Create request; userId={}", userId);
@@ -42,7 +44,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @GetMapping
-    public ResponseEntity<Object> getRequestsUser(@RequestHeader(userIdHead) final Long userId) {
+    public ResponseEntity<Object> getRequestsUser(@RequestHeader(USER_ID_HEADER) final Long userId) {
 
         log.info("Get user requests; userId={}", userId);
         return client.getRequestsUser(userId);
@@ -57,7 +59,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllRequests(@RequestHeader(userIdHead) final Long userId,
+    public ResponseEntity<Object> getAllRequests(@RequestHeader(USER_ID_HEADER) final Long userId,
                                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
                                                  @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 

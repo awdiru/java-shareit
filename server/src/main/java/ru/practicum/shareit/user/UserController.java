@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.model.dto.user.UserDto;
 import ru.practicum.shareit.user.annotations.UserControllerExceptionHandler;
 import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 

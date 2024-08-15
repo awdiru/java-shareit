@@ -1,5 +1,9 @@
 package ru.practicum.shareit.request;
 
+import ru.practicum.shareit.model.dto.request.RequestIncDto;
+import ru.practicum.shareit.model.dto.request.RequestOutDto;
+import ru.practicum.shareit.model.dto.request.RequestWithItemDto;
+
 import java.util.List;
 
 public interface RequestService {

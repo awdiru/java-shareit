@@ -5,9 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.enums.BookingStatusEnum;
-import ru.practicum.shareit.item.ItemOutDto;
-import ru.practicum.shareit.user.UserDto;
+import ru.practicum.shareit.model.dto.booking.BookingIncDto;
+import ru.practicum.shareit.model.dto.booking.BookingOutDto;
+import ru.practicum.shareit.model.dto.booking.BookingWithItemsDto;
+import ru.practicum.shareit.model.enums.BookingStatusEnum;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

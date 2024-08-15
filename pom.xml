@@ -24,13 +24,13 @@
 		<module>gateway</module>
 		<module>server</module>
 		<module>test-kafka</module>
-		<module>dto-template</module>
+		<module>template</module>
 	</modules>
 
 	<dependencies>
 		<dependency>
 			<groupId>ru.practicum</groupId>
-			<artifactId>dto-template</artifactId>
+			<artifactId>template</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

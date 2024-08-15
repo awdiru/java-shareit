@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.user.UserDto;
+import ru.practicum.shareit.model.dto.request.RequestIncDto;
+import ru.practicum.shareit.model.dto.request.RequestOutDto;
+import ru.practicum.shareit.model.dto.request.RequestWithItemDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
 import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;

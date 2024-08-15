@@ -1,9 +1,9 @@
 package ru.practicum.shareit.request.dto;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.request.RequestOutDto;
-import ru.practicum.shareit.request.RequestIncDto;
-import ru.practicum.shareit.request.RequestWithItemDto;
+import ru.practicum.shareit.model.dto.request.RequestOutDto;
+import ru.practicum.shareit.model.dto.request.RequestIncDto;
+import ru.practicum.shareit.model.dto.request.RequestWithItemDto;
 import ru.practicum.shareit.request.model.Request;
 
 /**
