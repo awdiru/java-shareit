@@ -25,6 +25,7 @@
 		<module>server</module>
 		<module>test-kafka</module>
 		<module>template</module>
+		<module>notification</module>
 	</modules>
 
 	<dependencies>
