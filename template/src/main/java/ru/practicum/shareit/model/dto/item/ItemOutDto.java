@@ -24,5 +24,6 @@ public class ItemOutDto {
     private Integer numberOfRentals;
     private Boolean available;
     private RequestOutDto request;
+    private Double rating;
     private List<CommentOutDto> comments;
 }

@@ -28,6 +28,7 @@ public class ItemMapper {
                 item.getNumberOfRentals(),
                 item.getAvailable(),
                 null,
+                null,
                 null);
 
         if (item.getRequest() != null)
@@ -45,6 +46,7 @@ public class ItemMapper {
                         item.getNumberOfRentals(),
                         item.getAvailable(),
                         requestMapper.toRequestOutDtoFromRequest(item.getRequest()),
+                        null,
                         null,
                         null,
                         null);
