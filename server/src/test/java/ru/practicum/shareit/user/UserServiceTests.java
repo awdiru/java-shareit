@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.DataException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
+import ru.practicum.shareit.model.dto.user.UserDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 

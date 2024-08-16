@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.booking.dto.model.BookingIncDto;
-import ru.practicum.shareit.booking.dto.model.BookingOutDto;
-import ru.practicum.shareit.booking.enums.BookingStateEnum;
-import ru.practicum.shareit.booking.enums.BookingStatusEnum;
+import ru.practicum.shareit.model.dto.booking.BookingIncDto;
+import ru.practicum.shareit.model.dto.booking.BookingOutDto;
+import ru.practicum.shareit.model.enums.BookingStateEnum;
+import ru.practicum.shareit.model.enums.BookingStatusEnum;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.ItemRepository;
@@ -120,7 +120,7 @@ public class BookingServiceImpl implements BookingService {
 
         Pageable paging = PageRequest.of(from, size);
 
-        BookingStateEnum stateEnum = BookingStateEnum.from(state);
+        BookingStateEnum stateEnum = BookingStateEnum.from(state).get();
         userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
 
@@ -151,7 +151,7 @@ public class BookingServiceImpl implements BookingService {
 
         Pageable paging = PageRequest.of(from, size);
 
-        BookingStateEnum stateEnum = BookingStateEnum.from(state);
+        BookingStateEnum stateEnum = BookingStateEnum.from(state).get();
         userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
 

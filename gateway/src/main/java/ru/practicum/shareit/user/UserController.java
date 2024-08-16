@@ -1,5 +1,8 @@
 package ru.practicum.shareit.user;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -8,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * RestController для работы приложения по пути /users
@@ -17,71 +22,71 @@ import ru.practicum.shareit.user.dto.UserDto;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Пользователи")
 public class UserController {
     private final UserClient client;
 
-    /**
-     * Запрос на создание пользователя
-     *
-     * @param userDto информация о новом пользователе
-     * @return ответ сервера
-     */
-    @PostMapping
+    @Operation(summary = "Создать пользователя",
+            description = """
+                    Создание нового пользователя по заданным email и имени.
+                    Email уникальный, в формате user@email.com
+                    """)
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createUser(@RequestBody @Valid final UserDto userDto) {
         log.info("Post user");
         return client.createUser(userDto);
     }
 
-    /**
-     * Обновление данных о пользователе
-     *
-     * @param userId  id пользователя
-     * @param userDto обновленный данные о пользователе
-     * @return ответ сервера
-     */
-    @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable final Long userId,
+    @Operation(summary = "Обновить пользователя",
+            description = """
+                    Обновление данных пользователя.
+                    null значения игнорируются.
+                    Можно обновить email, но на такой же уникальный
+                    Email в формате user@email.com
+                    """)
+    @PatchMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateUser(@Parameter(description = "id пользователя")
+                                             @PathVariable final Long userId,
                                              @RequestBody @Valid final UserDto userDto) {
 
         log.info("PATCH update user; userId={}", userId);
         return client.updateUser(userId, userDto);
     }
 
-    /**
-     * Вернуть данные о пользователе
-     *
-     * @param userId id пользователя
-     * @return ответ сервера
-     */
-    @GetMapping("/{userId}")
-    public ResponseEntity<Object> getUser(@PathVariable final Long userId) {
+    @Operation(summary = "Вернуть пользователя по id",
+            description = """
+                    Получение данных о пользователе по id.
+                    Возвращаются id, имя и email
+                    """)
+    @GetMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getUser(@Parameter(description = "id пользователя")
+                                          @PathVariable final Long userId) {
 
         log.info("GET user; userId={}", userId);
         return client.getUser(userId);
     }
 
-    /**
-     * Удаление пользователя
-     *
-     * @param userId id пользователя
-     * @return ответ сервера
-     */
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> delUser(@PathVariable final Long userId) {
+    @Operation(summary = "Удалить пользователя",
+            description = """
+                    Удаление пользователя по id.
+                    Удаляются все данные о пользователе из БД
+                    """)
+    @DeleteMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> delUser(@Parameter(description = "id пользователя")
+                                          @PathVariable final Long userId) {
 
         log.info("DELETE user; userId={}", userId);
         return client.delUser(userId);
     }
 
-    /**
-     * Вернуть список всех пользователей
-     *
-     * @param from индекс страницы (0 по умолчанию)
-     * @param size размер страницы (10 по умолчанию)
-     * @return ответ сервера
-     */
-    @GetMapping
-    public ResponseEntity<Object> getAllUsers(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
+    @Operation(summary = "Вернуть список всех пользователей",
+            description = """
+                    Возвращается страница № from размера size из БД
+                    """)
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getAllUsers(@Parameter(description = "№ страницы")
+                                              @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
+                                              @Parameter(description = "Размер страницы")
                                               @Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 
         log.info("GET all users; from={}, size={}", from, size);

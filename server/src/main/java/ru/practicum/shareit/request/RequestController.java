@@ -3,12 +3,14 @@ package ru.practicum.shareit.request;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.model.dto.request.RequestIncDto;
+import ru.practicum.shareit.model.dto.request.RequestOutDto;
+import ru.practicum.shareit.model.dto.request.RequestWithItemDto;
 import ru.practicum.shareit.request.annotations.RequestControllerExceptionHandler;
-import ru.practicum.shareit.request.dto.model.RequestIncDto;
-import ru.practicum.shareit.request.dto.model.RequestOutDto;
-import ru.practicum.shareit.request.dto.model.RequestWithItemDto;
 
 import java.util.List;
+
+import static ru.practicum.shareit.constants.Headers.USER_ID_HEADER;
 
 /**
  * RestController для работы приложения по пути /requests
@@ -20,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RequestController {
     private final RequestService requestService;
-    private final String userIdHead = "X-Sharer-User-Id";
 
     /**
      * Создать запрос на вещь
@@ -30,7 +31,7 @@ public class RequestController {
      * @return ответ сервера
      */
     @PostMapping
-    public RequestOutDto createRequest(@RequestHeader(userIdHead) final Long userId,
+    public RequestOutDto createRequest(@RequestHeader(USER_ID_HEADER) final Long userId,
                                        @RequestBody final RequestIncDto requestIncDto) {
 
         log.info("POST create request; userId={}", userId);
@@ -44,7 +45,7 @@ public class RequestController {
      * @return список запросов с ответами
      */
     @GetMapping
-    public List<RequestWithItemDto> getRequestsUser(@RequestHeader(userIdHead) final Long userId) {
+    public List<RequestWithItemDto> getRequestsUser(@RequestHeader(USER_ID_HEADER) final Long userId) {
 
         log.info("GET requests; userId={}", userId);
         return requestService.getRequestsUser(userId);
@@ -59,7 +60,7 @@ public class RequestController {
      * @return список запросов пользователей
      */
     @GetMapping("/all")
-    public List<RequestOutDto> getAllRequests(@RequestHeader(userIdHead) final Long userId,
+    public List<RequestOutDto> getAllRequests(@RequestHeader(USER_ID_HEADER) final Long userId,
                                               @RequestParam final Integer from,
                                               @RequestParam final Integer size) {
 

@@ -4,13 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.annotations.ItemControllerExceptionHandler;
-import ru.practicum.shareit.item.dto.model.comment.CommentIncDto;
-import ru.practicum.shareit.item.dto.model.comment.CommentOutDto;
-import ru.practicum.shareit.item.dto.model.item.ItemIncDto;
-import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
-import ru.practicum.shareit.item.dto.model.item.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.model.dto.comment.CommentIncDto;
+import ru.practicum.shareit.model.dto.comment.CommentOutDto;
+import ru.practicum.shareit.model.dto.item.ItemIncDto;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
 
 import java.util.List;
+
+import static ru.practicum.shareit.constants.Headers.USER_ID_HEADER;
 
 /**
  * RestController для работы приложения по пути /items
@@ -22,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
-    private final String userIdHead = "X-Sharer-User-Id";
 
     /**
      * Запрос на создание вещи
@@ -33,7 +34,7 @@ public class ItemController {
      */
     @PostMapping
     public ItemOutDto createItem(@RequestBody final ItemIncDto itemDto,
-                                 @RequestHeader(userIdHead) final Long userId) {
+                                 @RequestHeader(USER_ID_HEADER) final Long userId) {
 
         log.info("Create Item; userId={} ", userId);
         return itemService.createItem(itemDto, userId);
@@ -50,7 +51,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ItemOutDto updateItem(@PathVariable final Long itemId,
                                  @RequestBody final ItemIncDto itemDto,
-                                 @RequestHeader(userIdHead) final Long userId) {
+                                 @RequestHeader(USER_ID_HEADER) final Long userId) {
 
         log.info("Update Item; userId={}, itemId={} ", userId, itemId);
         return itemService.updateItem(itemId, itemDto, userId);
@@ -64,7 +65,7 @@ public class ItemController {
      * @return информация о вещи
      */
     @GetMapping("/{itemId}")
-    public ItemWidthBookingsTimeDto getItem(@RequestHeader(userIdHead) final Long userId,
+    public ItemWidthBookingsTimeDto getItem(@RequestHeader(USER_ID_HEADER) final Long userId,
                                             @PathVariable final Long itemId) {
 
         log.info("Get Item; userId={}, itemId={} ", userId, itemId);
@@ -78,7 +79,7 @@ public class ItemController {
      * @return список вещей пользователя
      */
     @GetMapping
-    public List<ItemWidthBookingsTimeDto> getItemsUser(@RequestHeader(userIdHead) final Long userId,
+    public List<ItemWidthBookingsTimeDto> getItemsUser(@RequestHeader(USER_ID_HEADER) final Long userId,
                                                        @RequestParam final Integer from,
                                                        @RequestParam final Integer size) {
 
@@ -108,7 +109,7 @@ public class ItemController {
      * @return добавленный комментарий
      */
     @PostMapping("/{itemId}/comment")
-    public CommentOutDto addComment(@RequestHeader(userIdHead) final Long userId,
+    public CommentOutDto addComment(@RequestHeader(USER_ID_HEADER) final Long userId,
                                     @RequestBody final CommentIncDto comment,
                                     @PathVariable final Long itemId) {
 

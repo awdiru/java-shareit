@@ -2,16 +2,15 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.booking.dto.model.BookingIncDto;
-import ru.practicum.shareit.booking.dto.model.BookingOutDto;
-import ru.practicum.shareit.booking.dto.model.BookingWithItemsDto;
-import ru.practicum.shareit.booking.enums.BookingStatusEnum;
-import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.model.dto.booking.BookingIncDto;
+import ru.practicum.shareit.model.dto.booking.BookingOutDto;
+import ru.practicum.shareit.model.dto.booking.BookingWithItemsDto;
+import ru.practicum.shareit.model.enums.BookingStatusEnum;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

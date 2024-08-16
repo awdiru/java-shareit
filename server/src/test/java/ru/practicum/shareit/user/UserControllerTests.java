@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exception.DataException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
+import ru.practicum.shareit.model.dto.user.UserDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.ResponseToUserDeletion;
 

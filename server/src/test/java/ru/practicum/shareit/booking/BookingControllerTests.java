@@ -7,12 +7,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.booking.dto.model.BookingIncDto;
-import ru.practicum.shareit.booking.dto.model.BookingOutDto;
-import ru.practicum.shareit.booking.enums.BookingStatusEnum;
+import ru.practicum.shareit.model.dto.booking.BookingIncDto;
+import ru.practicum.shareit.model.dto.booking.BookingOutDto;
+import ru.practicum.shareit.model.enums.BookingStatusEnum;
 import ru.practicum.shareit.exception.*;
-import ru.practicum.shareit.item.dto.model.item.ItemOutDto;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.model.dto.item.ItemOutDto;
+import ru.practicum.shareit.model.dto.user.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
