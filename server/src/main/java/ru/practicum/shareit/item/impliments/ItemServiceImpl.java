@@ -223,11 +223,14 @@ class ItemServiceImpl implements ItemService {
         List<Booking> bookings = bookingRepository
                 .searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), PageRequest.of(0, 1))
                 .toList();
-/*
+
         if (bookings.isEmpty())
             throw new IncorrectCommentatorException(
                     "Оценки могут ставить только те пользователи, которые брали вещь в аренду");
-*/
+
+        if (itemRepository.findById(itemId).get().equals(userId))
+            throw new IncorrectCommentatorException("Владелец вещи не может поставить ей оценку");
+
         if (ratingRepository.findByAuthorAndItem(userId, itemId).isPresent())
             throw new IncorrectCommentatorException("Оценку можно поставить только один раз");
 
