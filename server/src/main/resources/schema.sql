@@ -18,7 +18,7 @@ CREATE TABLE public.item_requests (
 	requestor int4 NOT NULL,
 	created timestamp NULL,
 	CONSTRAINT item_requests_pk PRIMARY KEY (id),
-	CONSTRAINT item_requests_users_fk FOREIGN KEY (requestor) REFERENCES public.users(id)
+	CONSTRAINT item_requests_users_fk FOREIGN KEY (requestor) REFERENCES public.users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE public.items (
@@ -30,8 +30,8 @@ CREATE TABLE public.items (
 	available bool DEFAULT false NULL,
 	request int4 NULL,
 	CONSTRAINT items_pk PRIMARY KEY (id),
-	CONSTRAINT items_item_requests_fk FOREIGN KEY (request) REFERENCES public.item_requests(id),
-	CONSTRAINT items_users_fk FOREIGN KEY (owner) REFERENCES public.users(id)
+	CONSTRAINT items_item_requests_fk FOREIGN KEY (request) REFERENCES public.item_requests(id) ON DELETE NO ACTION,
+	CONSTRAINT items_users_fk FOREIGN KEY (owner) REFERENCES public.users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE public.bookings (
@@ -42,8 +42,8 @@ CREATE TABLE public.bookings (
 	booker int4 NOT NULL,
 	status varchar NOT NULL,
 	CONSTRAINT bookings_pk PRIMARY KEY (id),
-	CONSTRAINT bookings_items_fk FOREIGN KEY (item) REFERENCES public.items(id),
-	CONSTRAINT bookings_users_fk FOREIGN KEY (booker) REFERENCES public.users(id)
+	CONSTRAINT bookings_items_fk FOREIGN KEY (item) REFERENCES public.items(id) ON DELETE CASCADE,
+	CONSTRAINT bookings_users_fk FOREIGN KEY (booker) REFERENCES public.users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE public.comments (
@@ -53,6 +53,6 @@ CREATE TABLE public.comments (
 	text varchar NOT NULL,
 	created timestamp NOT NULL,
 	CONSTRAINT comments_pk PRIMARY KEY (id),
-	CONSTRAINT comments_items_fk FOREIGN KEY (item) REFERENCES public.items(id),
-	CONSTRAINT comments_users_fk FOREIGN KEY (author) REFERENCES public.users(id)
+	CONSTRAINT comments_items_fk FOREIGN KEY (item) REFERENCES public.items(id) ON DELETE CASCADE,
+	CONSTRAINT comments_users_fk FOREIGN KEY (author) REFERENCES public.users(id) ON DELETE CASCADE
 );
