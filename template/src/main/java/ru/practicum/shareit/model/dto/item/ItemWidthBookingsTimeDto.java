@@ -27,6 +27,7 @@ public class ItemWidthBookingsTimeDto {
     private Boolean available;
     private RequestOutDto request;
     private Double rating;
+    private Integer userRating;
     private BookingWithItemsDto lastBooking;
     private BookingWithItemsDto nextBooking;
     private List<CommentOutDto> comments;

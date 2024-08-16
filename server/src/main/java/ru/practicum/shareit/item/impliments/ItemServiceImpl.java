@@ -12,16 +12,16 @@ import ru.practicum.shareit.exception.IncorrectCommentatorException;
 import ru.practicum.shareit.exception.IncorrectItemIdException;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.item.repository.CommentRepository;
-import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.ItemService;
-import ru.practicum.shareit.item.repository.RatingRepository;
 import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.RatingMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.Rating;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.item.repository.RatingRepository;
 import ru.practicum.shareit.model.dto.comment.CommentIncDto;
 import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
@@ -117,6 +117,9 @@ class ItemServiceImpl implements ItemService {
         ItemWidthBookingsTimeDto itemWidthBookingsTimeDto = itemMapper.toItemWidthBookingsTimeDtoFromItem(item);
 
         itemWidthBookingsTimeDto.setRating(ratingRepository.getRatingItem(itemId));
+        Rating userRating = ratingRepository.findByAuthorAndItem(userId, itemId).orElse(new Rating());
+        itemWidthBookingsTimeDto.setUserRating(userRating.getRating());
+
         itemWidthBookingsTimeDto.setComments(
                 commentRepository.findAllByItem(itemId)
                         .stream()
@@ -159,6 +162,11 @@ class ItemServiceImpl implements ItemService {
                 .peek(itemWidthBookingsTimeDto ->
                         itemWidthBookingsTimeDto
                                 .setRating(ratingRepository.getRatingItem(itemWidthBookingsTimeDto.getId())))
+                .peek(itemWidthBookingsTimeDto -> {
+                    Rating userRating = ratingRepository
+                            .findByAuthorAndItem(userId, itemWidthBookingsTimeDto.getId()).orElse(new Rating());
+                    itemWidthBookingsTimeDto.setUserRating(userRating.getRating());
+                })
                 .toList();
     }
 
@@ -215,11 +223,11 @@ class ItemServiceImpl implements ItemService {
         List<Booking> bookings = bookingRepository
                 .searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), PageRequest.of(0, 1))
                 .toList();
-
+/*
         if (bookings.isEmpty())
             throw new IncorrectCommentatorException(
                     "Оценки могут ставить только те пользователи, которые брали вещь в аренду");
-
+*/
         if (ratingRepository.findByAuthorAndItem(userId, itemId).isPresent())
             throw new IncorrectCommentatorException("Оценку можно поставить только один раз");
 

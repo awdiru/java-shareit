@@ -25,5 +25,6 @@ public class ItemOutDto {
     private Boolean available;
     private RequestOutDto request;
     private Double rating;
+    private Integer userRating;
     private List<CommentOutDto> comments;
 }
