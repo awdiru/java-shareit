@@ -59,3 +59,15 @@ services:
       - server
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
+
+  notification:
+    build: notification
+    image: notification
+    container_name: notification
+    ports:
+      - "9093:9093"
+    depends_on:
+      - server
+    environment:
+      - MAIL_USERNAME=projectJavaShareIt@gmail.com
+      - MAIL_PASSWORD=JavaShareIt

@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.impliments;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -24,14 +23,16 @@ import ru.practicum.shareit.model.dto.item.ItemOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
 import ru.practicum.shareit.request.RequestRepository;
+import ru.practicum.shareit.request.model.Request;
+import ru.practicum.shareit.sender.DataSender;
 import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.practicum.shareit.constants.TopicNames.ADD_COMMENT;
-import static ru.practicum.shareit.constants.TopicNames.CREATING_ITEM_ON_REQUESTS;
+import static ru.practicum.shareit.constants.TopicNames.*;
 
 /**
  * Реализация сервиса для ItemController
@@ -44,13 +45,12 @@ class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
+    private final DataSender dataSender;
 
     private final ItemMapper itemMapper;
     private final CommentMapper commentMapper;
     private final BookingMapper bookingMapper;
 
-    private final KafkaTemplate<String, ItemWithoutCommentsDto> itemWithoutCommentsDtoKafka;
-    private final KafkaTemplate<String, CommentOutDto> commentOutDtoKafka;
 
     @Override
     public ItemOutDto createItem(final ItemIncDto itemDto,
@@ -65,7 +65,15 @@ class ItemServiceImpl implements ItemService {
             item.setRequest(requestRepository.findById(itemDto.getRequestId())
                     .orElseThrow(() -> new IncorrectRequestIdException("Запрос с id " + itemDto.getRequestId() + " не найден")));
 
-            itemWithoutCommentsDtoKafka.send(CREATING_ITEM_ON_REQUESTS, itemMapper.toItemWithoutCommentsDtoFromItem(item));
+            User user = userRepository.findById(userId).get();
+            Request request = requestRepository.findById(itemDto.getRequestId()).get();
+            User requester = request.getRequestor();
+            dataSender.sendItemCreatedNotification(
+                    CREATING_ITEM_ON_REQUESTS_NOTIFICATION,
+                    requester.getEmail(),
+                    request.getDescription(),
+                    user.getEmail()
+            );
         }
         return itemMapper.toItemDtoFromItem(itemRepository.save(item));
     }
@@ -173,6 +181,12 @@ class ItemServiceImpl implements ItemService {
                                     final Long itemId,
                                     final Long userId) {
 
+        User author = userRepository.findById(userId)
+                .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден"));
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена."));
+
         List<Booking> bookings = bookingRepository
                 .searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), PageRequest.of(0, 1))
                 .toList();
@@ -183,16 +197,20 @@ class ItemServiceImpl implements ItemService {
 
         Comment comment = commentMapper.toCommentFromCommentIncDto(commentIncDto);
 
-        comment.setAuthor(userRepository.findById(userId)
-                .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден")));
+        comment.setAuthor(author);
 
-        comment.setItem(itemRepository.findById(itemId)
-                .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена.")));
+        comment.setItem(item);
 
         comment.setCreated(LocalDateTime.now());
 
         CommentOutDto commentOutDto = commentMapper.toCommentOutDtoFromComment(commentRepository.save(comment));
-        commentOutDtoKafka.send(ADD_COMMENT, commentOutDto);
+        dataSender.sendCommentNotification(
+                ADD_COMMENT_TOPIC,
+                author.getEmail(),
+                item.getName(),
+                comment.getText(),
+                item.getOwner().getEmail()
+        );
         return commentOutDto;
     }
 }

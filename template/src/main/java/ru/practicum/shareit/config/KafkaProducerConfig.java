@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import ru.practicum.shareit.model.Mail;
 import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
 
@@ -15,12 +16,7 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
     @Bean
-    public KafkaTemplate<String, ItemWithoutCommentsDto> itemWithoutCommentsDtoKafkaTemplate() {
-        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(getConfigProps()));
-    }
-
-    @Bean
-    public KafkaTemplate<String, CommentOutDto> commentOutDtoKafkaTemplate() {
+    public KafkaTemplate<String, Mail> kafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(getConfigProps()));
     }
 

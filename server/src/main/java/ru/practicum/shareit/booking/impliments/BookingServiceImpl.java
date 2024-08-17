@@ -7,19 +7,23 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.model.dto.booking.BookingIncDto;
-import ru.practicum.shareit.model.dto.booking.BookingOutDto;
-import ru.practicum.shareit.model.enums.BookingStateEnum;
-import ru.practicum.shareit.model.enums.BookingStatusEnum;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.model.dto.booking.BookingIncDto;
+import ru.practicum.shareit.model.dto.booking.BookingOutDto;
+import ru.practicum.shareit.model.enums.BookingStateEnum;
+import ru.practicum.shareit.model.enums.BookingStatusEnum;
+import ru.practicum.shareit.sender.DataSender;
 import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
+
+import static ru.practicum.shareit.constants.TopicNames.BOOKING_STATUS_TOPIC;
 
 /**
  * Реализация сервиса для BookingController
@@ -31,6 +35,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingMapper bookingMapper;
+    private final DataSender sender;
 
     @Override
     public BookingOutDto createBooking(final BookingIncDto bookingIncDto,
@@ -64,8 +69,16 @@ public class BookingServiceImpl implements BookingService {
                                          final Long bookingId,
                                          final Boolean approved) {
 
+        BookingStatusEnum status;
+
+        User owner = userRepository.findById(userId).get();
+
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IncorrectBookingIdException("Бронирование с id " + bookingId + " не найдено"));
+
+        User booker = userRepository.findById(booking.getBooker().getId()).get();
+
+        Item item = booking.getItem();
 
         if (booking.getBooker().getId().equals(userId) && approved)
             throw new IncorrectUserIdException("Бронирование может подтвердить только владелец вещи");
@@ -81,18 +94,26 @@ public class BookingServiceImpl implements BookingService {
 
         if (approved) {
             booking.setStatus(BookingStatusEnum.APPROVED);
-            Item item = booking.getItem();
-
+            status = BookingStatusEnum.APPROVED;
             if (item.getNumberOfRentals() != null) {
                 item.setNumberOfRentals(item.getNumberOfRentals() + 1);
             } else item.setNumberOfRentals(1);
-
             itemRepository.save(item);
-
-        } else if (booking.getBooker().getId().equals(userId))
+        } else if (booking.getBooker().getId().equals(userId)) {
             booking.setStatus(BookingStatusEnum.CANCELED);
+            status = BookingStatusEnum.CANCELED;
+        } else {
+            booking.setStatus(BookingStatusEnum.REJECTED);
+            status = BookingStatusEnum.REJECTED;
+        }
 
-        else booking.setStatus(BookingStatusEnum.REJECTED);
+        sender.sendBookingStatusNotification(
+                BOOKING_STATUS_TOPIC,
+                owner.getEmail(),
+                status,
+                item.getName(),
+                booker.getEmail()
+        );
 
         bookingRepository.save(booking);
         return bookingMapper.toBookingOutDtoFromBooking(booking);
