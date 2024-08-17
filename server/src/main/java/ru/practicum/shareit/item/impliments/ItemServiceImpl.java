@@ -36,6 +36,7 @@ import ru.practicum.shareit.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.practicum.shareit.constants.TopicNames.ADD_COMMENT;
 import static ru.practicum.shareit.constants.TopicNames.CREATING_ITEM_ON_REQUESTS;
@@ -186,7 +187,11 @@ class ItemServiceImpl implements ItemService {
                                         .map(commentMapper::toCommentOutDtoFromComment)
                                         .toList()
                         ))
-                .peek(itemOutDto -> itemOutDto.setRating(ratingRepository.getRatingItem(itemOutDto.getId())))
+                .peek(itemOutDto ->
+                        itemOutDto.setRating(Objects.requireNonNullElse(
+                                ratingRepository.getRatingItem(itemOutDto.getId()), 0.0))
+                )
+                .sorted((item1, item2) -> Double.compare(item2.getRating(), item1.getRating()))
                 .toList();
     }
 
