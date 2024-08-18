@@ -70,10 +70,10 @@ class ItemServiceImpl implements ItemService {
             User requester = request.getRequestor();
             dataSender.sendItemCreatedNotification(
                     CREATING_ITEM_ON_REQUESTS_NOTIFICATION,
-                    requester.getEmail(),
+                    user.getEmail(),
                     request.getDescription(),
-                    user.getEmail()
-            );
+                    requester.getEmail()
+                    );
         }
         return itemMapper.toItemDtoFromItem(itemRepository.save(item));
     }

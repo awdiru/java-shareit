@@ -4,6 +4,7 @@ package ru.practicum.shareit.model;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @ToString
@@ -11,8 +12,8 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Mail {
-    public final String id = UUID.randomUUID().toString();
+public class Mail implements Serializable{
+    public String id = UUID.randomUUID().toString();
     @Email
     private String from;
     @Email
