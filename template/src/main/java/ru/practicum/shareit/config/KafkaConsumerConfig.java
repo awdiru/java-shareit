@@ -10,6 +10,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
+import ru.practicum.shareit.model.dto.mail.MailWithCommentDto;
+import ru.practicum.shareit.model.dto.mail.MailWithItemDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +27,15 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ItemWithoutCommentsDto> itemWithoutCommentsDtoContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ItemWithoutCommentsDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, MailWithItemDto> mailWithItemDtoContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, MailWithItemDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(getConfigProps()));
+        return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, MailWithCommentDto> mailWithCommentDtoContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, MailWithCommentDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(getConfigProps()));
         return factory;
     }

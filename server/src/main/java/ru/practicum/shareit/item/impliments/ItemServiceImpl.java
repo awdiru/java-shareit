@@ -8,21 +8,24 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.model.dto.comment.CommentIncDto;
-import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.exception.IncorrectCommentatorException;
 import ru.practicum.shareit.exception.IncorrectItemIdException;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.item.*;
+import ru.practicum.shareit.item.CommentRepository;
+import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.model.dto.comment.CommentIncDto;
+import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
 import ru.practicum.shareit.model.dto.item.ItemOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
-import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
+import ru.practicum.shareit.model.dto.mail.MailWithCommentDto;
+import ru.practicum.shareit.model.dto.mail.MailWithItemDto;
 import ru.practicum.shareit.request.RequestRepository;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -49,8 +52,8 @@ class ItemServiceImpl implements ItemService {
     private final CommentMapper commentMapper;
     private final BookingMapper bookingMapper;
 
-    private final KafkaTemplate<String, ItemWithoutCommentsDto> itemWithoutCommentsDtoKafka;
-    private final KafkaTemplate<String, CommentOutDto> commentOutDtoKafka;
+    private final KafkaTemplate<String, MailWithItemDto> mailWithItemDtoKafkaTemplate;
+    private final KafkaTemplate<String, MailWithCommentDto> mailWithCommentDtoKafkaTemplate;
 
     @Override
     public ItemOutDto createItem(final ItemIncDto itemDto,
@@ -65,7 +68,11 @@ class ItemServiceImpl implements ItemService {
             item.setRequest(requestRepository.findById(itemDto.getRequestId())
                     .orElseThrow(() -> new IncorrectRequestIdException("Запрос с id " + itemDto.getRequestId() + " не найден")));
 
-            itemWithoutCommentsDtoKafka.send(CREATING_ITEM_ON_REQUESTS, itemMapper.toItemWithoutCommentsDtoFromItem(item));
+            mailWithItemDtoKafkaTemplate.send(CREATING_ITEM_ON_REQUESTS,
+                    new MailWithItemDto(
+                            item.getRequest().getRequestor().getEmail(),
+                            itemMapper.toItemWithoutCommentsDtoFromItem(item)
+                    ));
         }
         return itemMapper.toItemDtoFromItem(itemRepository.save(item));
     }
@@ -185,14 +192,15 @@ class ItemServiceImpl implements ItemService {
 
         comment.setAuthor(userRepository.findById(userId)
                 .orElseThrow(() -> new IncorrectUserIdException("Пользователь с id " + userId + " не найден")));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена."));
 
-        comment.setItem(itemRepository.findById(itemId)
-                .orElseThrow(() -> new IncorrectItemIdException("Вещь с id " + itemId + " не найдена.")));
+        comment.setItem(item);
 
         comment.setCreated(LocalDateTime.now());
 
         CommentOutDto commentOutDto = commentMapper.toCommentOutDtoFromComment(commentRepository.save(comment));
-        commentOutDtoKafka.send(ADD_COMMENT, commentOutDto);
+        mailWithCommentDtoKafkaTemplate.send(ADD_COMMENT, new MailWithCommentDto(item.getOwner().getEmail(), commentOutDto));
         return commentOutDto;
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
+import ru.practicum.shareit.model.dto.mail.MailWithCommentDto;
+import ru.practicum.shareit.model.dto.mail.MailWithItemDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +17,12 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
     @Bean
-    public KafkaTemplate<String, ItemWithoutCommentsDto> itemWithoutCommentsDtoKafkaTemplate() {
+    public KafkaTemplate<String, MailWithItemDto> mailWithItemDtoKafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(getConfigProps()));
     }
 
     @Bean
-    public KafkaTemplate<String, CommentOutDto> commentOutDtoKafkaTemplate() {
+    public KafkaTemplate<String, MailWithCommentDto> mailWithCommentDtoKafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(getConfigProps()));
     }
 
