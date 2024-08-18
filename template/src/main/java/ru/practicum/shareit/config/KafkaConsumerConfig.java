@@ -9,7 +9,6 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
 import ru.practicum.shareit.model.dto.mail.MailWithCommentDto;
 import ru.practicum.shareit.model.dto.mail.MailWithItemDto;
 

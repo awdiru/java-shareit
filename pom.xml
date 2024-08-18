@@ -23,7 +23,7 @@
 	<modules>
 		<module>gateway</module>
 		<module>server</module>
-		<module>test-kafka</module>
+		<module>notification</module>
 		<module>template</module>
 	</modules>
 

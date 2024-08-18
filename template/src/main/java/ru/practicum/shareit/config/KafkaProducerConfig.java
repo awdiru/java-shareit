@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.practicum.shareit.model.dto.comment.CommentOutDto;
-import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
 import ru.practicum.shareit.model.dto.mail.MailWithCommentDto;
 import ru.practicum.shareit.model.dto.mail.MailWithItemDto;
 
