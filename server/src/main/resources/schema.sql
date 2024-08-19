@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS PUBLIC.ratings;
 DROP TABLE IF EXISTS PUBLIC.comments;
 DROP TABLE IF EXISTS PUBLIC.bookings;
 DROP TABLE IF EXISTS PUBLIC.items;
@@ -55,4 +56,14 @@ CREATE TABLE public.comments (
 	CONSTRAINT comments_pk PRIMARY KEY (id),
 	CONSTRAINT comments_items_fk FOREIGN KEY (item) REFERENCES public.items(id) ON DELETE CASCADE,
 	CONSTRAINT comments_users_fk FOREIGN KEY (author) REFERENCES public.users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE public.ratings (
+	id int4 GENERATED ALWAYS AS IDENTITY NOT NULL,
+	author int4 NOT NULL,
+	item int4 NOT NULL,
+	rating int4 NOT NULL,
+	CONSTRAINT ratings_pk PRIMARY KEY (id),
+	CONSTRAINT ratings_items_fk FOREIGN KEY (item) REFERENCES public.items(id) ON DELETE CASCADE,
+	CONSTRAINT ratings_users_fk FOREIGN KEY (author) REFERENCES public.users(id) ON DELETE CASCADE
 );

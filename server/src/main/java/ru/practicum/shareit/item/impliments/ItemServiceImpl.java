@@ -8,27 +8,35 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.model.dto.comment.CommentIncDto;
-import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.exception.IncorrectCommentatorException;
 import ru.practicum.shareit.exception.IncorrectItemIdException;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.item.*;
+import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.RatingMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.Rating;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.item.repository.RatingRepository;
+import ru.practicum.shareit.model.dto.comment.CommentIncDto;
+import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
 import ru.practicum.shareit.model.dto.item.ItemOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
 import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
+import ru.practicum.shareit.model.dto.rating.RatingIncDto;
+import ru.practicum.shareit.model.dto.rating.RatingOutDto;
 import ru.practicum.shareit.request.RequestRepository;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.practicum.shareit.constants.TopicNames.ADD_COMMENT;
 import static ru.practicum.shareit.constants.TopicNames.CREATING_ITEM_ON_REQUESTS;
@@ -44,10 +52,12 @@ class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
+    private final RatingRepository ratingRepository;
 
     private final ItemMapper itemMapper;
     private final CommentMapper commentMapper;
     private final BookingMapper bookingMapper;
+    private final RatingMapper ratingMapper;
 
     private final KafkaTemplate<String, ItemWithoutCommentsDto> itemWithoutCommentsDtoKafka;
     private final KafkaTemplate<String, CommentOutDto> commentOutDtoKafka;
@@ -94,6 +104,7 @@ class ItemServiceImpl implements ItemService {
                         .map(commentMapper::toCommentOutDtoFromComment)
                         .toList()
         );
+        itemOutDto.setRating(ratingRepository.getRatingItem(itemId));
         return itemOutDto;
     }
 
@@ -106,13 +117,16 @@ class ItemServiceImpl implements ItemService {
 
         ItemWidthBookingsTimeDto itemWidthBookingsTimeDto = itemMapper.toItemWidthBookingsTimeDtoFromItem(item);
 
+        itemWidthBookingsTimeDto.setRating(ratingRepository.getRatingItem(itemId));
+        Rating userRating = ratingRepository.findByAuthorAndItem(userId, itemId).orElse(new Rating());
+        itemWidthBookingsTimeDto.setUserRating(userRating.getRating());
+
         itemWidthBookingsTimeDto.setComments(
                 commentRepository.findAllByItem(itemId)
                         .stream()
                         .map(commentMapper::toCommentOutDtoFromComment)
                         .toList()
         );
-
         if (!item.getOwner().getId().equals(userId))
             return itemWidthBookingsTimeDto;
 
@@ -146,6 +160,14 @@ class ItemServiceImpl implements ItemService {
                                         .map(commentMapper::toCommentOutDtoFromComment)
                                         .toList()
                         ))
+                .peek(itemWidthBookingsTimeDto ->
+                        itemWidthBookingsTimeDto
+                                .setRating(ratingRepository.getRatingItem(itemWidthBookingsTimeDto.getId())))
+                .peek(itemWidthBookingsTimeDto -> {
+                    Rating userRating = ratingRepository
+                            .findByAuthorAndItem(userId, itemWidthBookingsTimeDto.getId()).orElse(new Rating());
+                    itemWidthBookingsTimeDto.setUserRating(userRating.getRating());
+                })
                 .toList();
     }
 
@@ -165,6 +187,11 @@ class ItemServiceImpl implements ItemService {
                                         .map(commentMapper::toCommentOutDtoFromComment)
                                         .toList()
                         ))
+                .peek(itemOutDto ->
+                        itemOutDto.setRating(Objects.requireNonNullElse(
+                                ratingRepository.getRatingItem(itemOutDto.getId()), 0.0))
+                )
+                .sorted((item1, item2) -> Double.compare(item2.getRating(), item1.getRating()))
                 .toList();
     }
 
@@ -194,5 +221,28 @@ class ItemServiceImpl implements ItemService {
         CommentOutDto commentOutDto = commentMapper.toCommentOutDtoFromComment(commentRepository.save(comment));
         commentOutDtoKafka.send(ADD_COMMENT, commentOutDto);
         return commentOutDto;
+    }
+
+    @Override
+    public RatingOutDto addRating(Long userId, RatingIncDto ratingIncDto, Long itemId) {
+        List<Booking> bookings = bookingRepository
+                .searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), PageRequest.of(0, 1))
+                .toList();
+
+        if (bookings.isEmpty())
+            throw new IncorrectCommentatorException(
+                    "Оценки могут ставить только те пользователи, которые брали вещь в аренду");
+
+        if (itemRepository.findById(itemId).get().equals(userId))
+            throw new IncorrectCommentatorException("Владелец вещи не может поставить ей оценку");
+
+        if (ratingRepository.findByAuthorAndItem(userId, itemId).isPresent())
+            throw new IncorrectCommentatorException("Оценку можно поставить только один раз");
+
+        Rating rating = ratingMapper.toRatingFromRatingIncDto(ratingIncDto);
+        rating.setItem(itemId);
+        rating.setAuthor(userId);
+
+        return ratingMapper.toRatingOutDtoFromRating(ratingRepository.save(rating));
     }
 }

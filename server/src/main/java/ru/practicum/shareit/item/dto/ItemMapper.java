@@ -2,10 +2,10 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
 import ru.practicum.shareit.model.dto.item.ItemOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.model.dto.item.ItemWithoutCommentsDto;
 import ru.practicum.shareit.request.dto.RequestMapper;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -27,8 +27,7 @@ public class ItemMapper {
                 userMapper.toUserDto(item.getOwner()),
                 item.getNumberOfRentals(),
                 item.getAvailable(),
-                null,
-                null);
+                null, null, null, null);
 
         if (item.getRequest() != null)
             itemOutDto.setRequest(requestMapper.toRequestOutDtoFromRequest(item.getRequest()));
@@ -45,9 +44,7 @@ public class ItemMapper {
                         item.getNumberOfRentals(),
                         item.getAvailable(),
                         requestMapper.toRequestOutDtoFromRequest(item.getRequest()),
-                        null,
-                        null,
-                        null);
+                        null, null, null, null, null);
     }
 
     public Item toItemFromItemIncDto(ItemIncDto item) {
@@ -61,8 +58,8 @@ public class ItemMapper {
                         null);
     }
 
-    public ItemWithoutCommentsDto toItemWithoutCommentsDtoFromItem (Item item) {
-        return item==null ? null :
+    public ItemWithoutCommentsDto toItemWithoutCommentsDtoFromItem(Item item) {
+        return item == null ? null :
                 new ItemWithoutCommentsDto(item.getName(),
                         item.getDescription(),
                         userMapper.toUserDto(item.getOwner()),

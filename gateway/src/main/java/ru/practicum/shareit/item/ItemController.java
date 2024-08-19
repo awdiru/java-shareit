@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.model.dto.comment.CommentIncDto;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
+import ru.practicum.shareit.model.dto.rating.RatingIncDto;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static ru.practicum.shareit.constants.Headers.USER_ID_HEADER;
@@ -115,11 +116,28 @@ public class ItemController {
     @PostMapping(value = "/{itemId}/comment", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addComment(@Parameter(description = "id пользователя")
                                              @RequestHeader(USER_ID_HEADER) final Long userId,
-                                             @Parameter (description = "id вещи")
+                                             @Parameter(description = "id вещи")
                                              @PathVariable final Long itemId,
                                              @RequestBody @Valid final CommentIncDto comment) {
 
         log.info("POST add Comment; userId={}, itemId={}", userId, itemId);
         return client.addComment(userId, comment, itemId);
+    }
+
+    @Operation(summary = "Добавить оценку вещи",
+            description = """
+                    Добавить комментарий к вещи.
+                    Разрешено только тем пользователям, которые брали вещь в аренду.
+                    Оценка ставится не более одного раза.
+                    """)
+    @PostMapping(value = "/{itemId}/rating", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addRating(@Parameter(description = "id пользователя")
+                                            @RequestHeader(USER_ID_HEADER) final Long userId,
+                                            @Parameter(description = "id вещи")
+                                            @PathVariable final Long itemId,
+                                            @RequestBody @Valid final RatingIncDto rating) {
+
+        log.info("POST add Rating; userId={}, itemId={}, rating={}", userId, itemId, rating.getRating());
+        return client.addRating(userId, rating, itemId);
     }
 }

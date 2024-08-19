@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.annotations.ItemControllerExceptionHandler;
 import ru.practicum.shareit.model.dto.comment.CommentIncDto;
@@ -9,9 +11,12 @@ import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
 import ru.practicum.shareit.model.dto.item.ItemOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.model.dto.rating.RatingIncDto;
+import ru.practicum.shareit.model.dto.rating.RatingOutDto;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static ru.practicum.shareit.constants.Headers.USER_ID_HEADER;
 
 /**
@@ -115,5 +120,22 @@ public class ItemController {
 
         log.info("Add Comment; userId={}, itemId={}", userId, itemId);
         return itemService.addComment(comment, itemId, userId);
+    }
+
+    /**
+     * Добавить оценку к вещи
+     *
+     * @param userId  id пользователя
+     * @param rating оценка
+     * @param itemId  id вещи
+     * @return добавленный комментарий
+     */
+    @PostMapping(value = "/{itemId}/rating", produces = APPLICATION_JSON_VALUE)
+    public RatingOutDto addRating(@RequestHeader(USER_ID_HEADER) final Long userId,
+                                  @PathVariable final Long itemId,
+                                  @RequestBody @Valid final RatingIncDto rating) {
+
+        log.info("POST add Rating; userId={}, itemId={}, rating={}", userId, itemId, rating.getRating());
+        return itemService.addRating(userId, rating, itemId);
     }
 }
