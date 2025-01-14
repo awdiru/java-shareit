@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -19,6 +19,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
      * @param ownerId id пользователя
      * @return список вещей пользователя
      */
+    @Query("""
+            select it
+            from Item as it
+            where it.owner.id = :ownerId
+            """)
     Slice<Item> findAllByOwnerId(Long ownerId, Pageable paging);
 
     /**

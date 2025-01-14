@@ -5,6 +5,8 @@ import ru.practicum.shareit.model.dto.comment.CommentOutDto;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
 import ru.practicum.shareit.model.dto.item.ItemOutDto;
 import ru.practicum.shareit.model.dto.item.ItemWidthBookingsTimeDto;
+import ru.practicum.shareit.model.dto.rating.RatingIncDto;
+import ru.practicum.shareit.model.dto.rating.RatingOutDto;
 
 import java.util.List;
 
@@ -66,4 +68,14 @@ public interface ItemService {
      * @return добавленный комментарий
      */
     CommentOutDto addComment(CommentIncDto comment, Long itemId, Long userId);
+
+    /**
+     * Добавить оценку к вещи
+     *
+     * @param userId  id пользователя
+     * @param rating комментарий
+     * @param itemId  id вещи
+     * @return добавленный комментарий
+     */
+    RatingOutDto addRating(Long userId, RatingIncDto rating, Long itemId);
 }

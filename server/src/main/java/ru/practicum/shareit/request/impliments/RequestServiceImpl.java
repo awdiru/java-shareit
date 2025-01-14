@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.IncorrectRequestIdException;
 import ru.practicum.shareit.exception.IncorrectUserIdException;
-import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.model.dto.request.RequestIncDto;
 import ru.practicum.shareit.model.dto.request.RequestOutDto;
