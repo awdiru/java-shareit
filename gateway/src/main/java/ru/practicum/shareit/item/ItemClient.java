@@ -10,6 +10,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.model.dto.comment.CommentIncDto;
 import ru.practicum.shareit.model.dto.item.ItemIncDto;
+import ru.practicum.shareit.model.dto.rating.RatingIncDto;
 
 import java.util.Map;
 
@@ -116,5 +117,11 @@ public class ItemClient extends BaseClient {
                                              final Long itemId) {
 
         return post("/" + itemId + "/comment", userId, comment);
+    }
+
+    public ResponseEntity<Object> addRating(final Long userId,
+                                            final RatingIncDto rating,
+                                            final Long itemId) {
+        return post("/" + itemId + "/rating", userId, rating);
     }
 }
